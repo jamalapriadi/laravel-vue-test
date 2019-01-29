@@ -83,6 +83,66 @@ const routes = [
         path: '/role/:id',
         name: 'role-view',
         component: require('./components/role/RoleView.vue').default
+    },
+    {
+        path: '/bank',
+        name: 'bankIndex',
+        component: require('./components/master/bank/Index.vue').default
+    },
+    {
+        path: '/kelompok',
+        name: 'kelompokIndex',
+        component: require('./components/master/kelompok/Index.vue').default
+    },
+    {
+        path: '/kota',
+        name: 'kotaIndex',
+        component: require('./components/master/kota/Index.vue').default
+    },
+    {
+        path: '/lokasi',
+        name: 'lokasiIndex',
+        component: require('./components/master/lokasi/Index.vue').default
+    },
+    {
+        path: '/merk',
+        name: 'merkIndex',
+        component: require('./components/master/merk/Index.vue').default
+    },
+    {
+        path: '/perusahaan',
+        name: 'perusahaanIndex',
+        component: require('./components/master/perusahaan/Index.vue').default
+    },
+    {
+        path: '/program',
+        name: 'programIndex',
+        component: require('./components/master/program/Index.vue').default
+    },
+    {
+        path: '/rak',
+        name: 'rakIndex',
+        component: require('./components/master/rak/Index.vue').default
+    },
+    {
+        path: '/sales',
+        name: 'salesIndex',
+        component: require('./components/master/sales/Index.vue').default
+    },
+    {
+        path: '/suplier',
+        name: 'suplierIndex',
+        component: require('./components/master/suplier/Index.vue').default
+    },
+    {
+        path: '/add-new-order',
+        name: 'addOrderIndex',
+        component: require('./components/order/Create.vue').default
+    },
+    {
+        path: '/list-order',
+        name: 'listOrder',
+        component: require('./components/order/List.vue').default
     }
 ]
 
