@@ -15,7 +15,9 @@ class KetController extends Controller
      */
     public function index()
     {
-        //
+        $ket=Ket::paginate(25);
+
+        return $ket;
     }
 
     /**
@@ -36,7 +38,37 @@ class KetController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules=[
+            'nohp'=>'required',
+            'email'=>'required',
+            'pin'=>'required',
+            'npwp'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $ket=new Ket;
+            $ket->no_hp=request('nohp');
+            $ket->email=request('email');
+            $ket->pin=request('pin');
+            $ket->npwp=request('npwp');
+            $ket->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'data berhasil disimpan',
+                'errros'=>$validasi->errors()->all()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -45,7 +77,7 @@ class KetController extends Controller
      * @param  \App\Master\Ket  $ket
      * @return \Illuminate\Http\Response
      */
-    public function show(Ket $ket)
+    public function show($id)
     {
         //
     }
@@ -56,7 +88,7 @@ class KetController extends Controller
      * @param  \App\Master\Ket  $ket
      * @return \Illuminate\Http\Response
      */
-    public function edit(Ket $ket)
+    public function edit($id)
     {
         //
     }
@@ -68,9 +100,39 @@ class KetController extends Controller
      * @param  \App\Master\Ket  $ket
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Ket $ket)
+    public function update(Request $request, $id)
     {
-        //
+        $rules=[
+            'nohp'=>'required',
+            'email'=>'required',
+            'pin'=>'required',
+            'npwp'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $ket=Ket::find($id);
+            $ket->no_hp=request('nohp');
+            $ket->email=request('email');
+            $ket->pin=request('pin');
+            $ket->npwp=request('npwp');
+            $ket->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'data berhasil disimpan',
+                'errros'=>$validasi->errors()->all()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -79,8 +141,26 @@ class KetController extends Controller
      * @param  \App\Master\Ket  $ket
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Ket $ket)
+    public function destroy($id)
     {
-        //
+        $ket=Ket::find($id);
+
+        $hapus=$ket->delete();
+
+        if($hapus){
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>array()
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data gagal dihapus',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 }

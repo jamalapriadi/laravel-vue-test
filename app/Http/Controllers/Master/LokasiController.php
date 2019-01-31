@@ -15,7 +15,9 @@ class LokasiController extends Controller
      */
     public function index()
     {
-        //
+        $lokasi=Lokasi::paginate(25);
+
+        return $lokasi;
     }
 
     /**
@@ -36,7 +38,33 @@ class LokasiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules=[
+            'lokasi'=>'required',
+            'nama'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>"Validasi errors",
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $lokasi=new Lokasi;
+            $lokasi->lokasi=request('lokasi');
+            $lokasi->nm=request('nama');
+            $lokasi->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil disimpan',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -45,9 +73,11 @@ class LokasiController extends Controller
      * @param  \App\Master\Lokasi  $lokasi
      * @return \Illuminate\Http\Response
      */
-    public function show(Lokasi $lokasi)
+    public function show($id)
     {
-        //
+        $lokasi=Lokasi::find($id);
+
+        return $lokasi;
     }
 
     /**
@@ -56,7 +86,7 @@ class LokasiController extends Controller
      * @param  \App\Master\Lokasi  $lokasi
      * @return \Illuminate\Http\Response
      */
-    public function edit(Lokasi $lokasi)
+    public function edit($id)
     {
         //
     }
@@ -68,9 +98,35 @@ class LokasiController extends Controller
      * @param  \App\Master\Lokasi  $lokasi
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Lokasi $lokasi)
+    public function update(Request $request, $id)
     {
-        //
+        $rules=[
+            'lokasi'=>'required',
+            'nama'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>"Validasi errors",
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $lokasi=Lokasi::find($id);
+            $lokasi->lokasi=request('lokasi');
+            $lokasi->nm=request('nama');
+            $lokasi->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil disimpan',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -79,8 +135,26 @@ class LokasiController extends Controller
      * @param  \App\Master\Lokasi  $lokasi
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Lokasi $lokasi)
+    public function destroy($id)
     {
-        //
+        $lokasi=Lokasi::find($id);
+
+        $hapus=$lokasi->delete();
+
+        if($hapus){
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>array()
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data gagal dihapus',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 }

@@ -15,7 +15,9 @@ class SalesController extends Controller
      */
     public function index()
     {
-        //
+        $sales=Sales::paginate(25);
+
+        return $sales;
     }
 
     /**
@@ -36,7 +38,33 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules=[
+            'nama'=>'required',
+            'status'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $sales=new Sales;
+            $sales->nm=request('nama');
+            $sales->status=request('status');
+            $sales->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'data berhasil disimpan',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -45,9 +73,11 @@ class SalesController extends Controller
      * @param  \App\Master\Sales  $sales
      * @return \Illuminate\Http\Response
      */
-    public function show(Sales $sales)
+    public function show($id)
     {
-        //
+        $sales=Sales::find($id);
+
+        return $sales;
     }
 
     /**
@@ -56,7 +86,7 @@ class SalesController extends Controller
      * @param  \App\Master\Sales  $sales
      * @return \Illuminate\Http\Response
      */
-    public function edit(Sales $sales)
+    public function edit($id)
     {
         //
     }
@@ -68,9 +98,35 @@ class SalesController extends Controller
      * @param  \App\Master\Sales  $sales
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Sales $sales)
+    public function update(Request $request, $id)
     {
-        //
+        $rules=[
+            'nama'=>'required',
+            'status'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $sales=Sales::find($id);
+            $sales->nm=request('nama');
+            $sales->status=request('status');
+            $sales->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'data berhasil disimpan',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -79,8 +135,26 @@ class SalesController extends Controller
      * @param  \App\Master\Sales  $sales
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Sales $sales)
+    public function destroy($id)
     {
-        //
+        $sales=Sales::find($id);
+
+        $hapus=$sales->delete();
+
+        if($hapus){
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>array()
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data gagal dihapus',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 }

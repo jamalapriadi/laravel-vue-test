@@ -15,7 +15,9 @@ class RakController extends Controller
      */
     public function index()
     {
-        //
+        $rak=Rak::paginate(25);
+
+        return $rak;
     }
 
     /**
@@ -36,7 +38,33 @@ class RakController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules=[
+            'nama'=>'required',
+            'lokasi'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $rak=new Rak;
+            $rak->nm=request('nama');
+            $rak->lokaso=request('lokasi');
+            $rak->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'data berhasil disimpan',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -45,9 +73,11 @@ class RakController extends Controller
      * @param  \App\Master\Rak  $rak
      * @return \Illuminate\Http\Response
      */
-    public function show(Rak $rak)
+    public function show($id)
     {
-        //
+        $rak=Rak::find($id);
+
+        return $rak;
     }
 
     /**
@@ -56,7 +86,7 @@ class RakController extends Controller
      * @param  \App\Master\Rak  $rak
      * @return \Illuminate\Http\Response
      */
-    public function edit(Rak $rak)
+    public function edit($id)
     {
         //
     }
@@ -68,9 +98,35 @@ class RakController extends Controller
      * @param  \App\Master\Rak  $rak
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Rak $rak)
+    public function update(Request $request, $id)
     {
-        //
+        $rules=[
+            'nama'=>'required',
+            'lokasi'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $rak=Rak::find($id);
+            $rak->nm=request('nama');
+            $rak->lokaso=request('lokasi');
+            $rak->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'data berhasil disimpan',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -79,8 +135,26 @@ class RakController extends Controller
      * @param  \App\Master\Rak  $rak
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Rak $rak)
+    public function destroy($id)
     {
-        //
+        $rak=Rak::find($id);
+
+        $hapus=$rak->delete();
+
+        if($hapus){
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>array()
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data gagal dihapus',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 }

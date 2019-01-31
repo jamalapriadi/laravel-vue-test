@@ -15,7 +15,9 @@ class KelompokController extends Controller
      */
     public function index()
     {
-        //
+        $kelompok=Kelompok::paginate(25);
+
+        return $kelompok;
     }
 
     /**
@@ -36,7 +38,28 @@ class KelompokController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules=['nama'=>'required|max:30'];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $kel=new Kelompok;
+            $kel->nm=request('nama');
+            $kel->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -45,9 +68,11 @@ class KelompokController extends Controller
      * @param  \App\Master\Kelompok  $kelompok
      * @return \Illuminate\Http\Response
      */
-    public function show(Kelompok $kelompok)
+    public function show($id)
     {
-        //
+        $kel=Kelompok::find($id);
+
+        return $kel;
     }
 
     /**
@@ -56,9 +81,9 @@ class KelompokController extends Controller
      * @param  \App\Master\Kelompok  $kelompok
      * @return \Illuminate\Http\Response
      */
-    public function edit(Kelompok $kelompok)
+    public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -68,9 +93,30 @@ class KelompokController extends Controller
      * @param  \App\Master\Kelompok  $kelompok
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Kelompok $kelompok)
+    public function update(Request $request, $id)
     {
-        //
+        $rules=['nama'=>'required|max:30'];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $kel=Kelompok::find($id);
+            $kel->nm=request('nama');
+            $kel->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -79,8 +125,26 @@ class KelompokController extends Controller
      * @param  \App\Master\Kelompok  $kelompok
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Kelompok $kelompok)
+    public function destroy($id)
     {
-        //
+        $kel=Kelompok::find($id);
+
+        $hapus=$kel->delete();
+
+        if($hapus){
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>array()
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data gagal dihapus',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 }

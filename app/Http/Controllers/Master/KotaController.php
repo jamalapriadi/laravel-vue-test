@@ -15,7 +15,9 @@ class KotaController extends Controller
      */
     public function index()
     {
-        //
+        $kota=Kota::paginate(25);
+
+        return $kota;
     }
 
     /**
@@ -36,7 +38,33 @@ class KotaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules=[
+            'nama'=>'required',
+            'jenis'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $kota=new Kota;
+            $kota->nm=request('nama');
+            $kota->jenis=request('jenis');
+            $kota->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil disimpan',
+                'errors'=>array()
+            );
+        }
+
+        return $kota;
     }
 
     /**
@@ -45,9 +73,11 @@ class KotaController extends Controller
      * @param  \App\Master\Kota  $kota
      * @return \Illuminate\Http\Response
      */
-    public function show(Kota $kota)
+    public function show($id)
     {
-        //
+        $kota=Kota::find($id);
+
+        return $kota;
     }
 
     /**
@@ -56,7 +86,7 @@ class KotaController extends Controller
      * @param  \App\Master\Kota  $kota
      * @return \Illuminate\Http\Response
      */
-    public function edit(Kota $kota)
+    public function edit($id)
     {
         //
     }
@@ -68,9 +98,35 @@ class KotaController extends Controller
      * @param  \App\Master\Kota  $kota
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Kota $kota)
+    public function update(Request $request, $id)
     {
-        //
+        $rules=[
+            'nama'=>'required',
+            'jenis'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $kota=Kota::find($id);
+            $kota->nm=request('nama');
+            $kota->jenis=request('jenis');
+            $kota->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil diupdate',
+                'errors'=>array()
+            );
+        }
+
+        return $kota;
     }
 
     /**
@@ -79,8 +135,26 @@ class KotaController extends Controller
      * @param  \App\Master\Kota  $kota
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Kota $kota)
+    public function destroy($id)
     {
-        //
+        $kota=Kota::find($id);
+
+        $hapus=$kota->delete();
+
+        if($hapus){
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>array()
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data gagal dihapus',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 }

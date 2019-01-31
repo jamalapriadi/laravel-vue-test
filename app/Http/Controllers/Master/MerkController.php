@@ -15,7 +15,9 @@ class MerkController extends Controller
      */
     public function index()
     {
-        //
+        $merk=Merk::paginate(25);
+
+        return $merk;
     }
 
     /**
@@ -36,7 +38,33 @@ class MerkController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules=[
+            'nm'=>'required',
+            'persen'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $merk=new Merk;
+            $merk->nm=request('nama');
+            $merk->persen=request('persent');
+            $merk->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil disimpan',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -45,9 +73,11 @@ class MerkController extends Controller
      * @param  \App\Master\Merk  $merk
      * @return \Illuminate\Http\Response
      */
-    public function show(Merk $merk)
+    public function show($id)
     {
-        //
+        $merk=Merk::find($id);
+
+        return $merk;
     }
 
     /**
@@ -56,7 +86,7 @@ class MerkController extends Controller
      * @param  \App\Master\Merk  $merk
      * @return \Illuminate\Http\Response
      */
-    public function edit(Merk $merk)
+    public function edit($id)
     {
         //
     }
@@ -68,9 +98,35 @@ class MerkController extends Controller
      * @param  \App\Master\Merk  $merk
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Merk $merk)
+    public function update(Request $request, $id)
     {
-        //
+        $rules=[
+            'nm'=>'required',
+            'persen'=>'required'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $merk=Merk::find($id);
+            $merk->nm=request('nama');
+            $merk->persen=request('persent');
+            $merk->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil disimpan',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -79,8 +135,26 @@ class MerkController extends Controller
      * @param  \App\Master\Merk  $merk
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Merk $merk)
+    public function destroy($id)
     {
-        //
+        $merk=Merk::find($id);
+
+        $hapus=$merk->delete();
+
+        if($hapus){
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>array()
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data gagal dihapus',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 }

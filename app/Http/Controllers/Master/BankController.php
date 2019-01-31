@@ -38,7 +38,36 @@ class BankController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules=[
+            'kode'=>'required|max:5',
+            'nama'=>'required|max:30',
+            'status'=>'required|max:15'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $bank=new Bank;
+            $bank->kd_bank=request('kode');
+            $bank->nm=request('nama');
+            $bank->status=request('status');
+
+            $bank->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil disimpan',
+                'errrors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -47,9 +76,11 @@ class BankController extends Controller
      * @param  \App\Master\Bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function show(Bank $bank)
+    public function show($id)
     {
-        //
+        $bank=Bank::find($id);
+
+        return $bank;
     }
 
     /**
@@ -58,7 +89,7 @@ class BankController extends Controller
      * @param  \App\Master\Bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function edit(Bank $bank)
+    public function edit($id)
     {
         //
     }
@@ -70,9 +101,38 @@ class BankController extends Controller
      * @param  \App\Master\Bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Bank $bank)
+    public function update(Request $request, $id)
     {
-        //
+        $rules=[
+            'kode'=>'required|max:5',
+            'nama'=>'required|max:30',
+            'status'=>'required|max:15'
+        ];
+
+        $validasi=\Validator::make(request()->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $bank=Bank::find($id);
+            $bank->kd_bank=request('kode');
+            $bank->nm=request('nama');
+            $bank->status=request('status');
+
+            $bank->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil diupdate',
+                'errrors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -81,8 +141,26 @@ class BankController extends Controller
      * @param  \App\Master\Bank  $bank
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Bank $bank)
+    public function destroy($id)
     {
-        //
+        $bank=Bank::find($id);
+
+        $hapus=$bank->delete();
+
+        if($hapus){
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>array()
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data gagal dihapus',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 }
