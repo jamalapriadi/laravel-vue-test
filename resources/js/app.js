@@ -30,7 +30,10 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VueSweetalert2 from 'vue-sweetalert2';
+
 Vue.use(VueRouter);
+Vue.use(VueSweetalert2);
 
 //define routes for users
 const routes = [
@@ -88,6 +91,16 @@ const routes = [
         path: '/bank',
         name: 'bankIndex',
         component: require('./components/master/bank/Index.vue').default
+    },
+    {
+        path: '/add-bank',
+        name: 'bankCreate',
+        component: require('./components/master/bank/Create.vue').default
+    },
+    {
+        path: '/edit-bank/:id',
+        name: 'bankEdit',
+        component: require('./components/master/bank/Edit.vue').default
     },
     {
         path: '/kelompok',
