@@ -2,32 +2,21 @@
     <div class="container">
         <div class="card card-accent-primary">
             <div class="card-header">
-                Edit Bank
+                Edit Lokasi
             </div>
             <div class="card-body">
                 <form v-on:submit.prevent="saveForm()">
                     <div class="form-group">
-                        <label for="" class="control-label">Kode Bank</label>
-                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode">
-                        
-                        <!-- <div class="invalid-feedback">Please provide a valid informations.</div> -->
-
+                        <label for="" class="control-label">Lokasi</label>
+                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.lokasi }" v-model="state.lokasi">
                     </div>
                     <div class="form-group">
-                        <label for="" class="control-label">Nama Bank</label>
+                        <label for="" class="control-label">Nama</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="state.nama">
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="control-label">Status</label>
-                        <select name="status" id="status" class="form-control" :class="{ 'is-invalid': errors.status }" v-model="state.status">
-                            <option value="" disabled selected>--Pilih Status--</option>
-                            <option value="Active">Active</option>
-                            <option value="Non Active">Non Active</option>
-                        </select>
                     </div>
                     <hr>
                     <div class="form-group">
-                        <router-link to="/bank" class="btn btn-default">
+                        <router-link to="/lokasi" class="btn btn-default">
                             <i class="fa fa-backward"></i> Back
                         </router-link>
 
@@ -46,12 +35,11 @@
 export default {
     data() {
         return {
-            bankId:'',
+            lokasiId:'',
             url: window.location.origin + window.location.pathname,
             state: {
-                kode: '',
-                nama: '',
-                status: ''
+                lokasi:'',
+                nama: ''
             },
             message:'',
             errors: [],
@@ -61,14 +49,12 @@ export default {
         getData(){
             let app=this;
             let id= app.$route.params.id;
-            this.bankId = id;
+            this.lokasiId = id;
 
-            axios.get('/data/bank/'+id)
+            axios.get('/data/lokasi/'+id)
                 .then(response => {
-                    this.state.kode = response.data.kd_bank;
+                    this.state.lokasi= response.data.lokasi;
                     this.state.nama = response.data.nm;
-                    this.state.status = response.data.status;
-                    console.log(response);
                 })
                 .catch( error => {
                     alert('data tidak dapat di load');
@@ -78,9 +64,9 @@ export default {
         saveForm(){
             var newState = this.state;
 
-            axios.patch('/data/bank/'+this.bankId, newState)
+            axios.patch('/data/lokasi/'+this.lokasiId, newState)
                 .then(response => {
-                    this.$router.replace('/bank');
+                    this.$router.replace('/lokasi');
                 })
                 .catch( error => {
                     alert('data gagal diupdate');

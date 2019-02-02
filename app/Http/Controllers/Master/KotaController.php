@@ -13,9 +13,15 @@ class KotaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kota=Kota::paginate(25);
+        $kota=Kota::select('kd_kota','nm','jenis');
+
+        if($request->has('q')){
+            $kota=$kota->where('nm','like','%'.request('q').'%');
+        }
+
+        $kota=$kota->paginate(25);
 
         return $kota;
     }
@@ -64,7 +70,7 @@ class KotaController extends Controller
             );
         }
 
-        return $kota;
+        return $data;
     }
 
     /**

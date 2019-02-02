@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Master;
 
-use App\Models\Kelompok;
+use App\Models\Perusahaan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class KelompokController extends Controller
+class PerusahaanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,15 +15,15 @@ class KelompokController extends Controller
      */
     public function index(Request $request)
     {
-        $kelompok=Kelompok::select('id','nm');
+        $merk=Perusahaan::select('id','nama');
 
         if($request->has('q')){
-            $kelompok=$kelompok->where('nm','like','%'.request('q').'%');
+            $merk=$merk->where('nm','like','%'.request('q').'%');
         }
 
-        $kelompok=$kelompok->paginate(25);
+        $merk=$merk->paginate(25);
 
-        return $kelompok;
+        return $merk;
     }
 
     /**
@@ -44,7 +44,9 @@ class KelompokController extends Controller
      */
     public function store(Request $request)
     {
-        $rules=['nama'=>'required|max:30'];
+        $rules=[
+            'nama'=>'required'
+        ];
 
         $validasi=\Validator::make(request()->all(),$rules);
 
@@ -55,13 +57,14 @@ class KelompokController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
-            $kel=new Kelompok;
-            $kel->nm=request('nama');
-            $kel->save();
+            $merk=new Perusahaan;
+            $merk->nama=request('nama');
+            $merk->save();
 
             $data=array(
                 'success'=>true,
-                'pesan'
+                'pesan'=>'Data berhasil disimpan',
+                'errors'=>array()
             );
         }
 
@@ -71,37 +74,39 @@ class KelompokController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Master\Kelompok  $kelompok
+     * @param  \App\Master\Merk  $merk
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $kel=Kelompok::find($id);
+        $merk=Perusahaan::find($id);
 
-        return $kel;
+        return $merk;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Master\Kelompok  $kelompok
+     * @param  \App\Master\Merk  $merk
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Master\Kelompok  $kelompok
+     * @param  \App\Master\Merk  $merk
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $rules=['nama'=>'required|max:30'];
+        $rules=[
+            'nama'=>'required'
+        ];
 
         $validasi=\Validator::make(request()->all(),$rules);
 
@@ -112,13 +117,14 @@ class KelompokController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
-            $kel=Kelompok::find($id);
-            $kel->nm=request('nama');
-            $kel->save();
+            $merk=Perusahaan::find($id);
+            $merk->nama=request('nama');
+            $merk->save();
 
             $data=array(
                 'success'=>true,
-                'pesan'
+                'pesan'=>'Data berhasil disimpan',
+                'errors'=>array()
             );
         }
 
@@ -128,14 +134,14 @@ class KelompokController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Master\Kelompok  $kelompok
+     * @param  \App\Master\Merk  $merk
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $kel=Kelompok::find($id);
+        $merk=Perusahaan::find($id);
 
-        $hapus=$kel->delete();
+        $hapus=$merk->delete();
 
         if($hapus){
             $data=array(

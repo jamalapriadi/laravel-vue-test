@@ -13,9 +13,16 @@ class LokasiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $lokasi=Lokasi::paginate(25);
+        $lokasi=Lokasi::select('id','lokasi','nm');
+
+        if($request->has('q')){
+            $lokasi=$lokasi->where('nm','like','%'.request('q').'%')
+                ->orWhere('lokasi','like','%'.request('q').'%');
+        }
+
+        $lokasi=$lokasi->paginate(25);
 
         return $lokasi;
     }

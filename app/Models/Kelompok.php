@@ -10,7 +10,6 @@ class Kelompok extends Model
     use SoftDeletes;
 
     protected $table="klmpk";
-    protected $primaryKey="nm";
 
     protected $dates=['deleted_at'];
 

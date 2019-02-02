@@ -28,6 +28,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('kota','Master\KotaController');
     Route::resource('lokasi','Master\LokasiController');
     Route::resource('merk','Master\MerkController');
+    Route::resource('perusahaan','Master\PerusahaanController');
     Route::resource('mutasi','Master\MutasiController');
     Route::resource('order','Master\OrderController');
     Route::resource('picking','Master\PickingController');

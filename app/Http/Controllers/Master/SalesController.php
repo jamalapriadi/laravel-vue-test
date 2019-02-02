@@ -13,9 +13,15 @@ class SalesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sales=Sales::paginate(25);
+        $sales=Sales::select('id','nm','status');
+
+        if($request->has('q')){
+            $sales=$sales->where('nm','like','%'.request('q').'%');
+        }
+
+        $sales=$sales->paginate(25);
 
         return $sales;
     }

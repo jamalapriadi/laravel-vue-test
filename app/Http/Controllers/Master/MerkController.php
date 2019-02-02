@@ -13,9 +13,16 @@ class MerkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $merk=Merk::paginate(25);
+        $merk=Merk::select('nm','persen');
+
+        if($request->has('q')){
+            $merk=$merk->where('nm','like','%'.request('q').'%')
+                ->orWhere('persen','like','%'.request('q').'%');
+        }
+
+        $merk=$merk->paginate(25);
 
         return $merk;
     }
@@ -39,7 +46,7 @@ class MerkController extends Controller
     public function store(Request $request)
     {
         $rules=[
-            'nm'=>'required',
+            'nama'=>'required',
             'persen'=>'required'
         ];
 
@@ -54,7 +61,7 @@ class MerkController extends Controller
         }else{
             $merk=new Merk;
             $merk->nm=request('nama');
-            $merk->persen=request('persent');
+            $merk->persen=request('persen');
             $merk->save();
 
             $data=array(
@@ -101,7 +108,7 @@ class MerkController extends Controller
     public function update(Request $request, $id)
     {
         $rules=[
-            'nm'=>'required',
+            'nama'=>'required',
             'persen'=>'required'
         ];
 
@@ -116,7 +123,7 @@ class MerkController extends Controller
         }else{
             $merk=Merk::find($id);
             $merk->nm=request('nama');
-            $merk->persen=request('persent');
+            $merk->persen=request('persen');
             $merk->save();
 
             $data=array(

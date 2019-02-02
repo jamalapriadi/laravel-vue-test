@@ -21,6 +21,7 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -31,9 +32,11 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueSweetalert2 from 'vue-sweetalert2';
+import Spinner from 'vue-simple-spinner';
 
 Vue.use(VueRouter);
 Vue.use(VueSweetalert2);
+Vue.use(Spinner);
 
 //define routes for users
 const routes = [
@@ -87,46 +90,27 @@ const routes = [
         name: 'role-view',
         component: require('./components/role/RoleView.vue').default
     },
-    {
-        path: '/bank',
-        name: 'bankIndex',
-        component: require('./components/master/bank/Index.vue').default
-    },
-    {
-        path: '/add-bank',
-        name: 'bankCreate',
-        component: require('./components/master/bank/Create.vue').default
-    },
-    {
-        path: '/edit-bank/:id',
-        name: 'bankEdit',
-        component: require('./components/master/bank/Edit.vue').default
-    },
-    {
-        path: '/kelompok',
-        name: 'kelompokIndex',
-        component: require('./components/master/kelompok/Index.vue').default
-    },
-    {
-        path: '/kota',
-        name: 'kotaIndex',
-        component: require('./components/master/kota/Index.vue').default
-    },
-    {
-        path: '/lokasi',
-        name: 'lokasiIndex',
-        component: require('./components/master/lokasi/Index.vue').default
-    },
-    {
-        path: '/merk',
-        name: 'merkIndex',
-        component: require('./components/master/merk/Index.vue').default
-    },
-    {
-        path: '/perusahaan',
-        name: 'perusahaanIndex',
-        component: require('./components/master/perusahaan/Index.vue').default
-    },
+    { path: '/bank', name: 'bankIndex', component: require('./components/master/bank/Index.vue').default },
+    { path: '/add-bank', name: 'bankCreate', component: require('./components/master/bank/Create.vue').default },
+    { path: '/edit-bank/:id', name: 'bankEdit', component: require('./components/master/bank/Edit.vue').default },
+    { path: '/kelompok', name: 'kelompokIndex', component: require('./components/master/kelompok/Index.vue').default },
+    { path: '/add-kelompok', name: 'kelompokCreate', component: require('./components/master/kelompok/Create.vue').default },
+    { path: '/edit-kelompok/:id', name: 'kelompokEdit', component: require('./components/master/kelompok/Edit.vue').default },
+    { path: '/kota', name: 'kotaIndex', component: require('./components/master/kota/Index.vue').default },
+    { path: '/add-kota', name: 'kotaCreate', component: require('./components/master/kota/Create.vue').default },
+    { path: '/edit-kota/:id', name: 'kotaEdit', component: require('./components/master/kota/Edit.vue').default },
+    { path: '/lokasi', name: 'lokasiIndex', component: require('./components/master/lokasi/Index.vue').default },
+    { path: '/add-lokasi', name: 'lokasiCreate', component: require('./components/master/lokasi/Create.vue').default },
+    { path: '/edit-lokasi/:id', name: 'lokasiEdit', component: require('./components/master/lokasi/Edit.vue').default },
+    { path: '/merk', name: 'merkIndex', component: require('./components/master/merk/Index.vue').default },
+    { path: '/add-merk', name: 'merkCreate', component: require('./components/master/merk/Create.vue').default },
+    { path: '/edit-merk/:id', name: 'merkEdit', component: require('./components/master/merk/Edit.vue').default },
+    { path: '/perusahaan', name: 'perusahaanIndex', component: require('./components/master/perusahaan/Index.vue').default },
+    { path: '/add-perusahaan', name: 'perusahaanCreate', component: require('./components/master/perusahaan/Create.vue').default },
+    { path: '/edit-perusahaan/:id', name: 'perusahaanEdit', component: require('./components/master/perusahaan/Edit.vue').default },
+    { path: '/sales', name: 'salesIndex', component: require('./components/master/sales/Index.vue').default },
+    { path: '/add-sales', name: 'salesCreate', component: require('./components/master/sales/Create.vue').default },
+    { path: '/edit-sales/:id', name: 'salesEdit', component: require('./components/master/sales/Edit.vue').default },
     {
         path: '/program',
         name: 'programIndex',
@@ -136,11 +120,6 @@ const routes = [
         path: '/rak',
         name: 'rakIndex',
         component: require('./components/master/rak/Index.vue').default
-    },
-    {
-        path: '/sales',
-        name: 'salesIndex',
-        component: require('./components/master/sales/Index.vue').default
     },
     {
         path: '/suplier',

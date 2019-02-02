@@ -2,17 +2,10 @@
     <div class="container">
         <div class="card card-accent-primary">
             <div class="card-header">
-                Edit Bank
+                Edit Sales
             </div>
             <div class="card-body">
                 <form v-on:submit.prevent="saveForm()">
-                    <div class="form-group">
-                        <label for="" class="control-label">Kode Bank</label>
-                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode">
-                        
-                        <!-- <div class="invalid-feedback">Please provide a valid informations.</div> -->
-
-                    </div>
                     <div class="form-group">
                         <label for="" class="control-label">Nama Bank</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="state.nama">
@@ -27,7 +20,7 @@
                     </div>
                     <hr>
                     <div class="form-group">
-                        <router-link to="/bank" class="btn btn-default">
+                        <router-link to="/sales" class="btn btn-default">
                             <i class="fa fa-backward"></i> Back
                         </router-link>
 
@@ -49,7 +42,6 @@ export default {
             bankId:'',
             url: window.location.origin + window.location.pathname,
             state: {
-                kode: '',
                 nama: '',
                 status: ''
             },
@@ -63,9 +55,8 @@ export default {
             let id= app.$route.params.id;
             this.bankId = id;
 
-            axios.get('/data/bank/'+id)
+            axios.get('/data/sales/'+id)
                 .then(response => {
-                    this.state.kode = response.data.kd_bank;
                     this.state.nama = response.data.nm;
                     this.state.status = response.data.status;
                     console.log(response);
@@ -78,9 +69,9 @@ export default {
         saveForm(){
             var newState = this.state;
 
-            axios.patch('/data/bank/'+this.bankId, newState)
+            axios.patch('/data/sales/'+this.bankId, newState)
                 .then(response => {
-                    this.$router.replace('/bank');
+                    this.$router.replace('/sales');
                 })
                 .catch( error => {
                     alert('data gagal diupdate');
