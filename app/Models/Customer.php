@@ -14,4 +14,8 @@ class Customer extends Model
 
     protected $dates=['deleted_at'];
 
+    public function kota(){
+        return $this->belongsTo('App\Models\Kota','kota_id','kd_kota');
+    }
+
 }

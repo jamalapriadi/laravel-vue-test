@@ -159,4 +159,11 @@ class PerusahaanController extends Controller
 
         return $data;
     }
+
+    public function list_perusahaan(Request $request)
+    {
+        $perusahaan=Perusahaan::select('id','nama')->get();
+
+        return $perusahaan;
+    }
 }

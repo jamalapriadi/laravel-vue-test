@@ -164,4 +164,11 @@ class MerkController extends Controller
 
         return $data;
     }
+
+    public function list_merk()
+    {
+        $merk=Merk::select('id','nm','persen')->get();
+
+        return $merk;
+    }
 }

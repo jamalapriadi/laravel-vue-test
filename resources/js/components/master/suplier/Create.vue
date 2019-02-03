@@ -2,7 +2,7 @@
     <div class="container">
         <div class="card card-accent-primary">
             <div class="card-header">
-                Add New User
+                Add New Suplier
             </div>
             <div class="card-body">
 
@@ -10,41 +10,44 @@
                     {{ message }}
                 </div>
 
-                <form @submit.prevent="store" action="/data/users" method="post">
+                <form @submit.prevent="store" action="/data/suplier" method="post">
                     <div class="form-group">
-                        <label for="" class="control-label">Usernama</label>
-                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.username }" v-model="state.username">
+                        <label for="" class="control-label">Nama</label>
+                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="state.nama">
                     </div>
                     <div class="form-group">
-                        <label for="" class="control-label">Password</label>
-                        <input type="password" class="form-control" :class="{ 'is-invalid': errors.password }" v-model="state.password">
+                        <label for="" class="control-label">Alamat</label>
+                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.alamat }" v-model="state.alamat">
                     </div>
                     <div class="form-group">
-                        <label for="" class="control-label">Confirm Password</label>
-                        <input type="password" class="form-control" :class="{ 'is-invalid': errors.password_confirm }" v-model="state.password_confirm">
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="control-label">Level</label>
-                        <select name="level" id="level" class="form-control" :class="{ 'is-invalid': errors.level }" v-model="state.level">
-                            <option value="" disabled selected>--Pilih level--</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Manajer">Manajer</option>
-                            <option value="Direktur">Direktur</option>
+                        <label for="" class="control-label">Kota</label>
+                        <select name="kota" id="kota" class="form-control" :class="{ 'is-invalid': errors.kota }" v-model="state.kota">
+                            <option value="" disabled selected>--Pilih Kota--</option>
+                            <option v-for="(p,index) in kota" v-bind:key="index" v-bind:value="p.kd_kota">{{p.nm}}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="" class="control-label">Perusahaan</label>
-                        <select name="perusahaan" id="perusahaan" class="form-control" :class="{ 'is-invalid': errors.perusahaan }" v-model="state.perusahaan">
-                            <option value="" disabled selected>--Pilih Perusahaan--</option>
-                            <option v-for="(p,index) in perusahaan" v-bind:key="index" v-bind:value="p.id">{{p.nama}}</option>
-                        </select>
+                        <label for="" class="control-label">Telepon</label>
+                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.telepon }" v-model="state.telepon">
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label">Nama Perusahaan</label>
+                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.perusahaan }" v-model="state.perusahaan">
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label">Kontak</label>
+                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.kontak }" v-model="state.kontak">
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label">Fax</label>
+                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.fax }" v-model="state.fax">
                     </div>
                     <hr>
                     
                     <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
 
                     <div class="form-group">
-                        <router-link to="/users" class="btn btn-default">
+                        <router-link to="/suplier" class="btn btn-default">
                             <i class="fa fa-backward"></i> Back
                         </router-link>
 
@@ -69,16 +72,18 @@ export default {
     data() {
         return {
             state: {
-                username: '',
-                password:'',
-                password_confirm:'',
-                level:'',
-                perusahaan:''
+                nama: '',
+                alamat:'',
+                kota:'',
+                telepon:'',
+                perusahaan:'',
+                kontak:'',
+                fax:''
             },
             message:'',
             loading:false,
             errors: [],
-            perusahaan:[]
+            kota:[]
         }
     },
     methods: {
@@ -90,11 +95,13 @@ export default {
                     this.loading=false;
                     this.errors = [];
                     this.state = {
-                        username: '',
-                        password:'',
-                        password_confirm:'',
-                        level:'',
-                        perusahaan:''
+                        nama: '',
+                        alamat:'',
+                        kota:'',
+                        telepon:'',
+                        perusahaan:'',
+                        kontak:'',
+                        fax:''
                     }
                     this.message = 'Data has been saved.';
                 }else{
@@ -112,15 +119,15 @@ export default {
             });
         },
 
-        getPerusahaan(){
-            axios.get('/data/list-perusahaan')
+        getKota(){
+            axios.get('/data/list-kota')
                 .then(response => {
-                    this.perusahaan = response.data;
+                    this.kota = response.data;
                 })
         }
     },
     mounted() {
-        this.getPerusahaan();
+        this.getKota();
     },
     computed:{
         valKode() {

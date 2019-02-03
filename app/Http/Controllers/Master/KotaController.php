@@ -163,4 +163,11 @@ class KotaController extends Controller
 
         return $data;
     }
+
+    public function list_kota()
+    {
+        $kota=Kota::select('kd_kota','nm','jenis')->get();
+
+        return $kota;
+    }
 }

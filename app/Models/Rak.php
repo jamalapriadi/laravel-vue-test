@@ -10,7 +10,7 @@ class Rak extends Model
     use SoftDeletes;
 
     protected $table="rak";
-    // protected $primaryKey="kd_bank";
+    protected $primaryKey="kd";
 
     // protected $dates=['deleted_at'];
 

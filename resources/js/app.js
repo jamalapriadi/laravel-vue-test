@@ -60,21 +60,9 @@ const routes = [
         name: 'example',
         component: require('./components/ExampleComponent.vue').default
     },
-    {
-        path: '/users',
-        name: 'users-index',
-        component: require('./components/users/Index.vue').default
-    },
-    {
-        path: '/users/create',
-        name: 'users-add',
-        component: require('./components/users/Create.vue').default
-    },
-    {
-        path: '/users/:id',
-        name: 'users-view',
-        component: require('./components/users/View.vue').default
-    },
+    { path: '/users', name: 'users-index', component: require('./components/users/Index.vue').default },
+    { path: '/users/create', name: 'users-add', component: require('./components/users/Create.vue').default },
+    { path: '/users/:id', name: 'users-view', component: require('./components/users/View.vue').default },
     {
         path: '/role',
         name: 'role-index',
@@ -111,21 +99,21 @@ const routes = [
     { path: '/sales', name: 'salesIndex', component: require('./components/master/sales/Index.vue').default },
     { path: '/add-sales', name: 'salesCreate', component: require('./components/master/sales/Create.vue').default },
     { path: '/edit-sales/:id', name: 'salesEdit', component: require('./components/master/sales/Edit.vue').default },
-    {
-        path: '/program',
-        name: 'programIndex',
-        component: require('./components/master/program/Index.vue').default
-    },
-    {
-        path: '/rak',
-        name: 'rakIndex',
-        component: require('./components/master/rak/Index.vue').default
-    },
-    {
-        path: '/suplier',
-        name: 'suplierIndex',
-        component: require('./components/master/suplier/Index.vue').default
-    },
+    { path: '/program', name: 'programIndex', component: require('./components/master/program/Index.vue').default },
+    { path: '/add-program', name: 'programCreate', component: require('./components/master/program/Create.vue').default },
+    { path: '/edit-program/:id', name: 'programEdit', component: require('./components/master/program/Edit.vue').default },
+    { path: '/rak', name: 'rakIndex', component: require('./components/master/rak/Index.vue').default },
+    { path: '/add-rak', name: 'rakCreate', component: require('./components/master/rak/Create.vue').default },
+    { path: '/edit-rak/:id', name: 'rakEdit', component: require('./components/master/rak/Edit.vue').default },
+    { path: '/suplier', name: 'suplierIndex', component: require('./components/master/suplier/Index.vue').default },
+    { path: '/add-suplier', name: 'suplierCreate', component: require('./components/master/suplier/Create.vue').default },
+    { path: '/edit-suplier/:id', name: 'suplierEdit', component: require('./components/master/suplier/Edit.vue').default },
+    { path: '/customer', name: 'customerIndex', component: require('./components/master/customer/Index.vue').default },
+    { path: '/add-customer', name: 'customerCreate', component: require('./components/master/customer/Create.vue').default },
+    { path: '/edit-customer/:id', name: 'customerEdit', component: require('./components/master/customer/Edit.vue').default },
+    { path: '/barang', name: 'barangIndex', component: require('./components/master/barang/Index.vue').default },
+    { path: '/add-barang', name: 'barangCreate', component: require('./components/master/barang/Create.vue').default },
+    { path: '/edit-barang/:id', name: 'barangEdit', component: require('./components/master/barang/Edit.vue').default },
     {
         path: '/add-new-order',
         name: 'addOrderIndex',

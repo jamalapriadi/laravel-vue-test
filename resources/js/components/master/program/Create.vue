@@ -2,7 +2,7 @@
     <div class="container">
         <div class="card card-accent-primary">
             <div class="card-header">
-                Add New Kelompok
+                Add New Program
             </div>
             <div class="card-body">
 

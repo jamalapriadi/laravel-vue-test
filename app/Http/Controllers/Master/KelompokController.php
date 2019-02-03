@@ -153,4 +153,11 @@ class KelompokController extends Controller
 
         return $data;
     }
+
+    public function list_kelompok()
+    {
+        $kelompok=Kelompok::select('id','nm')->get();
+
+        return $kelompok;
+    }
 }

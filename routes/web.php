@@ -40,4 +40,23 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('rak','Master\RakController');
     Route::resource('suplier','Master\SuplierController');
     Route::resource('terima','Master\TerimaController');
+
+    /* user */
+    Route::resource('users','User\UserController');
+    Route::post('update-foto','User\UserController@update_foto');
+    Route::post('update-info','User\UserController@update_info');
+    Route::resource('roles','User\RoleController');
+    Route::resource('permissions','User\PermissionController');
+    Route::get('list-role-with-permission/{id}','User\RoleController@list_role_with_permission');
+    Route::get('list-role-user','User\UserController@list_role');
+    Route::post('save-role-user','User\UserController@save_role_user');
+    Route::post('hapus-role-user','User\UserController@hapus_role_user');
+    Route::post('change-password','User\UserController@change_password');
+    /* end user */
+
+    Route::get('list-perusahaan','Master\PerusahaanController@list_perusahaan');
+    Route::get('list-kota','Master\KotaController@list_kota');
+    Route::get('list-kelompok','Master\KelompokController@list_kelompok');
+    Route::get('list-merk','Master\MerkController@list_merk');
+    Route::get('autonumber-barang','Master\BarangController@autonumber_barang');
 });

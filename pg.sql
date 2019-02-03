@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Server version:               8.0.13 - MySQL Community Server - GPL
 -- Server OS:                    Win64
--- HeidiSQL Version:             9.5.0.5196
+-- HeidiSQL Version:             10.1.0.5464
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `bank` (
   UNIQUE KEY `nm` (`nm`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.bank: 1 rows
+-- Dumping data for table db_penjualan.bank: 2 rows
 DELETE FROM `bank`;
 /*!40000 ALTER TABLE `bank` DISABLE KEYS */;
 INSERT INTO `bank` (`kd_bank`, `nm`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
@@ -37,8 +37,8 @@ DROP TABLE IF EXISTS `brg`;
 CREATE TABLE IF NOT EXISTS `brg` (
   `kd` varchar(20) NOT NULL,
   `nm` varchar(50) NOT NULL,
-  `kelompok` varchar(50) NOT NULL,
-  `merk` varchar(50) NOT NULL,
+  `kelompok_id` int(11) NOT NULL,
+  `merk_id` int(11) NOT NULL,
   `status` varchar(15) NOT NULL,
   `satuan` varchar(25) NOT NULL,
   `pcs` int(5) NOT NULL,
@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `brg` (
   `jual` int(12) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`kd`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='hargab adalah harga beli, hargap adalah harga pokok';
 
@@ -62,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `nm` varchar(50) DEFAULT NULL,
   `alamat` varchar(50) DEFAULT NULL,
   `alias` varchar(25) DEFAULT NULL,
-  `kota` varchar(25) DEFAULT NULL,
+  `kota_id` int(11) DEFAULT NULL,
   `tlpn` varchar(15) DEFAULT NULL,
   `nmtk` varchar(50) DEFAULT NULL,
   `kontak` varchar(25) DEFAULT NULL,
@@ -76,15 +77,13 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `update_user` varchar(25) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`kd`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- Dumping data for table db_penjualan.customer: 2 rows
 DELETE FROM `customer`;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` (`kd`, `nm`, `alamat`, `alias`, `kota`, `tlpn`, `nmtk`, `kontak`, `fax`, `plafon`, `top`, `npwp`, `nik`, `jenis`, `insert_user`, `update_user`, `created_at`, `updated_at`) VALUES
-	(1, 'abu', 'asklkg', 'fglew', 'hwqr', '93498', '938eji', '2545', '3248', 0, 0, 'hf', 'ireur', 'iefhj', NULL, NULL, NULL, NULL),
-	(2, 'askfj', 'fjwek', 'jeigj', 'ifjeigj', 'igjeig', 'igeig', 'gieighei', 'giejigjei', 0, 0, 'giejigjei', 'ijegi', 'gije', NULL, NULL, NULL, NULL);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.ket
@@ -117,14 +116,11 @@ CREATE TABLE IF NOT EXISTS `klmpk` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nm` (`nm`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.klmpk: 1 rows
+-- Dumping data for table db_penjualan.klmpk: 2 rows
 DELETE FROM `klmpk`;
 /*!40000 ALTER TABLE `klmpk` DISABLE KEYS */;
-INSERT INTO `klmpk` (`id`, `nm`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, 'una', NULL, NULL, NULL),
-	(2, 'anisa', '2019-02-02 08:16:40', '2019-02-02 08:18:38', NULL);
 /*!40000 ALTER TABLE `klmpk` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.kota
@@ -139,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `kota` (
   PRIMARY KEY (`kd_kota`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.kota: 1 rows
+-- Dumping data for table db_penjualan.kota: 5 rows
 DELETE FROM `kota`;
 /*!40000 ALTER TABLE `kota` DISABLE KEYS */;
 INSERT INTO `kota` (`kd_kota`, `nm`, `jenis`, `created_at`, `updated_at`, `deleted_at`) VALUES
@@ -161,14 +157,11 @@ CREATE TABLE IF NOT EXISTS `lokasi` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `lokasi` (`lokasi`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.lokasi: 0 rows
+-- Dumping data for table db_penjualan.lokasi: 2 rows
 DELETE FROM `lokasi`;
 /*!40000 ALTER TABLE `lokasi` DISABLE KEYS */;
-INSERT INTO `lokasi` (`id`, `lokasi`, `nm`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, 'Lokasi A', 'Nama A', NULL, NULL, NULL),
-	(3, 'Lokasi B', 'Lokasi b', '2019-02-02 08:28:58', '2019-02-02 08:28:58', NULL);
 /*!40000 ALTER TABLE `lokasi` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.merk
@@ -182,14 +175,11 @@ CREATE TABLE IF NOT EXISTS `merk` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nm` (`nm`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.merk: 1 rows
+-- Dumping data for table db_penjualan.merk: 2 rows
 DELETE FROM `merk`;
 /*!40000 ALTER TABLE `merk` DISABLE KEYS */;
-INSERT INTO `merk` (`id`, `nm`, `persen`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, 'danone', 3, NULL, NULL, NULL),
-	(2, 'Sunlight', 5, '2019-02-02 08:36:50', '2019-02-02 08:39:00', NULL);
 /*!40000 ALTER TABLE `merk` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.mutasi
@@ -244,12 +234,11 @@ CREATE TABLE IF NOT EXISTS `perusahaan` (
   UNIQUE KEY `nama` (`nama`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.perusahaan: 1 rows
+-- Dumping data for table db_penjualan.perusahaan: 2 rows
 DELETE FROM `perusahaan`;
 /*!40000 ALTER TABLE `perusahaan` DISABLE KEYS */;
 INSERT INTO `perusahaan` (`id`, `nama`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, 'paturaw', NULL, NULL, NULL),
-	(2, 'perusahaan ba', '2019-02-02 08:51:37', '2019-02-02 08:52:32', '2019-02-02 08:52:32');
+	(1, 'paturaw', NULL, NULL, NULL);
 /*!40000 ALTER TABLE `perusahaan` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.picking
@@ -310,7 +299,7 @@ DELETE FROM `prgrm`;
 -- Dumping structure for table db_penjualan.rak
 DROP TABLE IF EXISTS `rak`;
 CREATE TABLE IF NOT EXISTS `rak` (
-  `kd` varchar(25) NOT NULL,
+  `kd` int(11) NOT NULL AUTO_INCREMENT,
   `nm` varchar(50) NOT NULL,
   `lokasi` varchar(25) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -434,14 +423,11 @@ CREATE TABLE IF NOT EXISTS `sales` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nm` (`nm`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.sales: 1 rows
+-- Dumping data for table db_penjualan.sales: 2 rows
 DELETE FROM `sales`;
 /*!40000 ALTER TABLE `sales` DISABLE KEYS */;
-INSERT INTO `sales` (`id`, `nm`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, 'udin', 'Tidak Aktif', NULL, NULL, NULL),
-	(2, 'Jamal Apriadis', 'Active', '2019-02-02 09:03:37', '2019-02-02 09:06:20', '2019-02-02 09:06:20');
 /*!40000 ALTER TABLE `sales` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.stok
@@ -476,23 +462,23 @@ DELETE FROM `storing`;
 -- Dumping structure for table db_penjualan.suplier
 DROP TABLE IF EXISTS `suplier`;
 CREATE TABLE IF NOT EXISTS `suplier` (
-  `kd` varchar(20) NOT NULL,
+  `kd` int(11) NOT NULL AUTO_INCREMENT,
   `nm` varchar(50) NOT NULL,
   `alamat` varchar(50) NOT NULL,
-  `kota` varchar(25) NOT NULL,
+  `kota_id` int(11) NOT NULL,
   `telepon` varchar(15) NOT NULL,
   `nm_perusahaan` varchar(50) NOT NULL,
   `kontak` varchar(25) NOT NULL,
   `fax` varchar(15) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`kd`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- Dumping data for table db_penjualan.suplier: 2 rows
 DELETE FROM `suplier`;
 /*!40000 ALTER TABLE `suplier` DISABLE KEYS */;
-INSERT INTO `suplier` (`kd`, `nm`, `alamat`, `kota`, `telepon`, `nm_perusahaan`, `kontak`, `fax`) VALUES
-	('1', 'aneka maju', 'otista', 'palu', '045151353', 'lksdnlg', '3420it', '34i398'),
-	('2', 'dwijd', 'rwqr', 'rhqiuhu', 'hqwhui', 'hehiuh', 'hueifhg', 'gheuihge');
 /*!40000 ALTER TABLE `suplier` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.terima
@@ -518,19 +504,20 @@ CREATE TABLE IF NOT EXISTS `user` (
   `username` varchar(150) DEFAULT NULL,
   `password` varchar(150) DEFAULT NULL,
   `lvl` varchar(15) DEFAULT NULL,
-  `perusahaan` varchar(50) DEFAULT NULL,
+  `perusahaan_id` int(11) DEFAULT NULL,
+  `active` enum('Y','N') DEFAULT 'Y',
   `remember_token` varchar(191) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table db_penjualan.user: 1 rows
 DELETE FROM `user`;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`id`, `username`, `password`, `lvl`, `perusahaan`, `remember_token`, `created_at`, `updated_at`) VALUES
-	(1, 'jamal.apriadi', '$2y$10$lRTHzn8Bp7o1bERqA0HH.OOtOJYUhrhsg4aHxTQz4bcbpvpp2I19K', 'Admin', 'paturaw', NULL, NULL, NULL);
+INSERT INTO `user` (`id`, `username`, `password`, `lvl`, `perusahaan_id`, `active`, `remember_token`, `created_at`, `updated_at`) VALUES
+	(1, 'jamal.apriadi', '$2y$10$lRTHzn8Bp7o1bERqA0HH.OOtOJYUhrhsg4aHxTQz4bcbpvpp2I19K', 'Admin', 1, 'Y', 'wOvJIAGElT8cXSJtwbCPZqQlvbfvSIk4h8GxgZShiIR1HmRRSsOLJKuNJPx0', NULL, NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

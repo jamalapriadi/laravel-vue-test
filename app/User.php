@@ -29,4 +29,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function perusahaan()
+    {
+        return $this->belongsTo('App\Models\Perusahaan','perusahaan_id');
+    }
 }

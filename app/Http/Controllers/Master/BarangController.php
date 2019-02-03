@@ -13,9 +13,22 @@ class BarangController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $barang=Barang::with(
+            [
+                'kelompok',
+                'merk'
+            ]
+        );
+
+        if($request->has('q')){
+            $barang=$barang->where('nm','like','%'.request('q').'%');
+        }
+
+        $barang=$barang->paginate(25);
+
+        return $barang;
     }
 
     /**
@@ -36,7 +49,49 @@ class BarangController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules=[
+            'kode'=>'required',
+            'nama'=>'required',
+            'kelompok'=>'required',
+            'merk'=>'required',
+            'status'=>'required',
+            'satuan'=>'required',
+            'pcs'=>'required',
+            'hrgb'=>'required',
+            'hrgp'=>'required',
+            'jual'=>'required'
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $barang=new Barang;
+            $barang->kd=request('kode');
+            $barang->nm=request('nama');
+            $barang->kelompok_id=request('kelompok');
+            $barang->merk_id=request('merk');
+            $barang->status=request('status');
+            $barang->satuan=request('satuan');
+            $barang->pcs=request('pcs');
+            $barang->hrgb=request('hrgb');
+            $barang->hrgp=request('hrgp');
+            $barang->jual=request('jual');
+            $barang->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil disimpan',
+                'errors'=>''
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -45,9 +100,11 @@ class BarangController extends Controller
      * @param  \App\Master\Barang  $barang
      * @return \Illuminate\Http\Response
      */
-    public function show(Barang $barang)
+    public function show($id)
     {
-        //
+        $barang=Barang::find($id);
+
+        return $barang;
     }
 
     /**
@@ -56,7 +113,7 @@ class BarangController extends Controller
      * @param  \App\Master\Barang  $barang
      * @return \Illuminate\Http\Response
      */
-    public function edit(Barang $barang)
+    public function edit($id)
     {
         //
     }
@@ -68,9 +125,51 @@ class BarangController extends Controller
      * @param  \App\Master\Barang  $barang
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Barang $barang)
+    public function update(Request $request, $id)
     {
-        //
+        $rules=[
+            'kode'=>'required',
+            'nama'=>'required',
+            'kelompok'=>'required',
+            'merk'=>'required',
+            'status'=>'required',
+            'satuan'=>'required',
+            'pcs'=>'required',
+            'hrgb'=>'required',
+            'hrgp'=>'required',
+            'jual'=>'required'
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $barang=Barang::find($id);
+            $barang->kd=request('kode');
+            $barang->nm=request('nama');
+            $barang->kelompok_id=request('kelompok');
+            $barang->merk_id=request('merk');
+            $barang->status=request('status');
+            $barang->satuan=request('satuan');
+            $barang->pcs=request('pcs');
+            $barang->hrgb=request('hrgb');
+            $barang->hrgp=request('hrgp');
+            $barang->jual=request('jual');
+            $barang->save();
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil disimpan',
+                'errors'=>''
+            );
+        }
+
+        return $data;
     }
 
     /**
@@ -79,8 +178,39 @@ class BarangController extends Controller
      * @param  \App\Master\Barang  $barang
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Barang $barang)
+    public function destroy($id)
     {
-        //
+        $barang=Barang::find($id);
+
+        $hapus=$barang->delete();
+
+        if($hapus){
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>array()
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data gagal dihapus',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
+    }
+
+    public function autonumber_barang()
+    {
+        $sql=Barang::select(\DB::Raw("max(kd) as maxKode"))
+            ->first();
+        $kodeBarang = $sql->maxKode;
+        $noUrut= (int) substr($kodeBarang, 3,3);
+        $noUrut++;
+        $char = "BRG";
+        $newId= $char.sprintf("%03s",$noUrut);
+
+        return $newId;
     }
 }

@@ -61,6 +61,16 @@
                             <i class="nav-icon icon-bank"></i> Suplier
                         </router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link to="/customer" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Customer
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/barang" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Barang
+                        </router-link>
+                    </li>
                 </ul>
             </li>
 
@@ -107,11 +117,11 @@
                     <i class="nav-icon icon-user"></i> Users
                 </router-link>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <router-link to="role" class="nav-link" active-class="active">
                     <i class="nav-icon icon-lock"></i> Roles
                 </router-link>
-            </li>
+            </li> --}}
         </ul>
     </nav>
     <button class="sidebar-minimizer brand-minimizer" type="button"></button>

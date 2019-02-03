@@ -1,20 +1,18 @@
 <template>
     <div class="card card-accent-primary">
         <div class="card-header">
-            Data Program
+            Data Customer
 
             <div class="card-header-actions">
-                <!-- <router-link to="/add-kelompok" class="btn btn-primary">
+                <router-link to="/add-customer" class="btn btn-primary">
                     <i class="fa fa-plus"></i> Add New
-                </router-link> -->
+                </router-link>
             </div>
         </div>
 
         <div class="card-body">
-
-            <div class="alert alert-info">Under Construction</div>
             
-            <!-- <div class="row">
+            <div class="row">
                 <div class="col-lg-5">
                     <form class="form-inline">
                         <div class="form-group">
@@ -27,39 +25,65 @@
                 </div>
             </div>
 
-            <br> -->
+            <br>
             
-            <!-- <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th width="5%">No.</th>
-                        <th>Nama</th>
-                        <th width="17%"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(l, index) in list.data" v-bind:key="index">
-                        <td>{{index+1}}</td>
-                        <td>{{l.nm}}</td>
-                        <td>
-                            <div class="btn-group">
-                                <router-link :to="{ name: 'kelompokEdit', params: {id: l.id}}" class="btn btn-warning">
-                                    <i class="fa fa-edit text-white"></i>
-                                </router-link>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th width="5%">No.</th>
+                            <th>NPWP</th>
+                            <th>NIK</th>
+                            <th>Nama</th>
+                            <th>Alamat</th>
+                            <th>Alias</th>
+                            <th>Kota</th>
+                            <th>NMTK</th>
+                            <th>Telpon</th>
+                            <th>Kontak</th>
+                            <th>Fax</th>
+                            <th>Plafon</th>
+                            <th>Top</th>
+                            <th>Jenis</th>
+                            <th width="17%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(l, index) in list.data" v-bind:key="index">
+                            <td>{{index+1}}</td>
+                            <td>{{l.npwp}}</td>
+                            <td>{{l.nik}}</td>
+                            <td>{{l.nm}}</td>
+                            <td>{{l.alamat}}</td>
+                            <td>{{l.alias}}</td>
+                            <td>{{l.kota.nm}}</td>
+                            <td>{{l.nmtk}}</td>
+                            <td>{{l.tlpn}}</td>
+                            <td>{{l.kontak}}</td>
+                            <td>{{l.fax}}</td>
+                            <td>{{l.plafon}}</td>
+                            <td>{{l.top}}</td>
+                            <td>{{l.jenis}}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <router-link :to="{ name: 'customerEdit', params: {id: l.kd}}" class="btn btn-warning">
+                                        <i class="fa fa-edit text-white"></i>
+                                    </router-link>
 
-                                <a class="btn btn-danger" v-on:click="hapus(l.id, index, l.nm)" v-bind:id="'delete'+l.id">
-                                    <i class="fa fa-trash text-white"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table> -->
+                                    <a class="btn btn-danger" v-on:click="hapus(l.kd, index, l.nm)" v-bind:id="'delete'+l.kd">
+                                        <i class="fa fa-trash text-white"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <!-- <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
+            <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
             <div align="right">
                 <pagination :data="listData" @pagination-change-page="showData" :show-disabled="true"></pagination>
-            </div> -->
+            </div>
         </div>
     </div>
 </template>
@@ -106,7 +130,7 @@
                     page = 1;
                 }
 
-                axios.get('data/kelompok?page='+page)
+                axios.get('data/customer?page='+page)
                     .then(response => {
                         this.loading=false;
                         this.list = response.data;
@@ -119,7 +143,7 @@
                     page = 1;
                 }
 
-                axios.get('/data/kelompok?q='+this.pencarian)
+                axios.get('/data/customer?q='+this.pencarian)
                     .then(response => {
                         this.list = response.data;
                     })
@@ -141,7 +165,7 @@
                 })
                 .then((result) => {
                     if(result.value) {
-                        axios.delete('/data/kelompok/'+id)
+                        axios.delete('/data/customer/'+id)
                             .then(response => {
                                 if(response.data.success==true){
                                     this.$swal('Deleted', response.data.pesan , 'success');

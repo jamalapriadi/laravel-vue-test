@@ -54,7 +54,7 @@ class RakController extends Controller
         }else{
             $rak=new Rak;
             $rak->nm=request('nama');
-            $rak->lokaso=request('lokasi');
+            $rak->lokasi=request('lokasi');
             $rak->save();
 
             $data=array(
@@ -116,7 +116,7 @@ class RakController extends Controller
         }else{
             $rak=Rak::find($id);
             $rak->nm=request('nama');
-            $rak->lokaso=request('lokasi');
+            $rak->lokasi=request('lokasi');
             $rak->save();
 
             $data=array(
