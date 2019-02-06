@@ -15,6 +15,19 @@ class Barang extends Model
 
     protected $dates=['deleted_at'];
 
+    protected $fillable = [
+        'kd', 
+        'nm',
+        'kelompok_id',
+        'merk_id',
+        'status',
+        'satuan',
+        'pcs',
+        'hrgb',
+        'hrgp',
+        'jual'
+    ];
+
     public function kelompok()
     {
         return $this->belongsTo('App\Models\Kelompok','kelompok_id');

@@ -67,6 +67,7 @@ class CustomerController extends Controller
             );
         }else{
             $cus=new Customer;
+            $cus->kd=request('kode');
             $cus->nm=request('nama');
             $cus->alamat=request('alamat');
             $cus->alias=request('alias');
@@ -202,5 +203,18 @@ class CustomerController extends Controller
         }
 
         return $data;
+    }
+
+    public function autonumber_customer()
+    {
+        $sql=Customer::select(\DB::Raw("max(kd) as maxKode"))
+            ->first();
+        $kodeBarang = $sql->maxKode;
+        $noUrut= (int) substr($kodeBarang, 3,3);
+        $noUrut++;
+        $char = "CST";
+        $newId= $char.sprintf("%03s",$noUrut);
+
+        return $newId;
     }
 }

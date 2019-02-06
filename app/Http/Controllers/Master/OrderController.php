@@ -83,4 +83,17 @@ class OrderController extends Controller
     {
         //
     }
+
+    public function autonumber_order()
+    {
+        $sql=Order::select(\DB::Raw("max(no_order) as maxKode"))
+            ->first();
+        $kodeOrder = $sql->maxKode;
+        $noUrut= (int) substr($kodeOrder, 6,6);
+        $noUrut++;
+        $char = date('y')."-";
+        $newId= $char.sprintf("%06s",$noUrut);
+
+        return $newId;
+    }
 }

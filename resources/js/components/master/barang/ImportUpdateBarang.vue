@@ -2,7 +2,7 @@
     <div class="container">
         <div class="card card-accent-primary">
             <div class="card-header">
-                Add New Rak
+                Import Data Barang
             </div>
             <div class="card-body">
 
@@ -10,25 +10,17 @@
                     {{ message }}
                 </div>
 
-                <form @submit.prevent="store" action="/data/rak" method="post">
+                <form @submit.prevent="store" action="/data/import-update-barang" method="post" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="" class="control-label">Gudang</label>
-                        <!-- <input type="text" class="form-control" :class="{ 'is-invalid': errors.lokasi }" v-model="state.lokasi"> -->
-                        <select class="form-control" name="lokasi" id="lokasi" v-model="state.lokasi">
-                            <option value="">--Pilih Gudang--</option>
-                            <option v-for="(l,index) in lokasi" v-bind:key="index" v-bind:value="l.id">{{l.nm}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="control-label">Nomor Rak</label>
-                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="state.nama">
+                        <label for="" class="control-label">Upload File</label>
+                        <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
                     </div>
                     <hr>
                     
                     <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
 
                     <div class="form-group">
-                        <router-link to="/rak" class="btn btn-default">
+                        <router-link to="/barang" class="btn btn-default">
                             <i class="fa fa-backward"></i> Back
                         </router-link>
 
@@ -53,26 +45,32 @@ export default {
     data() {
         return {
             state: {
-                lokasi:'',
-                nama: ''
+                file: ''
             },
             message:'',
             loading:false,
             errors: [],
-            lokasi: []
+            kota:[]
         }
     },
     methods: {
         store(e) {
             this.loading = true;
 
-            axios.post(e.target.action, this.state).then(response => {
+            let formData = new FormData();
+            formData.append('file', this.state.file);
+
+            axios.post(e.target.action, formData,{
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(response => {
                 if(response.data.success==true){
                     this.loading=false;
                     this.errors = [];
                     this.state = {
-                        lokasi:'',
-                        nama: ''
+                        file: ''
                     }
                     this.message = 'Data has been saved.';
                 }else{
@@ -91,15 +89,12 @@ export default {
             });
         },
 
-        getLokasi(){
-            axios.get('/data/list-lokasi')
-                .then( response => {
-                    this.lokasi = response.data;
-                })
+        handleFileUpload(){
+            this.state.file = this.$refs.file.files[0];
         }
     },
-    mounted(){
-        this.getLokasi();
+    mounted() {
+        
     },
     computed:{
         valKode() {

@@ -14,4 +14,13 @@ class Rak extends Model
 
     // protected $dates=['deleted_at'];
 
+    public function lokasi(){
+        return $this->belongsTo('App\Models\Lokasi','lokasi_id')
+            ->select(
+                [
+                    'id','nm','lokasi'
+                ]
+            );
+    }
+
 }

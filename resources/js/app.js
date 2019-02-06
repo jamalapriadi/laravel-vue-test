@@ -114,6 +114,8 @@ const routes = [
     { path: '/barang', name: 'barangIndex', component: require('./components/master/barang/Index.vue').default },
     { path: '/add-barang', name: 'barangCreate', component: require('./components/master/barang/Create.vue').default },
     { path: '/edit-barang/:id', name: 'barangEdit', component: require('./components/master/barang/Edit.vue').default },
+    { path: '/import-barang', name: 'importBarang', component: require('./components/master/barang/ImportBarang.vue').default },
+    { path: '/import-update-barang', name: 'updateImportBarang', component: require('./components/master/barang/ImportUpdateBarang.vue').default},
     {
         path: '/add-new-order',
         name: 'addOrderIndex',

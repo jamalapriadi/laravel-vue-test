@@ -7,6 +7,10 @@
             <div class="card-body">
                 <form v-on:submit.prevent="saveForm()">
                     <div class="form-group">
+                        <label for="" class="control-label">Kode Customer</label>
+                        <input type="text" class="form-control" name="kode" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
+                    </div>
+                    <div class="form-group">
                         <label for="" class="control-label">Nama</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="state.nama">
                     </div>
@@ -85,8 +89,20 @@ export default {
             lokasiId:'',
             url: window.location.origin + window.location.pathname,
             state: {
-                lokasi:'',
-                nama: ''
+                kode: '',
+                nama: '',
+                nik:'',
+                npwp:'',
+                alamat:'',
+                alias:'',
+                kota:'',
+                telepon:'',
+                nmtk:'',
+                kontak:'',
+                fax:'',
+                plafon:'',
+                top:'',
+                jenis:''
             },
             message:'',
             errors: [],
@@ -101,13 +117,14 @@ export default {
 
             axios.get('/data/customer/'+id)
                 .then(response => {
+                    this.state.kode = response.data.kd;
                     this.state.nama = response.data.nm;
                     this.state.nik = response.data.nik;
                     this.state.npwp = response.data.npwp;
                     this.state.alamat = response.data.alamat;
                     this.state.alias = response.data.alias;
                     this.state.kota = response.data.kota_id;
-                    this.state.telepon = response.data.telpn;
+                    this.state.telepon = response.data.tlpn;
                     this.state.nmtk = response.data.nmtk;
                     this.state.kontak = response.data.kontak;
                     this.state.fax = response.data.fax;
@@ -125,7 +142,11 @@ export default {
 
             axios.patch('/data/customer/'+this.lokasiId, newState)
                 .then(response => {
-                    this.$router.replace('/customer');
+                    if(response.data.success==true){
+                        this.$router.replace('/customer');
+                    }else{
+                        alert('Update Data Gagal');
+                    }
                 })
                 .catch( error => {
                     alert('data gagal diupdate');

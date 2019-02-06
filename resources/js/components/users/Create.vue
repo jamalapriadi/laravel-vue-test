@@ -12,7 +12,7 @@
 
                 <form @submit.prevent="store" action="/data/users" method="post">
                     <div class="form-group">
-                        <label for="" class="control-label">Usernama</label>
+                        <label for="" class="control-label">Username</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.username }" v-model="state.username">
                     </div>
                     <div class="form-group">

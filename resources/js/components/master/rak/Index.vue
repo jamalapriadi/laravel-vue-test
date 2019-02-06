@@ -31,15 +31,15 @@
                 <thead>
                     <tr>
                         <th width="5%">No.</th>
-                        <th>Lokasi</th>
-                        <th>Nama</th>
+                        <th>Gudang</th>
+                        <th>Nomor RAK</th>
                         <th width="17%"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(l, index) in list.data" v-bind:key="index">
                         <td>{{index+1}}</td>
-                        <td>{{l.lokasi}}</td>
+                        <td>{{l.lokasi.nm}}</td>
                         <td>{{l.nm}}</td>
                         <td>
                             <div class="btn-group">

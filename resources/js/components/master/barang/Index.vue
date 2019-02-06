@@ -4,14 +4,29 @@
             Data Barang
 
             <div class="card-header-actions">
-                <router-link to="/add-barang" class="btn btn-primary">
-                    <i class="fa fa-plus"></i> Add New
-                </router-link>
+                
             </div>
         </div>
 
         <div class="card-body">
-            
+            <div class="btn-group">
+                <router-link to="/add-barang" class="btn btn-primary text-white">
+                    <i class="fa fa-plus"></i> Add New
+                </router-link>
+
+                <router-link to="/import-barang" class="btn btn-success text-white">
+                    <i class="fa fa-file-excel"></i> Import Barang
+                </router-link>
+
+                <router-link to="/import-update-barang" class="btn btn-warning text-white">
+                    <i class="fa fa-file-excel"></i> Update Barang
+                </router-link>
+
+                <a href="/data/export-barang" class="btn btn-info text-white">
+                    <i class="fa fa-file-excel"></i> Export Barang
+                </a>
+            </div>
+            <hr>
             <div class="row">
                 <div class="col-lg-5">
                     <form class="form-inline">

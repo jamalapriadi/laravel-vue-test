@@ -164,4 +164,13 @@ class LokasiController extends Controller
 
         return $data;
     }
+
+    public function list_lokasi()
+    {
+        $lokasi=Lokasi::select('id','lokasi','nm');
+
+        $lokasi=$lokasi->get();
+
+        return $lokasi;
+    }
 }

@@ -6,6 +6,12 @@ use App\Models\Barang;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\Exports\BarangExport;
+use App\Exports\AllBarangExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\BarangImport;
+use App\Imports\BarangUpdateImport;
+
 class BarangController extends Controller
 {
     /**
@@ -212,5 +218,65 @@ class BarangController extends Controller
         $newId= $char.sprintf("%03s",$noUrut);
 
         return $newId;
+    }
+
+    public function sample_barang(Request $request)
+    {
+        return Excel::download(new BarangExport, 'barang.xlsx');
+    }
+
+    public function export_barang(Request $request)
+    {
+        return Excel::download(new AllBarangExport, 'barang.xlsx');
+    }
+
+    public function import_new_barang(Request $request)
+    {
+        $rules=['file'=>'required'];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi Gagal',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            Excel::import(new BarangImport, request()->file('file'));
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil di import',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
+    }
+
+    public function import_update_barang(Request $request)
+    {
+        $rules=['file'=>'required'];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi Gagal',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            Excel::import(new BarangUpdateImport, request()->file('file'));
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil di import',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 }

@@ -15,7 +15,7 @@ class RakController extends Controller
      */
     public function index()
     {
-        $rak=Rak::paginate(25);
+        $rak=Rak::with('lokasi')->paginate(25);
 
         return $rak;
     }
@@ -54,7 +54,7 @@ class RakController extends Controller
         }else{
             $rak=new Rak;
             $rak->nm=request('nama');
-            $rak->lokasi=request('lokasi');
+            $rak->lokasi_id=request('lokasi');
             $rak->save();
 
             $data=array(
@@ -116,7 +116,7 @@ class RakController extends Controller
         }else{
             $rak=Rak::find($id);
             $rak->nm=request('nama');
-            $rak->lokasi=request('lokasi');
+            $rak->lokasi_id=request('lokasi');
             $rak->save();
 
             $data=array(

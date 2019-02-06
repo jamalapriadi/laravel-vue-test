@@ -12,6 +12,10 @@
 
                 <form @submit.prevent="store" action="/data/customer" method="post">
                     <div class="form-group">
+                        <label for="" class="control-label">Kode Customer</label>
+                        <input type="text" class="form-control" name="kode" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
+                    </div>
+                    <div class="form-group">
                         <label for="" class="control-label">Nama</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="state.nama">
                     </div>
@@ -96,6 +100,7 @@ export default {
     data() {
         return {
             state: {
+                kode: '',
                 nama: '',
                 nik:'',
                 npwp:'',
@@ -125,6 +130,7 @@ export default {
                     this.loading=false;
                     this.errors = [];
                     this.state = {
+                        kode: '',
                         nama: '',
                         nik:'',
                         npwp:'',
@@ -139,6 +145,7 @@ export default {
                         top:'',
                         jenis:''
                     }
+                    this.getKodeCustomer();
                     this.message = 'Data has been saved.';
                 }else{
                     this.loading=false;
@@ -161,9 +168,17 @@ export default {
                 .then(response => {
                     this.kota = response.data;
                 })
+        },
+
+        getKodeCustomer(){
+            axios.get('/data/autonumber-customer')
+                .then( response => {
+                    this.state.kode = response.data
+                });
         }
     },
     mounted() {
+        this.getKodeCustomer();
         this.getKota();
     },
     computed:{

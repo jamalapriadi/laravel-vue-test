@@ -11,6 +11,7 @@ class Customer extends Model
 
     protected $table="customer";
     protected $primaryKey="kd";
+    public $incrementing=false;
 
     protected $dates=['deleted_at'];
 
