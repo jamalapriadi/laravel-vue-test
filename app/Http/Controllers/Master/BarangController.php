@@ -279,4 +279,23 @@ class BarangController extends Controller
 
         return $data;
     }
+
+    public function list_barang(Request $request)
+    {
+        $barang=Barang::with(
+            [
+                'kelompok',
+                'merk'
+            ]
+        );
+
+        if($request->has('q')){
+            $barang=$barang->where('nm','like','%'.request('q').'%')
+                ->where('kd','like','%'.request('q').'%');
+        }   
+
+        $barang=$barang->limit(25);
+
+        return $barang->get();
+    }
 }

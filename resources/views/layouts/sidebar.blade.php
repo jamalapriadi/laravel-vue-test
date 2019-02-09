@@ -41,11 +41,7 @@
                             <i class="nav-icon icon-bank"></i> Perusahaan
                         </router-link>
                     </li>
-                    <li class="nav-item">
-                        <router-link to="/program" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Program
-                        </router-link>
-                    </li>
+                    
                     <li class="nav-item">
                         <router-link to="/rak" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> Rak
@@ -76,7 +72,43 @@
 
             <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon fa fa-code"></i> Order
+                    <i class="nav-icon icon-paypal"></i> Program
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <router-link to="/add-new-program" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Add New Program
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/program" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> List Program
+                        </router-link>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-list"></i> PO
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <router-link to="/add-new-order" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Add New PO
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/program" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> List PO
+                        </router-link>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-basket-loaded"></i> Order
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
@@ -94,7 +126,25 @@
 
             <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon fa fa-code"></i> Mutasi
+                    <i class="nav-icon icon-social-dropbox"></i> Picking
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <router-link to="/add-new-order" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Add New Picking
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/program" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> List Picking
+                        </router-link>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-direction"></i> Mutasi
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">

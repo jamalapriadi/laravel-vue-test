@@ -100,7 +100,7 @@ const routes = [
     { path: '/add-sales', name: 'salesCreate', component: require('./components/master/sales/Create.vue').default },
     { path: '/edit-sales/:id', name: 'salesEdit', component: require('./components/master/sales/Edit.vue').default },
     { path: '/program', name: 'programIndex', component: require('./components/master/program/Index.vue').default },
-    { path: '/add-program', name: 'programCreate', component: require('./components/master/program/Create.vue').default },
+    { path: '/add-new-program', name: 'programCreate', component: require('./components/master/program/Create.vue').default },
     { path: '/edit-program/:id', name: 'programEdit', component: require('./components/master/program/Edit.vue').default },
     { path: '/rak', name: 'rakIndex', component: require('./components/master/rak/Index.vue').default },
     { path: '/add-rak', name: 'rakCreate', component: require('./components/master/rak/Create.vue').default },
