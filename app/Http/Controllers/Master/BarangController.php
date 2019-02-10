@@ -291,11 +291,32 @@ class BarangController extends Controller
 
         if($request->has('q')){
             $barang=$barang->where('nm','like','%'.request('q').'%')
-                ->where('kd','like','%'.request('q').'%');
-        }   
+                ->orWhere('kd','like','%'.request('q').'%');
+        }
 
         $barang=$barang->limit(25);
 
         return $barang->get();
+    }
+
+    public function cari_barang_by_kode($id)
+    {
+        $barang=Barang::find($id);
+
+        if($barang!=null){
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Barang ditemukan',
+                'barang'=>$barang
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Barang tidak ditemukan',
+                'barang'=>array()
+            );
+        }
+
+        return $data;
     }
 }

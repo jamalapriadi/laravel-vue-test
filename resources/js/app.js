@@ -33,10 +33,13 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueSweetalert2 from 'vue-sweetalert2';
 import Spinner from 'vue-simple-spinner';
+import BootstrapVue from 'bootstrap-vue'
+
 
 Vue.use(VueRouter);
 Vue.use(VueSweetalert2);
 Vue.use(Spinner);
+Vue.use(BootstrapVue);
 
 //define routes for users
 const routes = [
@@ -102,6 +105,7 @@ const routes = [
     { path: '/program', name: 'programIndex', component: require('./components/master/program/Index.vue').default },
     { path: '/add-new-program', name: 'programCreate', component: require('./components/master/program/Create.vue').default },
     { path: '/edit-program/:id', name: 'programEdit', component: require('./components/master/program/Edit.vue').default },
+    { path: '/program-detail/:id', name: 'programDetail', component: require('./components/master/program/Detail.vue').default},
     { path: '/rak', name: 'rakIndex', component: require('./components/master/rak/Index.vue').default },
     { path: '/add-rak', name: 'rakCreate', component: require('./components/master/rak/Create.vue').default },
     { path: '/edit-rak/:id', name: 'rakEdit', component: require('./components/master/rak/Edit.vue').default },

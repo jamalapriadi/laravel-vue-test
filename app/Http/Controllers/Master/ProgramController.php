@@ -45,16 +45,10 @@ class ProgramController extends Controller
     public function store(Request $request)
     {
         $rules=[
+            'kode'=>'required',
             'nama'=>'required',
-            'nik'=>'required',
-            'npwp'=>'required',
-            'alamat'=>'required',
-            'alias'=>'required',
-            'kota'=>'required',
-            'telepon'=>'required',
-            'nmtk'=>'required',
-            'kontak'=>'required',
-            'kota'=>'required'
+            'start'=>'required',
+            'end'=>'required'
         ];
 
         $validasi=\Validator::make($request->all(),$rules);
@@ -66,29 +60,46 @@ class ProgramController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
-            $cus=new Customer;
-            $cus->kd=request('kode');
+            $cus=new Program;
+            $cus->nmr=request('kode');
             $cus->nm=request('nama');
-            $cus->alamat=request('alamat');
-            $cus->alias=request('alias');
-            $cus->kota_id=request('kota');
-            $cus->tlpn=request('telepon');
-            $cus->nmtk=request('nmtk');
-            $cus->kontak=request('kontak');
-            $cus->fax=request('fax');
-            $cus->plafon=request('plafon');
-            $cus->top=request('top');
-            $cus->npwp=request('npwp');
-            $cus->nik=request('nik');
-            $cus->jenis=request('jenis');
+            $cus->awprriod=date('Y-m-d',strtotime(request('start')));
+            $cus->akpriod=date('Y-m-d',strtotime(request('end')));
             $cus->insert_user=auth()->user()->username;
-            $cus->save();
+            $cus->update_user=auth()->user()->username;
+            $simpan=$cus->save();
 
-            $data=array(
-                'success'=>true,
-                'pesan'=>'Data berhasil disimpan',
-                'errors'=>''
-            );
+            if($simpan){
+                if($request->has('listBarang')){
+                    $listbarang=request('listBarang');
+
+                    foreach($listbarang as $key=>$val){
+                        \DB::table('rprogram')
+                            ->insert(
+                                [
+                                    'nmr_program'=>request('kode'),
+                                    'kd_brg'=>$val['kd_barang'],
+                                    'qty'=>$val['qty'],
+                                    'point'=>$val['point']
+                                ]
+                            );
+                    }
+                }
+
+                $data=array(
+                    'success'=>true,
+                    'pesan'=>'Data berhasil disimpan',
+                    'errors'=>''
+                );
+            }else{
+                $data=array(
+                    'success'=>false,
+                    'pesan'=>'Data gagal disimpan',
+                    'errors'=>''
+                );
+            }
+
+            
         }
 
         return $data;
@@ -97,12 +108,12 @@ class ProgramController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Master\Customer  $program
+     * @param  \App\Master\Program  $program
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $cus=Customer::find($id);
+        $cus=Program::with('detail')->find($id);
 
         return $cus;
     }
@@ -110,7 +121,7 @@ class ProgramController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Master\Customer  $program
+     * @param  \App\Master\Program  $program
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -122,7 +133,7 @@ class ProgramController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Master\Customer  $program
+     * @param  \App\Master\Program  $program
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -149,7 +160,7 @@ class ProgramController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
-            $cus=Customer::find($id);
+            $cus=Program::find($id);
             $cus->nm=request('nama');
             $cus->alamat=request('alamat');
             $cus->alias=request('alias');
@@ -179,16 +190,21 @@ class ProgramController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Master\Customer  $program
+     * @param  \App\Master\Program  $program
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $cus=Customer::find($id);
+        $cus=Program::find($id);
 
         $hapus=$cus->delete();
 
         if($hapus){
+            \DB::table('rprogram')
+                ->where('nmr_program',$id)
+                ->delete();
+
+
             $data=array(
                 'success'=>true,
                 'pesan'=>'Data berhasil dihapus',
@@ -205,15 +221,15 @@ class ProgramController extends Controller
         return $data;
     }
 
-    public function autonumber_customer()
+    public function autonumber_program()
     {
-        $sql=Customer::select(\DB::Raw("max(kd) as maxKode"))
+        $sql=Program::select(\DB::Raw("max(nmr) as maxKode"))
             ->first();
         $kodeBarang = $sql->maxKode;
-        $noUrut= (int) substr($kodeBarang, 3,3);
+        $noUrut= (int) substr($kodeBarang, 11,11);
         $noUrut++;
-        $char = "CST";
-        $newId= $char.sprintf("%03s",$noUrut);
+        $char = "PRG-TLG-".date('y')."-";
+        $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;
     }

@@ -94,12 +94,12 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <router-link to="/add-new-order" class="nav-link" active-class="active">
+                        <router-link to="/add-new-po" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> Add New PO
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/program" class="nav-link" active-class="active">
+                        <router-link to="/po" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> List PO
                         </router-link>
                     </li>
@@ -130,12 +130,12 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <router-link to="/add-new-order" class="nav-link" active-class="active">
+                        <router-link to="/add-new-picking" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> Add New Picking
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/program" class="nav-link" active-class="active">
+                        <router-link to="/list-picking" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> List Picking
                         </router-link>
                     </li>
@@ -148,12 +148,12 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <router-link to="/add-new-order" class="nav-link" active-class="active">
+                        <router-link to="/add-new-mutasi" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> Add New Mutasi
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/list-order" class="nav-link" active-class="active">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> List Mutasi
                         </router-link>
                     </li>

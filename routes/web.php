@@ -66,5 +66,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('autonumber-barang','Master\BarangController@autonumber_barang');
     Route::get('autonumber-order','Master\OrderController@autonumber_order');
     Route::get('autonumber-customer','Master\CustomerController@autonumber_customer');
+    Route::get('autonumber-program','Master\ProgramController@autonumber_program');
     Route::get('list-barang','Master\BarangController@list_barang');
+    Route::get('cari-barang-by-kode/{id}','Master\BarangController@cari_barang_by_kode');
 });
