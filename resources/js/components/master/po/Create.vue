@@ -1,7 +1,7 @@
 <template>
     <div class="card card-accent-primary">
         <div class="card-header">
-            Add New Order
+            Add New PO
         </div>
         <div class="card-body">
 
@@ -35,52 +35,15 @@
                                 </select>
                             </div>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="" class="control-label col-lg-3">Kode Transaksi</label>
-                            <div class="col-lg-9">
-                                <select name="kd_trans" id="kd_trans" class="form-control" v-model="state.kd_trans">
-                                    <option v-for="(l,index) in kodetrans" v-bind:value="l" v-bind:key="index">{{l}}</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group row" v-if="state.kd_trans == 'Kredit'">
-                            <label for="" class="control-label col-lg-3">Tanggal Jatuh Tempo</label>
-                            <div class="col-lg-9">
-                                <date-picker v-model="state.tanggaljt" :config="options"></date-picker>
-                            </div>
-                        </div>
-
                     </div>
 
                     <div class="col-lg-6">
-                        <div class="form-group row">
-                            <label for="" class="control-label col-lg-3">Sales</label>
-                            <div class="col-lg-9">
-                                <select name="sales" id="sales" class="form-control" v-model="state.sales">
-                                    <option value="" disabled selected>--Pilih Sales--</option>
-                                    <option v-for="(l, index) in saless" v-bind:key="index"  v-bind:value="l.id">{{l.id}} - [{{l.nm}}]</option>
-                                </select>
-                            </div>
-                        </div>
-
                         <div class="form-group row">
                             <label for="" class="control-label col-lg-3">Perusahaan</label>
                             <div class="col-lg-9">
                                 <select name="perusahaan" id="perusahaan" class="form-control" v-model="state.perusahaan">
                                     <option value="" disabled selected>--Pilih Perusahaan--</option>
                                     <option v-for="(l, index) in perusahaans" v-bind:key="index"  v-bind:value="l.id">{{l.nama}}</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="" class="control-label col-lg-3">Lokasi</label>
-                            <div class="col-lg-9">
-                                <select name="lokasi" id="lokasi" class="form-control" v-model="state.lokasi">
-                                    <option value="" disabled selected>--Pilih Lokasi--</option>
-                                    <option v-for="(l, index) in lokasis" v-bind:key="index"  v-bind:value="l.id">{{l.id}} - [{{l.nm}}]</option>
                                 </select>
                             </div>
                         </div>
@@ -96,127 +59,105 @@
                 
             </form>
 
-            <div class="card card-default">
-                <div class="card-header">Detail Barang</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="form-group col-md-2">
-                            <label for="" class="control-label">Kode barang</label>
-                            <!-- <multiselect v-model="value" :options="tanggal"></multiselect> -->
+            <br><br>
+            <div>
+                <div class="row">
+                    <div class="form-group col-md-3">
+                        <label for="" class="control-label">Kode barang</label>
+                        <!-- <multiselect v-model="value" :options="tanggal"></multiselect> -->
 
-                            <!-- <multiselect v-model="barang.kode" 
-                                id="ajax" 
-                                label="nm" 
-                                track-by="kd" 
-                                placeholder="Type to search" 
-                                open-direction="bottom" 
-                                :multiple="false"
-                                :options="barangs" 
-                                :searchable="true" 
-                                :loading="isLoading" 
-                                :internal-search="false" 
-                                :clear-on-select="false" 
-                                :close-on-select="true" 
-                                :options-limit="25" 
-                                :limit="3" 
-                                :limit-text="limitText" 
-                                :max-height="600" 
-                                :show-no-results="false" 
-                                :hide-selected="false" 
-                                :custom-label="nameWithLang"
-                                @input="executeLoader"
-                                @search-change="asyncFind">
-                            </multiselect> -->
+                        <!-- <multiselect v-model="barang.kode" 
+                            id="ajax" 
+                            label="nm" 
+                            track-by="kd" 
+                            placeholder="Type to search" 
+                            open-direction="bottom" 
+                            :multiple="false"
+                            :options="barangs" 
+                            :searchable="true" 
+                            :loading="isLoading" 
+                            :internal-search="false" 
+                            :clear-on-select="false" 
+                            :close-on-select="true" 
+                            :options-limit="25" 
+                            :limit="3" 
+                            :limit-text="limitText" 
+                            :max-height="600" 
+                            :show-no-results="false" 
+                            :hide-selected="false" 
+                            :custom-label="nameWithLang"
+                            @input="executeLoader"
+                            @search-change="asyncFind">
+                        </multiselect> -->
 
-                            <input type="text" placeholder="Cari Kode barang" class="form-control" v-model="barang.kode" v-on:keyup.enter="cariBarang">
-                        </div>
-
-                        <div class="form-group col-md-2">
-                            <label for="" class="control-label">Nama Barang</label>
-                            <input type="text" placeholder="Cari barang" class="form-control" v-model="barang.nama" readonly>
-                        </div>
-
-                        <div class="form-group col-md-1">
-                            <label for="" class="control-label">Harga</label>
-                            <input type="text" placeholder="Harga" class="form-control" v-model="barang.harga" readonly>
-                        </div>
-
-                        <div class="form-group col-md-1">
-                            <label for="" class="control-label">Dos</label>
-                            <input type="text" class="form-control" v-model="barang.dos">
-                        </div>
-
-                        <div class="form-group col-md-1">
-                            <label for="" class="control-label">PCS</label>
-                            <input type="text" class="form-control" v-model="barang.pcs">
-                        </div>
-
-                        <div class="form-group col-md-1">
-                            <label for="" class="control-label">Diskon</label>
-                            <input type="text" class="form-control" v-model="barang.diskon">
-                        </div>
-
-                        <div class="form-group col-md-1">
-                            <label for="" class="control-label">Jumlah</label>
-                            <input type="text" class="form-control" v-model="barang.jumlah">
-                        </div>
-
-                        <div class="form-group col-md-1">
-                            <div class="btn-group">
-                                <button v-on:click="saveBarang()" class="btn btn-primary" style="margin-top:25px;">
-                                    <i class="fa fa-plus"></i>
-                                    Add
-                                </button>
-
-                                <a @click="showModal" class="btn btn-info text-white" style="margin-top:25px;">
-                                    <i class="fa fa-list"></i> List Barang
-                                </a>
-                            </div>
-                        </div>
+                        <input type="text" placeholder="Cari Kode barang" class="form-control" v-model="barang.kode" v-on:keyup.enter="cariBarang">
                     </div>
 
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Kode Barang</th>
-                                <th>Nama Barang</th>
-                                <th>Harga</th>
-                                <th>Dos</th>
-                                <th>Pcs</th>
-                                <th>Diskon</th>
-                                <th>Jumlah</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(l,index) in state.listBarang" v-bind:key="index">
-                                <td>{{ index+1 }}</td>
-                                <td>{{l.kd_barang}}</td>
-                                <td>{{l.nm_barang}}</td>
-                                <td>{{l.harga}}</td>
-                                <td>{{l.dos}}</td>
-                                <td>{{l.pcs}}</td>
-                                <td>{{l.diskon}}</td>
-                                <td>{{l.jumlah}}</td>
-                                <td>
-                                    <a @click="deleteBarang(index)" class="btn btn-danger text-white">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <!-- <tfoot>
-                            <tr>
-                                <td colspan="3"> Total</td>
-                                <td>{{totalQty}}</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tfoot> -->
-                    </table>
+                    <div class="form-group col-md-2">
+                        <label for="" class="control-label">Nama Barang</label>
+                        <input type="text" placeholder="Cari barang" class="form-control" v-model="barang.nama" readonly>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label for="" class="control-label">Dos</label>
+                        <input type="text" class="form-control" v-model="barang.dos">
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label for="" class="control-label">PCS</label>
+                        <input type="text" class="form-control" v-model="barang.pcs">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <div class="btn-group">
+                            <button v-on:click="saveBarang()" class="btn btn-primary" style="margin-top:25px;">
+                                <i class="fa fa-plus"></i>
+                                Add
+                            </button>
+
+                            <a @click="showModal" class="btn btn-info text-white" style="margin-top:25px;">
+                                <i class="fa fa-list"></i> List Barang
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Dos</th>
+                        <th>Pcs</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(l,index) in state.listBarang" v-bind:key="index">
+                        <td>{{ index+1 }}</td>
+                        <td>{{l.kd_barang}}</td>
+                        <td>{{l.nm_barang}}</td>
+                        <td>{{l.dos}}</td>
+                        <td>{{l.pcs}}</td>
+                        <td>
+                            <a @click="deleteBarang(index)" class="btn btn-danger text-white">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+                <!-- <tfoot>
+                    <tr>
+                        <td colspan="3"> Total</td>
+                        <td>{{totalQty}}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot> -->
+            </table>
 
             
             <hr>
@@ -224,7 +165,7 @@
             <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
 
             <div class="form-group">
-                <router-link to="/list-order" class="btn btn-default">
+                <router-link to="/po" class="btn btn-default">
                     <i class="fa fa-backward"></i> Back
                 </router-link>
 
@@ -318,12 +259,8 @@ export default {
                 nama: '',
                 customer:'',
                 tanggal:new Date(),
-                tanggaljt:new Date(),
                 perusahaan:'',
                 keterangan:'',
-                lokasi:'',
-                sales:'',
-                kd_trans:'Tunai',
                 listBarang:[]
             },
             date: new Date(),
@@ -336,17 +273,13 @@ export default {
             errors: [],
             value: null,
             tanggal: ['list', 'of', 'options'],
-            kodetrans: ['Tunai','Kredit'],
             selectedBarangs: '',
             barangs: [],
             barang:{
                 kode:'',
                 nama:'',
-                harga:'',
-                dos:'',
-                pcs:'',
-                diskon:'',
-                jumlah:''
+                qty:'',
+                point:''
             },
             listBarang:[],
             list:[],
@@ -354,9 +287,7 @@ export default {
             pencarian:'',
             isLoading: false,
             customers:[],
-            perusahaans:[],
-            saless:[],
-            lokasis:[]
+            perusahaans:[]
         }
     },
     watch: {
@@ -372,12 +303,10 @@ export default {
         this.getCode();
         this.getCustomer();
         this.getPerusahaan();
-        this.getSales();
-        this.getLokasi();
     },
     methods: {
         getCode(){
-            axios.get('/data/autonumber-order')
+            axios.get('/data/autonumber-po')
                 .then(response => {
                     this.state.kode = response.data;
                 })
@@ -426,20 +355,6 @@ export default {
                 })
         },
 
-        getSales(){
-            axios.get('/data/list-sales')
-                .then(response => {
-                    this.saless = response.data;
-                })
-        },
-
-        getLokasi(){
-            axios.get('/data/list-lokasi')
-                .then(response => {
-                    this.lokasis = response.data;
-                })
-        },
-
         saveBarang(){
             if(this.barang.kode==""){
                 alert('Barang harus diisi');
@@ -453,14 +368,8 @@ export default {
                 return false;
             }
 
-            if(this.barang.harga==""){
-                alert('Harga barang harus diisi');
-
-                return false;
-            }
-
             if(this.barang.dos==""){
-                alert('Dos harus diisi');
+                alert('Dos barang harus diisi');
 
                 return false;
             }
@@ -471,23 +380,14 @@ export default {
                 return false;
             }
 
-            if(this.barang.jumlah==""){
-                alert('Jumlah harus diisi');
-
-                return false;
-            }
-
 
             this.state.listBarang.push(
                 {
                     // kd_barang:this.barang.kode.kd,
                     kd_barang:this.barang.kode,
                     nm_barang:this.barang.nama,
-                    harga:this.barang.harga,
                     dos:this.barang.dos,
-                    pcs:this.barang.pcs,
-                    diskon:this.barang.diskon,
-                    jumlah:this.barang.jumlah
+                    pcs:this.barang.pcs
                 }
             );
 
@@ -497,11 +397,8 @@ export default {
         kosongBarang(){
             this.barang.kode='';
             this.barang.nama='';
-            this.barang.harga='';
-            this.barang.pcs='';
             this.barang.dos='';
-            this.barang.diskon='';
-            this.barang.jumlah='';
+            this.barang.pcs='';
         },
 
         deleteBarang: function(index) {
@@ -555,7 +452,6 @@ export default {
             console.log(brg);
             this.barang.kode=brg.kd;
             this.barang.nama=brg.nm;
-            this.barang.harga=brg.jual;
 
             this.$refs.myModalRef.hide()
         },
@@ -566,7 +462,6 @@ export default {
                     if(response.data.success==true){
                         this.barang.kode = response.data.barang.kd;
                         this.barang.nama = response.data.barang.nm;
-                        this.barang.harga = response.data.barang.jual;
                     }else{
                         alert('Barang tidak ditemukan');
                         this.barang.kode='';
@@ -594,27 +489,17 @@ export default {
                 return false;
             }
 
-            if(this.state.sales==""){
-                alert('Sales Barang harus diisi');
-
-                return false;
-            }
-
             this.loading = true;
 
-            axios.post('/data/order', this.state)
+            axios.post('/data/po', this.state)
                 .then(response => {
                     if(response.data.success==true){
                         this.state.kode='';
                         this.state.nama= '';
                         this.state.customer='';
                         this.state.tanggal=new Date();
-                        this.state.tanggaljt=new Date();
                         this.state.perusahaan='';
                         this.state.keterangan='';
-                        this.state.lokasi='';
-                        this.state.sales='';
-                        this.state.kd_trans='Tunai';
                         this.state.listBarang=[];
 
                         this.getCode();

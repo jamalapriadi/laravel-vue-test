@@ -120,16 +120,14 @@ const routes = [
     { path: '/edit-barang/:id', name: 'barangEdit', component: require('./components/master/barang/Edit.vue').default },
     { path: '/import-barang', name: 'importBarang', component: require('./components/master/barang/ImportBarang.vue').default },
     { path: '/import-update-barang', name: 'updateImportBarang', component: require('./components/master/barang/ImportUpdateBarang.vue').default},
-    {
-        path: '/add-new-order',
-        name: 'addOrderIndex',
-        component: require('./components/order/Create.vue').default
-    },
-    {
-        path: '/list-order',
-        name: 'listOrder',
-        component: require('./components/order/List.vue').default
-    }
+
+    { path: '/po', name: 'poIndex', component: require('./components/master/po/Index.vue').default},
+    { path: '/add-new-po', name: 'poCreate', component: require('./components/master/po/Create.vue').default },
+    { path: '/po-detail/:id', name: 'poDetail', component: require('./components/master/po/Detail.vue').default},
+
+    { path: '/add-new-order', name: 'addOrderIndex', component: require('./components/order/Create.vue').default },
+    { path: '/list-order', name: 'listOrder', component: require('./components/order/List.vue').default },
+    { path: '/order-detail/:id', name: 'orderDetail', component: require('./components/order/Detail.vue').default},
 ]
 
 const router = new VueRouter({ routes });

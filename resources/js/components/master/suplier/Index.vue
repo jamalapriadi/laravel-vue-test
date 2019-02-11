@@ -16,8 +16,8 @@
                 <div class="col-lg-5">
                     <form class="form-inline">
                         <div class="form-group">
-                            <label for="" class="control-label col-lg-2">FILTER:</label>
-                            <div class="col-lg-10">
+                            <label for="" class="control-label col-lg-4">FILTER:</label>
+                            <div class="col-lg-8">
                                 <input type="text" class="form-control" name="q" id="q" placeholder="Type and Enter" v-model="pencarian">
                             </div>
                         </div>
