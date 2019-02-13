@@ -1,10 +1,10 @@
 <template>
     <div class="card card-accent-primary">
         <div class="card-header">
-            Data PO
+            Data Picking
 
             <div class="card-header-actions">
-                <router-link to="/add-new-order" class="btn btn-primary">
+                <router-link to="/add-new-picking" class="btn btn-primary">
                     <i class="fa fa-plus"></i> Add New
                 </router-link>
             </div>
@@ -31,43 +31,42 @@
                 <thead>
                     <tr>
                         <th width="5%">No.</th>
-                        <th>Nmr. Order</th>
                         <th>Kd. Picking</th>
+                        <th>No. PO</th>
                         <th>Customer</th>
-                        <!-- <th>Perusahaan</th> -->
+                        <th>Keterangan</th>
                         <th>Sales</th>
                         <th>Kd Transaksi</th>
                         <th>Tgl</th>
                         <th>Tgl Jatuh Tempo</th>
                         <th>Lokasi</th>
-                        <th>Keterangan</th>
-                        <!-- <th>Jumlah Barang</th> -->
-                        <th>Total</th>
+                        <!-- <th>Jumlah Barang</th>
+                        <th>Total</th> -->
                         <th width="17%"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(l, index) in list.data" v-bind:key="index">
                         <td>{{index+1}}</td>
-                        <td>{{l.no_order}}</td>
                         <td>{{l.kd_picking}}</td>
-                        <td>{{l.picking.po.customer.nm}}</td>
-                        <!-- <td>{{l.perusahaan.nama}}</td> -->
-                        <td>{{l.picking.sales.nm}}</td>
-                        <td>{{l.picking.kd_trans}}</td>
-                        <td>{{l.picking.tgl}}</td>
-                        <td>{{l.picking.tglj}}</td>
-                        <td>{{l.picking.lokasi.nm}}</td>
-                        <td>{{l.picking.ket}}</td>
-                        <!-- <td>{{l.picking.detail.length}}</td> -->
-                        <td>{{l.total}}</td>
+                        <td>{{l.no_po}}</td>
+                        <td>{{l.po.customer.nm}}</td>
+                        <td>{{l.ket}}</td>
+                        <td>{{l.sales.nm}}</td>
+                        <td>{{l.kd_trans}}</td>
+                        <td>{{l.tgl}}</td>
+                        <td>{{l.tglj}}</td>
+                        <td>{{l.lokasi.nm}}</td>
+                        <!-- <td>{{l.ket}}</td>
+                        <td>{{l.detail.length}}</td>
+                        <td>{{l.total}}</td> -->
                         <td>
                             <div class="btn-group">
-                                <router-link :to="{ name: 'orderDetail', params: {id: l.no_order}}" class="btn btn-info">
+                                <router-link :to="{ name: 'pickingDetail', params: {id: l.kd_picking}}" class="btn btn-info">
                                     <i class="fa fa-list text-white"></i>
                                 </router-link>
 
-                                <a class="btn btn-danger" v-on:click="hapus(l.no_order, index, l.nm)" v-bind:id="'delete'+l.no_order">
+                                <a class="btn btn-danger" v-on:click="hapus(l.kd_picking, index, l.nm)" v-bind:id="'delete'+l.kd_picking">
                                     <i class="fa fa-trash text-white"></i>
                                 </a>
                             </div>
@@ -126,7 +125,7 @@
                     page = 1;
                 }
 
-                axios.get('data/order?page='+page)
+                axios.get('data/picking?page='+page)
                     .then(response => {
                         this.loading=false;
                         this.list = response.data;
@@ -139,7 +138,7 @@
                     page = 1;
                 }
 
-                axios.get('/data/order?q='+this.pencarian)
+                axios.get('/data/picking?q='+this.pencarian)
                     .then(response => {
                         this.list = response.data;
                     })
@@ -161,7 +160,7 @@
                 })
                 .then((result) => {
                     if(result.value) {
-                        axios.delete('/data/order/'+id)
+                        axios.delete('/data/picking/'+id)
                             .then(response => {
                                 if(response.data.success==true){
                                     this.$swal('Deleted', response.data.pesan , 'success');

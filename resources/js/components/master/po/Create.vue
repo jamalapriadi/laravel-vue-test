@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <div class="form-group row">
+                        <!-- <div class="form-group row">
                             <label for="" class="control-label col-lg-3">Perusahaan</label>
                             <div class="col-lg-9">
                                 <select name="perusahaan" id="perusahaan" class="form-control" v-model="state.perusahaan">
@@ -46,7 +46,7 @@
                                     <option v-for="(l, index) in perusahaans" v-bind:key="index"  v-bind:value="l.id">{{l.nama}}</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-group row">
                             <label for="" class="control-label col-lg-3">Keterangan</label>
@@ -259,7 +259,7 @@ export default {
                 nama: '',
                 customer:'',
                 tanggal:new Date(),
-                perusahaan:'',
+                // perusahaan:'',
                 keterangan:'',
                 listBarang:[]
             },
@@ -302,7 +302,7 @@ export default {
     mounted() {
         this.getCode();
         this.getCustomer();
-        this.getPerusahaan();
+        // this.getPerusahaan();
     },
     methods: {
         getCode(){
@@ -498,7 +498,7 @@ export default {
                         this.state.nama= '';
                         this.state.customer='';
                         this.state.tanggal=new Date();
-                        this.state.perusahaan='';
+                        // this.state.perusahaan='';
                         this.state.keterangan='';
                         this.state.listBarang=[];
 

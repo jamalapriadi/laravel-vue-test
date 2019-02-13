@@ -108,24 +108,6 @@
 
             <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-basket-loaded"></i> Order
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <router-link to="/add-new-order" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Add New Order
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/list-order" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> List Order
-                        </router-link>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
                     <i class="nav-icon icon-social-dropbox"></i> Picking
                 </a>
                 <ul class="nav-dropdown-items">
@@ -137,6 +119,24 @@
                     <li class="nav-item">
                         <router-link to="/list-picking" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> List Picking
+                        </router-link>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-basket-loaded"></i> Order
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <router-link to="/add-new-order" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Add New Order
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-order" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> List Order
                         </router-link>
                     </li>
                 </ul>

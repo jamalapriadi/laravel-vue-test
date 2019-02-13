@@ -8,7 +8,7 @@
                 <form v-on:submit.prevent="saveForm()">
                     <div class="form-group">
                         <label for="" class="control-label">Kode Customer</label>
-                        <input type="text" class="form-control" name="kode" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
+                        <input type="text" class="form-control" name="kode" :class="{ 'is-invalid': errors.kode }" v-model="state.kode">
                     </div>
                     <div class="form-group">
                         <label for="" class="control-label">Nama</label>

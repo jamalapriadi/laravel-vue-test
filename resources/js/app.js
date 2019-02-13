@@ -125,6 +125,10 @@ const routes = [
     { path: '/add-new-po', name: 'poCreate', component: require('./components/master/po/Create.vue').default },
     { path: '/po-detail/:id', name: 'poDetail', component: require('./components/master/po/Detail.vue').default},
 
+    { path : '/list-picking', name:'pickingIndex', component: require('./components/picking/Index').default},
+    { path: '/add-new-picking', name:'pickingCreate', component: require('./components/picking/Create.vue').default},
+    { path: '/picking-detail/:id', name: 'pickingDetail', component: require('./components/picking/Detail.vue').default},
+
     { path: '/add-new-order', name: 'addOrderIndex', component: require('./components/order/Create.vue').default },
     { path: '/list-order', name: 'listOrder', component: require('./components/order/List.vue').default },
     { path: '/order-detail/:id', name: 'orderDetail', component: require('./components/order/Detail.vue').default},

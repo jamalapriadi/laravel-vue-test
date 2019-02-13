@@ -41,7 +41,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('rak','Master\RakController');
     Route::resource('sales','Master\SalesController');
     Route::resource('stok','Master\StokController');
-    Route::resource('rak','Master\RakController');
+    // Route::resource('rak','Master\RakController');
     Route::resource('suplier','Master\SuplierController');
     Route::resource('terima','Master\TerimaController');
 
@@ -63,10 +63,18 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('list-kelompok','Master\KelompokController@list_kelompok');
     Route::get('list-merk','Master\MerkController@list_merk');
     Route::get('list-lokasi','Master\LokasiController@list_lokasi');
+    Route::get('list-customer','Master\CustomerController@list_customer');
+    Route::get('list-rak','Master\RakController@list_rak');
+    Route::get('list-sales','Master\SalesController@list_sales');
     Route::get('autonumber-barang','Master\BarangController@autonumber_barang');
     Route::get('autonumber-order','Master\OrderController@autonumber_order');
     Route::get('autonumber-customer','Master\CustomerController@autonumber_customer');
     Route::get('autonumber-program','Master\ProgramController@autonumber_program');
+    Route::get('autonumber-po','Master\PoController@autonumber_po');
+    Route::get('autonumber-picking','Master\PickingController@autonumber_picking');
+    Route::get('autonumber-order','Master\OrderController@autonumber_order');
     Route::get('list-barang','Master\BarangController@list_barang');
     Route::get('cari-barang-by-kode/{id}','Master\BarangController@cari_barang_by_kode');
+    Route::get('list-po-not-in-picking','Master\PoController@list_po_not_in_picking');
+    Route::get('list-picking-not-in-order','Master\PickingController@list_picking_not_in_order');
 });

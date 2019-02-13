@@ -163,4 +163,17 @@ class SalesController extends Controller
 
         return $data;
     }
+
+    public function list_sales(Request $request)
+    {
+        $sales=Sales::select('id','nm','status');
+
+        if($request->has('q')){
+            $sales=$sales->where('nm','like','%'.request('q').'%');
+        }
+
+        $sales=$sales->get();
+
+        return $sales;
+    }
 }

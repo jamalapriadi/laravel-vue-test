@@ -1,11 +1,13 @@
 <template>
     <div class="row">
-        <div class="col-lg-4">
-            <div class="card card-default">
-                <div class="card-header">Order</div>
+        <div class="col-lg-3">
+            <div class="card card-accent-primary">
+                <div class="card-header">
+                    Picking
+                </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="" class="control-label">Nomor Order</label>
+                        <label for="" class="control-label">Kode Picking</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
                     </div>
 
@@ -15,90 +17,125 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="" class="control-label">Kd. Picking</label>
-                        <select name="kd_picking" id="kd_picking" class="form-control" v-model="state.kd_picking" @change="ubahPicking">
-                            <option value="" disabled selected>--Pilih Kode Picking--</option>
-                            <option v-for="(l,index) in pickings" v-bind:key="index" v-bind:value="l.kd_picking">{{l.kd_picking}}</option>
+                        <label for="" class="control-label">Kode Transaksi</label>
+                        <select name="kd_trans" id="kd_trans" class="form-control" v-model="state.kd_trans">
+                            <option v-for="(l,index) in kodetrans" v-bind:value="l" v-bind:key="index">{{l}}</option>
                         </select>
                     </div>
 
+                     <!-- v-if="state.kd_trans == 'Kredit'" -->
+                    <div class="form-group">
+                        <label for="" class="control-label">Tanggal Jatuh Tempo</label>
+                        <date-picker v-model="state.tanggaljt" :config="options"></date-picker>
+                    </div>
+
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-8">
-            <div class="card card-default" v-show="tampilDetail">
+        <div class="col-lg-9">
+            <div class="card card-default">
                 <div class="card-header">Detail Picking</div>
                 <div class="card-body">
-                    <table class="table">
-                        <!-- <thead> -->
-                            <tr>
-                                <th>No. PO</th>
-                                <td>{{state.no_po}}</td>
-                            </tr>
-                            <tr>
-                                <th>Tanggal Picking</th>
-                                <td>{{state.tanggal}}</td>
-                            </tr>
-                            <tr>
-                                <th>Customer</th>
-                                <td>{{state.customer}}</td>
-                            </tr>
-                            <tr>
-                                <th>Kode Transaksi</th>
-                                <td>{{state.kd_trans}}</td>
-                            </tr>
-                            <tr>
-                                <th>Lokasi</th>
-                                <td>{{state.lokasi}}</td>
-                            </tr>
-                            <tr>
-                                <th>Sales</th>
-                                <td>{{state.sales}}</td>
-                            </tr>
-                        <!-- </thead> -->
-                    </table>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Nomor PO</label>
+                                <div class="col-lg-9">
+                                    <select name="po" id="po" class="form-control" v-model="state.no_po" @change="changePo">
+                                        <option value="" disabled selected>--Pilih PO--</option>
+                                        <option v-for="(l,index) in pos" v-bind:key="index" v-bind:value="l.no_po">{{l.no_po}}</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <br><br>
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Customer</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" v-model="state.customer" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Sales</label>
+                                <div class="col-lg-9">
+                                    <select name="sales" id="sales" class="form-control" v-model="state.sales">
+                                        <option value="" disabled selected>--Pilih Sales--</option>
+                                        <option v-for="(l, index) in saless" v-bind:key="index"  v-bind:value="l.id">{{l.id}} - [{{l.nm}}]</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Lokasi</label>
+                                <div class="col-lg-9">
+                                    <select name="lokasi" id="lokasi" class="form-control" v-model="state.lokasi" @change="changeLokasi">
+                                        <option value="" disabled selected>--Pilih Lokasi--</option>
+                                        <option v-for="(l, index) in lokasis" v-bind:key="index"  v-bind:value="l.id">{{l.id}} - [{{l.nm}}]</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Keterangan</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" v-model="state.keterangan">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br>
+
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>No.</th>
                                 <th>Kode / Nama Barang</th>
+                                <th>Dos / PCS  PO</th>
+                                <th>Rak</th>
                                 <th>Dos</th>
                                 <th>PCS</th>
-                                <th>Harga</th>
-                                <th width='11%'>Jumlah</th>
-                                <!-- <th width='11%'>Diskon %</th> -->
-                                <th>Subtotal</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(l,index) in barangs" v-bind:key="index">
+                            <tr v-for="(l,index) in barang" v-bind:key="index">
+                                <!-- <input type="hidden" v-model="state.kodes[index]" :value="l.kd">
+                                <input type="hidden" v-model="state.pdoss[index]" :value="l.pivot.dos">
+                                <input type="hidden" v-model="state.ppcss[index]" :value="l.pivot.pcs"> -->
                                 <td>{{ index+1 }}</td>
                                 <td>{{l.kd}} / {{l.nm}}</td>
-                                <td>{{l.pivot.dos}}</td>
-                                <td>{{l.pivot.pcs}}</td>
+                                <td>{{l.pivot.dos}} / {{l.pivot.pcs}}</td>
                                 <td>
-                                    <input type="number" class="form-control" v-model="state.jual[index]" readonly>
+                                    <select name="rak" id="rak" class="form-control" v-model="state.rak[index]">
+                                        <option value="" disabled selected>--Pilih Rak--</option>
+                                        <option v-for="(k,index) in raks" v-bind:key="index" v-bind:value="k.kd">{{k.kd}} [ {{k.nm}} ]</option>
+                                    </select>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" v-model="state.jumlah[index]" v-bind:enter="ubahJumlah(index)">
+                                    <input type="text" class="form-control" id="dos" placeholder="Dos" v-model="state.dos[index]">
                                 </td>
-                                <!-- <td>
-                                    <input type="number" class="form-control" v-model="state.diskon[index]" @change="ubahDiskon(index)">
-                                </td> -->
                                 <td>
-                                    <input type="number" class="form-control" v-model="state.subtotal[index]" readonly>
+                                    <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]">
                                 </td>
                             </tr>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="6">TOTAL</th>
-                                <th>{{state.total}}</th>
-                            </tr>
-                        </tfoot>
                     </table>
 
                     <hr>
@@ -119,6 +156,7 @@
             </div>
         </div>
     </div>
+    
 </template>
 
 <script>
@@ -143,9 +181,8 @@ export default {
     data() {
         return {
             state: {
-                kd_picking:'',
                 kode:'',
-                nama: '',
+                no_po:'',
                 customer:'',
                 tanggal:new Date(),
                 tanggaljt:new Date(),
@@ -153,14 +190,13 @@ export default {
                 keterangan:'',
                 lokasi:'',
                 sales:'',
-                total:0,
                 kd_trans:'Tunai',
-                listBarang:[],
+                listBarang:[{rak:[]}],
+                rak:[],
                 kodes:[],
-                jual:[],
-                jumlah:[],
-                diskon:[],
-                subtotal:[],
+                pdos:[],
+                ppcs:[],
+                rak:[],
                 dos:[],
                 pcs:[]
             },
@@ -177,15 +213,7 @@ export default {
             kodetrans: ['Tunai','Kredit'],
             selectedBarangs: '',
             barangs: [],
-            barang:{
-                kode:'',
-                nama:'',
-                harga:'',
-                dos:'',
-                pcs:'',
-                diskon:'',
-                jumlah:''
-            },
+            barang:[],
             listBarang:[],
             list:[],
             listData:{},
@@ -194,9 +222,10 @@ export default {
             customers:[],
             perusahaans:[],
             saless:[],
+            kodes:[],
             lokasis:[],
-            pickings:[],
-            tampilDetail:false,
+            pos:[],
+            raks:[],
         }
     },
     watch: {
@@ -210,84 +239,44 @@ export default {
     },
     mounted() {
         this.getCode();
-        this.getPicking();
         // this.getCustomer();
         // this.getPerusahaan();
-        // this.getSales();
-        // this.getLokasi();
+        this.getNoPo();
+        this.getSales();
+        this.getLokasi();
     },
     methods: {
+        getNoPo(){
+            axios.get('/data/list-po-not-in-picking')
+                .then(response => {
+                    this.pos= response.data
+                })
+        },
         getCode(){
-            axios.get('/data/autonumber-order')
+            axios.get('/data/autonumber-picking')
                 .then(response => {
                     this.state.kode = response.data;
                 })
         },
-
-        ubahPicking(){
-            console.log(this.state.kd_picking);
-            axios.get('/data/picking/'+this.state.kd_picking)
+        changePo(){
+            axios.get('/data/po/'+this.state.no_po)
                 .then(response => {
-                    this.tampilDetail=true;
-                    console.log(response.data);
-                    this.state.no_po=response.data.no_po;
-                    this.state.tanggal=response.data.tgl;
-                    this.state.customer=response.data.po.customer.nm;
-                    this.state.kd_trans=response.data.kd_trans;
-                    this.state.lokasi=response.data.lokasi.nm;
-                    this.state.sales=response.data.sales.nm;
-                    this.barangs=response.data.detail;
+                    this.state.customer=response.data.customer.nm;
+                    this.barang=response.data.detail;
 
-                    for (var i = 0; i < this.barangs.length; i++) {
-                        this.state.kodes.push(this.barangs[i].kd);
-                        this.state.jual.push(this.barangs[i].jual);
-                        this.state.dos.push(this.barangs[i].pivot.dos);
-                        this.state.pcs.push(this.barangs[i].pivot.pcs);
-                        this.state.diskon.push(0);
-                        this.state.jumlah.push(0);
-                        this.state.subtotal.push(this.barangs[i].jual);
+                    for (var i = 0; i < this.barang.length; i++) {
+                        this.state.kodes.push(this.barang[i].kd);
+                        this.state.pdos.push(this.barang[i].pivot.dos)
+                        this.state.ppcs.push(this.barang[i].pivot.pcs)
                     }
-
-                    this.total();
                 })
         },
-
-
-        getPicking(){
-            axios.get('/data/list-picking-not-in-order')
+        changeLokasi(){
+            axios.get('/data/list-rak?lokasi='+this.state.lokasi)
                 .then(response => {
-                    this.pickings = response.data;
+                    this.raks=response.data;
                 })
         },
-
-        ubahJumlah(index){
-            this.state.subtotal[index]=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
-
-            this.total();
-        },
-
-        ubahDiskon(index){
-            var jual=parseInt(this.state.jual[index]);
-            var jumlah=parseInt(this.state.jumlah[index]);
-            var diskon=parseInt(this.state.diskon[index]);
-
-            var h=(jual*jumlah)*diskon/100;
-
-            // this.state.subtotal[index]=(jual*jumlah)*diskon/100;
-
-            this.total();
-        },
-
-        total(){
-            var s=0;
-            for(var i=0; i<this.state.subtotal.length; i++){
-                s=parseInt(s)+parseInt(this.state.subtotal[i]);
-            }
-
-            this.state.total=s;
-        },
-
-
         store(e) {
             this.loading = true;
 
@@ -482,26 +471,34 @@ export default {
         },
 
         saveProgram(){
+            // console.log(this.state);
+            // console.log(this.kodes);
+            // console.log(this.rak);
             if(this.state.kode==""){
                 alert('Kode harus diisi');
 
                 return false;
             }
 
-            if(this.state.kd_picking==""){
-                alert('No Po harus diisi');
+            if(this.state.customer==""){
+                alert('Customer harus diisi');
+
+                return false;
+            }
+
+            if(this.state.sales==""){
+                alert('Sales Barang harus diisi');
 
                 return false;
             }
 
             this.loading = true;
 
-            axios.post('/data/order', this.state)
+            axios.post('/data/picking', this.state)
                 .then(response => {
                     if(response.data.success==true){
-                        this.state.kd_picking='';
                         this.state.kode='';
-                        this.state.nama= '';
+                        this.state.no_po='';
                         this.state.customer='';
                         this.state.tanggal=new Date();
                         this.state.tanggaljt=new Date();
@@ -509,19 +506,19 @@ export default {
                         this.state.keterangan='';
                         this.state.lokasi='';
                         this.state.sales='';
-                        this.state.total=0;
                         this.state.kd_trans='Tunai';
-                        this.state.listBarang=[];
+                        this.state.rak=[];
                         this.state.kodes=[];
-                        this.state.jual=[];
-                        this.state.jumlah=[];
-                        this.state.diskon=[];
-                        this.state.subtotal=[];
-
-                        this.tampilDetail=false;
+                        this.state.pdos=[];
+                        this.state.ppcs=[];
+                        this.state.rak=[];
+                        this.state.dos=[];
+                        this.state.pcs=[];
+                        this.barang=[];
 
                         this.getCode();
-                        this.getPicking();
+                        this.getNoPo();
+
                         this.message = 'Data has been saved.';
                         this.loading = false;
                     }else{
@@ -533,8 +530,8 @@ export default {
     },
     computed:{
         totalQty: function() {
-            return this.state.subtotal.reduce(function(a, c){
-                return a + Number(c || 0)
+            return this.listBarang.reduce(function(a, c){
+                return a + Number(c.dos || 0)
             }, 0)
         }
     }

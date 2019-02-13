@@ -7,11 +7,51 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
-    protected $table="order";
-    // protected $primaryKey="kd_bank";
+    protected $table="orders";
+    protected $primaryKey="no_order";
+    public $incrementing=false;
 
     // protected $dates=['deleted_at'];
+
+    public function detail(){
+        return $this->belongsToMany('App\Models\Barang','rorder','no_order','kd_brg','no_order','kd')
+            ->withPivot(
+                [
+                    'no_order',
+                    'kd_brg',
+                    'dos',
+                    'pcs',
+                    'hrg',
+                    'diskon',
+                    'jumlah'
+                ]
+            );
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo('App\Models\Customer','customer_id','kd');
+    }
+
+    public function perusahaan()
+    {
+        return $this->belongsTo('App\Models\Perusahaan','perusahaan_id');
+    }
+
+    public function sales()
+    {
+        return $this->belongsTo('App\Models\Sales','sales_id');
+    }
+
+    public function lokasi()
+    {
+        return $this->belongsTo('App\Models\Lokasi','lokasi_id');
+    }
+
+    public function picking(){
+        return $this->belongsTo('App\Models\Picking','kd_picking','kd_picking');
+    }
 
 }

@@ -217,4 +217,17 @@ class CustomerController extends Controller
 
         return $newId;
     }
+
+    public function list_customer(Request $request)
+    {
+        $customer=Customer::with('kota');
+
+        if($request->has('q')){
+            $customer=$customer->where('nm','like','%'.request('q').'%');
+        }
+
+        $customer=$customer->get();
+
+        return $customer;
+    }
 }

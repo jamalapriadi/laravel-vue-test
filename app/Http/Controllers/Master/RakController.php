@@ -157,4 +157,17 @@ class RakController extends Controller
 
         return $data;
     }
+
+    public function list_rak(Request $request)
+    {
+        $rak=Rak::select('kd','nm','lokasi_id');
+
+        if($request->has('lokasi')){
+            $rak=$rak->where('lokasi_id',$request->input('lokasi'));
+        }
+
+        $rak=$rak->get();
+
+        return $rak;
+    }
 }

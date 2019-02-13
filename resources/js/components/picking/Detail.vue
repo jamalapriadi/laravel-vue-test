@@ -2,23 +2,29 @@
     <div class="container">
         <div class="card card-accent-primary">
             <div class="card-header">
-                Detail Order
+                Detail Picking
             </div>
             <div class="card-body">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>No. Order</th>
+                            <th>Kode. picking</th>
                             <th>{{state.kode}}</th>
-                        </tr>
-                        <tr>
-                            <th>Kd. Picking</th>
-                            <th>{{state.kd_picking}}</th>
                         </tr>
                         <tr>
                             <th>Tanggal</th>
                             <th>{{state.tanggal}}</th>
                         </tr>
+                        <tr>
+                            <th>No. PO</th>
+                            <th>{{state.no_po}}</th>
+                        </tr>
+
+                        <tr>
+                            <th>Customer</th>
+                            <th>{{state.customer}}</th>
+                        </tr>
+                        
                         <tr>
                             <th>Kd. Trans</th>
                             <th>{{state.kd_trans}}</th>
@@ -27,10 +33,7 @@
                             <th>Tanggal Jatuh Tempo</th>
                             <th>{{state.tanggaljt}}</th>
                         </tr>
-                        <tr>
-                            <th>Customer</th>
-                            <th>{{state.customer}}</th>
-                        </tr>
+                        
                         <tr>
                             <th>Sales</th>
                             <th>{{state.sales}}</th>
@@ -59,12 +62,10 @@
                                     <th>No.</th>
                                     <th>Kode Barang</th>
                                     <th>Nama Barang</th>
+                                    <th>PDos</th>
+                                    <th>PPcs</th>
                                     <th>Dos</th>
                                     <th>Pcs</th>
-                                    <th>Harga</th>
-                                    <!-- <th>Diskon</th> -->
-                                    <th>Jumlah</th>
-                                    <th>Subtotal</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,20 +73,12 @@
                                     <td>{{index+1}}</td>
                                     <td>{{l.kd}}</td>
                                     <td>{{l.nm}}</td>
+                                    <td>{{l.pivot.pdos}}</td>
+                                    <td>{{l.pivot.ppcs}}</td>
                                     <td>{{l.pivot.dos}}</td>
                                     <td>{{l.pivot.pcs}}</td>
-                                    <td>{{l.pivot.hrg}}</td>
-                                    <!-- <td>{{l.pivot.diskon}}</td> -->
-                                    <td>{{l.pivot.jumlah}}</td>
-                                    <td>{{parseInt(l.pivot.hrg) * parseInt(l.pivot.jumlah)}}</td>
                                 </tr>
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th colspan="7">Total</th>
-                                    <th>{{state.total}}</th>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -93,7 +86,7 @@
                 <hr>
 
                 <div class="form-group">
-                    <router-link to="/list-order" class="btn btn-default">
+                    <router-link to="/list-picking" class="btn btn-default">
                         <i class="fa fa-backward"></i> Back
                     </router-link>
                 </div>
@@ -112,7 +105,6 @@ export default {
             url: window.location.origin + window.location.pathname,
             state: {
                 kode:'',
-                kd_picking:'',
                 nama: '',
                 customer:'',
                 tanggal:new Date(),
@@ -134,37 +126,24 @@ export default {
             let id= app.$route.params.id;
             this.kelompokId = id;
 
-            axios.get('/data/order/'+id)
+            axios.get('/data/picking/'+id)
                 .then(response => {
-                    this.state.kode= response.data.no_order;
-                    this.state.customer= response.data.picking.po.customer.nm;
-                    this.state.tanggal= response.data.picking.tgl;
-                    this.state.tanggaljt= response.data.picking.tglj;
-                    this.state.perusahaan= response.data.picking.perusahaan.nama;
-                    this.state.keterangan= response.data.picking.ket;
-                    this.state.lokasi= response.data.picking.lokasi.nm;
-                    this.state.sales= response.data.picking.sales.nm;
-                    this.state.kd_trans= response.data.picking.kd_trans;
+                    this.state.kode= response.data.kd_picking;
+                    this.state.no_po= response.data.no_po;
+                    this.state.customer= response.data.po.customer.nm;
+                    this.state.tanggal= response.data.tgl;
+                    this.state.tanggaljt= response.data.tglj;
+                    this.state.perusahaan= response.data.perusahaan.nama;
+                    this.state.keterangan= response.data.keterangan;
+                    this.state.lokasi= response.data.lokasi.nm;
+                    this.state.sales= response.data.sales.nm;
+                    this.state.kd_trans= response.data.kd_trans;
                     this.state.listBarang= response.data.detail;
-                    this.state.total= response.data.total;
-                    this.state.kd_picking=response.data.kd_picking;
                 })
                 .catch( error => {
                     alert('data tidak dapat di load');
                 })
         },
-
-        saveForm(){
-            var newState = this.state;
-
-            axios.patch('/data/order/'+this.kelompokId, newState)
-                .then(response => {
-                    this.$router.replace('/list-order');
-                })
-                .catch( error => {
-                    alert('data gagal diupdate');
-                })
-        }
     },
     mounted() {
         this.getData();

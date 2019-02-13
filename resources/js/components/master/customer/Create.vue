@@ -13,7 +13,7 @@
                 <form @submit.prevent="store" action="/data/customer" method="post">
                     <div class="form-group">
                         <label for="" class="control-label">Kode Customer</label>
-                        <input type="text" class="form-control" name="kode" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
+                        <input type="text" class="form-control" name="kode" :class="{ 'is-invalid': errors.kode }" v-model="state.kode">
                     </div>
                     <div class="form-group">
                         <label for="" class="control-label">Nama</label>
@@ -145,7 +145,7 @@ export default {
                         top:'',
                         jenis:''
                     }
-                    this.getKodeCustomer();
+                    // this.getKodeCustomer();
                     this.message = 'Data has been saved.';
                 }else{
                     this.loading=false;
@@ -178,7 +178,7 @@ export default {
         }
     },
     mounted() {
-        this.getKodeCustomer();
+        // this.getKodeCustomer();
         this.getKota();
     },
     computed:{
