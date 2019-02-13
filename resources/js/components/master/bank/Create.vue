@@ -11,13 +11,13 @@
                 </div>
 
                 <form @submit.prevent="store" action="/data/bank" method="post">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="" class="control-label">Kode Bank</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode">
                         
-                        <!-- <div class="invalid-feedback">Please provide a valid informations.</div> -->
+                        <div class="invalid-feedback">Please provide a valid informations.</div>
 
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="" class="control-label">Nama Bank</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="state.nama">
@@ -70,7 +70,7 @@ export default {
                 if(response.data.success==true){
                     this.errors = [];
                     this.state = {
-                        kode: '',
+                        // kode: '',
                         nama: '',
                         status: ''
                     }
@@ -91,12 +91,12 @@ export default {
         }
     },
     computed:{
-        valKode() {
-            if (this.post.kode.length === 0 || this.post.kode.length > 50) {
-                return true;
-            } 
-            return false;
-        },
+        // valKode() {
+        //     if (this.post.kode.length === 0 || this.post.kode.length > 50) {
+        //         return true;
+        //     } 
+        //     return false;
+        // },
         valNama() {
             if (this.post.nama.length === 0 || this.post.nama.length > 50) {
                 return true;

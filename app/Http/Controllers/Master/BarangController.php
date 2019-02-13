@@ -319,4 +319,16 @@ class BarangController extends Controller
 
         return $data;
     }
+
+    public function cari_barang_by_nama(Request $request)
+    {
+        $barang=Barang::select('kd','nm');
+
+        if($request->has('q')){
+            $barnag=$barang->where('nm','like','%'.request('q').'%')
+                ->orWhere('kd','like','%'.request('q').'%');
+        }
+
+        return $barang->get();
+    }
 }

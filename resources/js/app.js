@@ -33,13 +33,18 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import VueSweetalert2 from 'vue-sweetalert2';
 import Spinner from 'vue-simple-spinner';
-import BootstrapVue from 'bootstrap-vue'
+import BootstrapVue from 'bootstrap-vue';
+import Vuelidate from 'vuelidate';
+import Autocomplete from 'v-autocomplete'
+import 'v-autocomplete/dist/v-autocomplete.css'
 
 
 Vue.use(VueRouter);
 Vue.use(VueSweetalert2);
 Vue.use(Spinner);
 Vue.use(BootstrapVue);
+Vue.use(Vuelidate);
+Vue.use(Autocomplete)
 
 //define routes for users
 const routes = [
@@ -109,6 +114,7 @@ const routes = [
     { path: '/rak', name: 'rakIndex', component: require('./components/master/rak/Index.vue').default },
     { path: '/add-rak', name: 'rakCreate', component: require('./components/master/rak/Create.vue').default },
     { path: '/edit-rak/:id', name: 'rakEdit', component: require('./components/master/rak/Edit.vue').default },
+    { path: '/import-rak', name:'rakImport', component: require('./components/master/rak/Import.vue').default},
     { path: '/suplier', name: 'suplierIndex', component: require('./components/master/suplier/Index.vue').default },
     { path: '/add-suplier', name: 'suplierCreate', component: require('./components/master/suplier/Create.vue').default },
     { path: '/edit-suplier/:id', name: 'suplierEdit', component: require('./components/master/suplier/Edit.vue').default },

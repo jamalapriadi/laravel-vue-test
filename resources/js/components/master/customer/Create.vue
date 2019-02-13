@@ -16,8 +16,28 @@
                         <input type="text" class="form-control" name="kode" :class="{ 'is-invalid': errors.kode }" v-model="state.kode">
                     </div>
                     <div class="form-group">
-                        <label for="" class="control-label">Nama</label>
+                        <label for="" class="control-label">Nama Toko</label>
+                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.toko }" v-model="state.toko">
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label">Nama Pemilik</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="state.nama">
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label">Alias</label>
+                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.alias }" v-model="state.alias">
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label">Alamat</label>
+                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.alamat }" v-model="state.alamat">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="" class="control-label">Kota</label>
+                        <select name="kota" id="kota" class="form-control" :class="{ 'is-invalid': errors.kota }" v-model="state.kota">
+                            <option value="" disabled selected>--Pilih Kota--</option>
+                            <option v-for="(p,index) in kota" v-bind:key="index" v-bind:value="p.kd_kota">{{p.nm}}</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="" class="control-label">NIK</label>
@@ -28,25 +48,10 @@
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.npwp }" v-model="state.npwp">
                     </div>
                     <div class="form-group">
-                        <label for="" class="control-label">Alamat</label>
-                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.alamat }" v-model="state.alamat">
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="control-label">Alias</label>
-                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.alias }" v-model="state.alias">
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="control-label">Kota</label>
-                        <select name="kota" id="kota" class="form-control" :class="{ 'is-invalid': errors.kota }" v-model="state.kota">
-                            <option value="" disabled selected>--Pilih Kota--</option>
-                            <option v-for="(p,index) in kota" v-bind:key="index" v-bind:value="p.kd_kota">{{p.nm}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="control-label">Telepon</label>
+                        <label for="" class="control-label">No. Hp / Telepon</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.telepon }" v-model="state.telepon">
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="" class="control-label">Nmtk</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.nmtk }" v-model="state.nmtk">
                     </div>
@@ -57,7 +62,7 @@
                     <div class="form-group">
                         <label for="" class="control-label">Fax</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.fax }" v-model="state.fax">
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="" class="control-label">Plafon</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.plafon }" v-model="state.plafon">
@@ -66,10 +71,10 @@
                         <label for="" class="control-label">Top</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.top }" v-model="state.top">
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="" class="control-label">Jenis</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.jenis }" v-model="state.jenis">
-                    </div>
+                    </div> -->
                     <hr>
                     
                     <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
@@ -101,6 +106,7 @@ export default {
         return {
             state: {
                 kode: '',
+                toko:'',
                 nama: '',
                 nik:'',
                 npwp:'',
@@ -131,6 +137,7 @@ export default {
                     this.errors = [];
                     this.state = {
                         kode: '',
+                        toko:'',
                         nama: '',
                         nik:'',
                         npwp:'',

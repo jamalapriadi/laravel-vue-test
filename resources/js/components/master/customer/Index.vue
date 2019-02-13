@@ -32,38 +32,40 @@
                     <thead>
                         <tr>
                             <th width="5%">No.</th>
-                            <th>NPWP</th>
-                            <th>NIK</th>
-                            <th>Nama</th>
-                            <th>Alamat</th>
+                            <th>Nama Toko</th>
+                            <th>Nama Pemilik</th>
                             <th>Alias</th>
+                            <th>Alamat</th>
                             <th>Kota</th>
-                            <th>NMTK</th>
-                            <th>Telpon</th>
-                            <th>Kontak</th>
-                            <th>Fax</th>
+                            <th>NIK</th>
+                            <th>NPWP</th>
+                            <!-- <th>NMTK</th> -->
+                            <th>No. HP / Telpon</th>
+                            <!-- <th>Kontak</th>
+                            <th>Fax</th> -->
                             <th>Plafon</th>
                             <th>Top</th>
-                            <th>Jenis</th>
+                            <!-- <th>Jenis</th> -->
                             <th width="17%"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(l, index) in list.data" v-bind:key="index">
                             <td>{{index+1}}</td>
-                            <td>{{l.npwp}}</td>
-                            <td>{{l.nik}}</td>
+                            <td>{{l.nm_toko}}</td>
                             <td>{{l.nm}}</td>
-                            <td>{{l.alamat}}</td>
                             <td>{{l.alias}}</td>
+                            <td>{{l.alamat}}</td>
                             <td>{{l.kota.nm}}</td>
-                            <td>{{l.nmtk}}</td>
+                            <td>{{l.nik}}</td>
+                            <td>{{l.npwp}}</td>
+                            <!-- <td>{{l.nmtk}}</td> -->
                             <td>{{l.tlpn}}</td>
-                            <td>{{l.kontak}}</td>
-                            <td>{{l.fax}}</td>
+                            <!-- <td>{{l.kontak}}</td>
+                            <td>{{l.fax}}</td> -->
                             <td>{{l.plafon}}</td>
                             <td>{{l.top}}</td>
-                            <td>{{l.jenis}}</td>
+                            <!-- <td>{{l.jenis}}</td> -->
                             <td>
                                 <div class="btn-group">
                                     <router-link :to="{ name: 'customerEdit', params: {id: l.kd}}" class="btn btn-warning">

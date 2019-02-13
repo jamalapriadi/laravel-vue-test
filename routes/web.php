@@ -39,6 +39,8 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('po','Master\PoController');
     Route::resource('program','Master\ProgramController');
     Route::resource('rak','Master\RakController');
+    Route::get('sample-rak','Master\RakController@sample_rak');
+    Route::post('import-new-rak','Master\RakController@import_new_rak');
     Route::resource('sales','Master\SalesController');
     Route::resource('stok','Master\StokController');
     // Route::resource('rak','Master\RakController');
@@ -75,6 +77,8 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('autonumber-order','Master\OrderController@autonumber_order');
     Route::get('list-barang','Master\BarangController@list_barang');
     Route::get('cari-barang-by-kode/{id}','Master\BarangController@cari_barang_by_kode');
+    Route::get('cari-barang-by-nama','Master\BarangController@cari_barang_by_nama');
+    Route::get('cari-customer-by-nama','Master\CustomerController@cari_customer_by_nama');
     Route::get('list-po-not-in-picking','Master\PoController@list_po_not_in_picking');
     Route::get('list-picking-not-in-order','Master\PickingController@list_picking_not_in_order');
 });

@@ -50,10 +50,10 @@
                         <th>Nama</th>
                         <th>Kelompok</th>
                         <th>Merk</th>
-                        <th>Status</th>
-                        <th>Satuan</th>
+                        <!-- <th>Status</th> -->
+                        <!-- <th>Satuan</th> -->
                         <th>PCS</th>
-                        <th>Harga Beli</th>
+                        <!-- <th>Harga Beli</th> -->
                         <th>Harga Pokok</th>
                         <th>Jual</th>
                         <th width="17%"></th>
@@ -66,10 +66,10 @@
                         <td>{{l.nm}}</td>
                         <td>{{l.kelompok.nm}}</td>
                         <td>{{l.merk.nm}}</td>
-                        <td>{{l.status}}</td>
-                        <td>{{l.satuan}}</td>
+                        <!-- <td>{{l.status}}</td> -->
+                        <!-- <td>{{l.satuan}}</td> -->
                         <td>{{l.pcs}}</td>
-                        <td>{{l.hrgb}}</td>
+                        <!-- <td>{{l.hrgb}}</td> -->
                         <td>{{l.hrgp}} </td>
                         <td>{{l.jual}}</td>
                         <td>

@@ -29,10 +29,18 @@
                         <div class="form-group row">
                             <label for="" class="control-label col-lg-3">Customer</label>
                             <div class="col-lg-9">
-                                <select name="customer" id="customer" class="form-control" v-model="state.customer">
+                                <!-- <select name="customer" id="customer" class="form-control" v-model="state.customer">
                                     <option value="" disabled selected>--Pilih Customer--</option>
                                     <option v-for="(l, index) in customers" v-bind:key="index"  v-bind:value="l.kd">{{l.kd}} - [{{l.nm}}]</option>
-                                </select>
+                                </select> -->
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <vue-bootstrap-typeahead v-model="carikodecustomer" :data="listkodecustomer" placeholder="Kode Customer" @hit="getKodeCustomer($event)" ref="kodecustomer"/>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <vue-bootstrap-typeahead v-model="carinamacustomer" :data="listcaricustomer" placeholder="Cari Customer..." @hit="getNamaCustomer($event)" ref="namacustomer"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -64,38 +72,12 @@
                 <div class="row">
                     <div class="form-group col-md-3">
                         <label for="" class="control-label">Kode barang</label>
-                        <!-- <multiselect v-model="value" :options="tanggal"></multiselect> -->
-
-                        <!-- <multiselect v-model="barang.kode" 
-                            id="ajax" 
-                            label="nm" 
-                            track-by="kd" 
-                            placeholder="Type to search" 
-                            open-direction="bottom" 
-                            :multiple="false"
-                            :options="barangs" 
-                            :searchable="true" 
-                            :loading="isLoading" 
-                            :internal-search="false" 
-                            :clear-on-select="false" 
-                            :close-on-select="true" 
-                            :options-limit="25" 
-                            :limit="3" 
-                            :limit-text="limitText" 
-                            :max-height="600" 
-                            :show-no-results="false" 
-                            :hide-selected="false" 
-                            :custom-label="nameWithLang"
-                            @input="executeLoader"
-                            @search-change="asyncFind">
-                        </multiselect> -->
-
-                        <input type="text" placeholder="Cari Kode barang" class="form-control" v-model="barang.kode" v-on:keyup.enter="cariBarang">
+                        <vue-bootstrap-typeahead v-model="carikodebarang" :data="listkodebarang" placeholder="Cari Kode Barang..." @hit="getKodeBarang($event)" ref="kodebarang"/>
                     </div>
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">Nama Barang</label>
-                        <input type="text" placeholder="Cari barang" class="form-control" v-model="barang.nama" readonly>
+                        <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Cari Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
                     </div>
 
                     <div class="form-group col-md-2">
@@ -245,12 +227,15 @@ import datePicker from 'vue-bootstrap-datetimepicker';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
 import Multiselect from 'vue-multiselect'
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
+import uniq from 'lodash/uniq'
 
 export default {
     components: {
         VueLoading,
         datePicker,
-        Multiselect 
+        Multiselect,
+        VueBootstrapTypeahead
     },
     data() {
         return {
@@ -279,7 +264,9 @@ export default {
                 kode:'',
                 nama:'',
                 qty:'',
-                point:''
+                point:'',
+                dos:0,
+                pcs:0
             },
             listBarang:[],
             list:[],
@@ -287,7 +274,17 @@ export default {
             pencarian:'',
             isLoading: false,
             customers:[],
-            perusahaans:[]
+            perusahaans:[],
+            listCBarang:[],
+            listCCustomer:[],
+            listcaribarang:[],
+            listcaricustomer:[],
+            listkodecustomer:[],
+            listkodebarang:[],
+            carinamabarang:'',
+            carikodebarang:'',
+            carinamacustomer:'',
+            carikodecustomer:''
         }
     },
     watch: {
@@ -297,7 +294,23 @@ export default {
             }else{
                 this.showData();
             }
-        }
+        },
+
+        carinamabarang: _.debounce(function(addr){
+            this.cariBarangByNama(addr);
+        }, 500),
+
+        carinamacustomer: _.debounce(function(q){
+            this.cariNamaCustomerByName(q);
+        },500),
+
+        carikodebarang: _.debounce(function(q){
+            this.cariBarangByKode(q);
+        }, 500),
+
+        carikodecustomer: _.debounce(function(q){
+            this.cariKodeCustomerById(q);
+        },500),
     },
     mounted() {
         this.getCode();
@@ -311,6 +324,7 @@ export default {
                     this.state.kode = response.data;
                 })
         },
+
         store(e) {
             this.loading = true;
 
@@ -335,6 +349,139 @@ export default {
                     }
                 }
             });
+        },
+
+        async cariBarangByNama(query){
+            this.listcaribarang=[];
+            this.listCBarang=[];
+            let result=[];
+            axios.get('/data/cari-barang-by-nama?q='+query)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listcaribarang.push(response.data[i].nm);
+
+                        this.listCBarang.push(
+                            {
+                                kd:response.data[i].kd,
+                                nm:response.data[i].nm
+                            }
+                        );
+                    }
+                })
+        },
+
+        async cariBarangByKode(q){
+            this.listkodebarang=[];
+            this.listCBarang=[];
+            axios.get('/data/cari-barang-by-nama?q='+q)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listkodebarang.push(response.data[i].kd);
+
+                        this.listCBarang.push(
+                            {
+                                kd:response.data[i].kd,
+                                nm:response.data[i].nm
+                            }
+                        );
+                    }
+                })
+        },
+
+        async cariNamaCustomerByName(q){
+            this.listcaricustomer=[];
+            this.listCCustomer=[];
+            axios.get('/data/cari-customer-by-nama?q='+q)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listcaricustomer.push(response.data[i].nm);
+
+                        this.listCCustomer.push(
+                            {
+                                kd:response.data[i].kd,
+                                nm:response.data[i].nm
+                            }
+                        );
+                    }
+                })
+        },
+
+        async cariKodeCustomerById(q){
+            this.listkodecustomer=[];
+            this.listCCustomer=[];
+            axios.get('/data/cari-customer-by-nama?q='+q)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listkodecustomer.push(response.data[i].kd);
+
+                        this.listCCustomer.push(
+                            {
+                                kd:response.data[i].kd,
+                                nm:response.data[i].nm
+                            }
+                        );
+                    }
+                })
+        },
+        
+        getNamaBarang(item){
+            let unique = [...new Set(this.listCBarang)]; 
+            var nama="";
+            
+            for(var i=0; i< unique.length; i++){
+                if(unique[i].nm == item){
+                    nama=unique[i].kd;
+                }
+            }
+
+            this.barang.nama=item;
+            this.barang.kode=nama;
+            // this.carinamabarang=nama;
+            this.$refs.kodebarang.inputValue = nama
+        },
+
+        getKodeBarang(item){
+            let unique = [...new Set(this.listCBarang)]; 
+            var nama="";
+            
+            for(var i=0; i< unique.length; i++){
+                if(unique[i].kd == item){
+                    nama=unique[i].nm;
+                }
+            }
+
+            this.barang.kode=item;
+            this.barang.nama=nama;
+            // this.carinamabarang=nama;
+            this.$refs.namabarang.inputValue = nama;
+        },
+
+        getNamaCustomer(item){
+            let uniqueCus = [...new Set(this.listCCustomer)]; 
+            var nama="";
+            
+            for(var i=0; i< uniqueCus.length; i++){
+                if(uniqueCus[i].nm == item){
+                    nama=uniqueCus[i].kd;
+                }
+            };
+
+            this.$refs.kodecustomer.inputValue = nama
+            this.state.customer=nama;
+        },
+
+        getKodeCustomer(item){
+            let uniqueCus = [...new Set(this.listCCustomer)]; 
+            var nama="";
+            
+            for(var i=0; i< uniqueCus.length; i++){
+                if(uniqueCus[i].kd == item){
+                    nama=uniqueCus[i].nm;
+                }
+            };
+            
+            this.$refs.namacustomer.inputValue = nama
+            this.state.customer=item;
         },
 
         limitText (count) {
@@ -368,17 +515,17 @@ export default {
                 return false;
             }
 
-            if(this.barang.dos==""){
-                alert('Dos barang harus diisi');
+            // if(this.barang.dos==""){
+            //     alert('Dos barang harus diisi');
 
-                return false;
-            }
+            //     return false;
+            // }
 
-            if(this.barang.pcs==""){
-                alert('PCS harus diisi');
+            // if(this.barang.pcs==""){
+            //     alert('PCS harus diisi');
 
-                return false;
-            }
+            //     return false;
+            // }
 
 
             this.state.listBarang.push(
@@ -397,8 +544,10 @@ export default {
         kosongBarang(){
             this.barang.kode='';
             this.barang.nama='';
-            this.barang.dos='';
-            this.barang.pcs='';
+            this.barang.dos=0;
+            this.barang.pcs=0;
+            this.$refs.kodebarang.inputValue = '';
+            this.$refs.namabarang.inputValue = '';
         },
 
         deleteBarang: function(index) {
@@ -452,6 +601,8 @@ export default {
             console.log(brg);
             this.barang.kode=brg.kd;
             this.barang.nama=brg.nm;
+            this.$refs.kodebarang.inputValue = brg.kd;
+            this.$refs.namabarang.inputValue = brg.nm;
 
             this.$refs.myModalRef.hide()
         },
@@ -500,6 +651,8 @@ export default {
                         this.state.tanggal=new Date();
                         // this.state.perusahaan='';
                         this.state.keterangan='';
+                        this.$refs.kodecustomer.inputValue = '';
+                        this.$refs.namacustomer.inputValue = '';
                         this.state.listBarang=[];
 
                         this.getCode();

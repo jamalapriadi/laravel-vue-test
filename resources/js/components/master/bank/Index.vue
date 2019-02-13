@@ -31,7 +31,7 @@
                 <thead>
                     <tr>
                         <th width="5%">No.</th>
-                        <th>Kode Bank</th>
+                        <!-- <th>Kode Bank</th> -->
                         <th>Nama Bank</th>
                         <th>Status</th>
                         <th width="17%"></th>
@@ -40,7 +40,7 @@
                 <tbody>
                     <tr v-for="(l, index) in list.data" v-bind:key="index">
                         <td>{{index+1}}</td>
-                        <td>{{l.kd_bank}}</td>
+                        <!-- <td>{{l.kd_bank}}</td> -->
                         <td>{{l.nm}}</td>
                         <td>{{l.status}}</td>
                         <td>

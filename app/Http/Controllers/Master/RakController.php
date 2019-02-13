@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Master;
 use App\Models\Rak;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\RakExport;
+use App\Imports\RakImport;
 
 class RakController extends Controller
 {
@@ -169,5 +172,35 @@ class RakController extends Controller
         $rak=$rak->get();
 
         return $rak;
+    }
+
+    public function sample_rak(Request $request)
+    {
+        return Excel::download(new RakExport, 'rak.xlsx');
+    }
+
+    public function import_new_rak(Request $request)
+    {
+        $rules=['file'=>'required'];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi Gagal',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            Excel::import(new RakImport, request()->file('file'));
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil di import',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 }

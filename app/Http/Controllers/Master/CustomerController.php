@@ -46,14 +46,15 @@ class CustomerController extends Controller
     {
         $rules=[
             'nama'=>'required',
+            'toko'=>'required',
             'nik'=>'required',
             'npwp'=>'required',
             'alamat'=>'required',
             'alias'=>'required',
             'kota'=>'required',
             'telepon'=>'required',
-            'nmtk'=>'required',
-            'kontak'=>'required',
+            // 'nmtk'=>'required',
+            // 'kontak'=>'required',
             'kota'=>'required'
         ];
 
@@ -68,6 +69,7 @@ class CustomerController extends Controller
         }else{
             $cus=new Customer;
             $cus->kd=request('kode');
+            $cus->nm_toko=request('toko');
             $cus->nm=request('nama');
             $cus->alamat=request('alamat');
             $cus->alias=request('alias');
@@ -129,14 +131,15 @@ class CustomerController extends Controller
     {
         $rules=[
             'nama'=>'required',
+            'toko'=>'required',
             'nik'=>'required',
             'npwp'=>'required',
             'alamat'=>'required',
             'alias'=>'required',
             'kota'=>'required',
             'telepon'=>'required',
-            'nmtk'=>'required',
-            'kontak'=>'required',
+            // 'nmtk'=>'required',
+            // 'kontak'=>'required',
             'kota'=>'required'
         ];
 
@@ -150,6 +153,7 @@ class CustomerController extends Controller
             );
         }else{
             $cus=Customer::find($id);
+            $cus->nm_toko=request('toko');
             $cus->nm=request('nama');
             $cus->alamat=request('alamat');
             $cus->alias=request('alias');
@@ -229,5 +233,19 @@ class CustomerController extends Controller
         $customer=$customer->get();
 
         return $customer;
+    }
+
+    public function cari_customer_by_nama(Request $request)
+    {
+        $cus=Customer::select('kd','nm');
+
+        if($request->has('q')){
+            $cus=$cus->where('nm','like','%'.request('q').'%')
+                ->orWhere('kd','like','%'.request('q').'%');
+        }
+
+        $cus=$cus->get();
+
+        return $cus;
     }
 }

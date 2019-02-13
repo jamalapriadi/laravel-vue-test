@@ -6,13 +6,13 @@
             </div>
             <div class="card-body">
                 <form v-on:submit.prevent="saveForm()">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="" class="control-label">Kode Bank</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode">
                         
-                        <!-- <div class="invalid-feedback">Please provide a valid informations.</div> -->
+                        <div class="invalid-feedback">Please provide a valid informations.</div>
 
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="" class="control-label">Nama Bank</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="state.nama">
@@ -49,7 +49,7 @@ export default {
             bankId:'',
             url: window.location.origin + window.location.pathname,
             state: {
-                kode: '',
+                // kode: '',
                 nama: '',
                 status: ''
             },
@@ -65,7 +65,7 @@ export default {
 
             axios.get('/data/bank/'+id)
                 .then(response => {
-                    this.state.kode = response.data.kd_bank;
+                    // this.state.kode = response.data.kd_bank;
                     this.state.nama = response.data.nm;
                     this.state.status = response.data.status;
                     console.log(response);

@@ -46,7 +46,7 @@ class BankController extends Controller
     public function store(Request $request)
     {
         $rules=[
-            'kode'=>'required|max:5',
+            // 'kode'=>'required|max:5',
             'nama'=>'required|max:30',
             'status'=>'required|max:15'
         ];
@@ -61,7 +61,7 @@ class BankController extends Controller
             );
         }else{
             $bank=new Bank;
-            $bank->kd_bank=request('kode');
+            // $bank->kd_bank=request('kode');
             $bank->nm=request('nama');
             $bank->status=request('status');
 
@@ -111,7 +111,7 @@ class BankController extends Controller
     public function update(Request $request, $id)
     {
         $rules=[
-            'kode'=>'required|max:5',
+            // 'kode'=>'required|max:5',
             'nama'=>'required|max:30',
             'status'=>'required|max:15'
         ];
@@ -126,7 +126,7 @@ class BankController extends Controller
             );
         }else{
             $bank=Bank::find($id);
-            $bank->kd_bank=request('kode');
+            // $bank->kd_bank=request('kode');
             $bank->nm=request('nama');
             $bank->status=request('status');
 

@@ -7,6 +7,10 @@
                 <router-link to="/add-rak" class="btn btn-primary">
                     <i class="fa fa-plus"></i> Add New
                 </router-link>
+
+                <router-link to="/import-rak" class="btn btn-success text-white">
+                    <i class="fa fa-file-excel"></i> Import Rak
+                </router-link>
             </div>
         </div>
 

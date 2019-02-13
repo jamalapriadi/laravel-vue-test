@@ -13,6 +13,11 @@ class Rak extends Model
     protected $primaryKey="kd";
 
     // protected $dates=['deleted_at'];
+    protected $fillable = [
+        'kd', 
+        'nm',
+        'lokasi_id'
+    ];
 
     public function lokasi(){
         return $this->belongsTo('App\Models\Lokasi','lokasi_id')

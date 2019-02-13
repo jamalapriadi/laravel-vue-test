@@ -32,7 +32,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="" class="control-label">Satuan</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.satuan }" v-model="state.satuan">
                     </div>
@@ -40,17 +40,17 @@
                     <div class="form-group">
                         <label for="" class="control-label">Status</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.status }" v-model="state.status">
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                         <label for="" class="control-label">PCS</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.pcs }" v-model="state.pcs">
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="" class="control-label">Harga Beli</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.hrgb }" v-model="state.hrgb">
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                         <label for="" class="control-label">Harga Pokok</label>
