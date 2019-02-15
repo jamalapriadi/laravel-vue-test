@@ -19,8 +19,7 @@ class PickingController extends Controller
             [
                 'po',
                 'po.customer',
-                'sales',
-                'lokasi',
+                'po.lokasi',
                 'perusahaan'
             ]
         )->where('perusahaan_id',auth()->user()->perusahaan_id);
@@ -52,8 +51,6 @@ class PickingController extends Controller
             'kode'=>'required',
             'no_po'=>'required',
             'kd_trans'=>'required',
-            'sales'=>'required',
-            'lokasi'=>'required',
             'tanggal'=>'required',
             'kodes'=>'required',
             'dos'=>'required',
@@ -73,11 +70,9 @@ class PickingController extends Controller
             $p->kd_picking=request('kode');
             $p->no_po=request('no_po');
             $p->ket=request('keterangan');
-            $p->sales_id=request('sales');
             $p->kd_trans=request('kd_trans');
             $p->tgl=date('Y-m-d',strtotime(request('tanggal')));
             $p->tglj=date('Y-m-d',strtotime(request('tanggaljt')));
-            $p->lokasi_id=request('lokasi');
             $p->perusahaan_id=auth()->user()->perusahaan_id;
             $p->insert_user=auth()->user()->username;
             $p->update_user=auth()->user()->username;
@@ -133,8 +128,7 @@ class PickingController extends Controller
             [
                 'po',
                 'po.customer',
-                'sales',
-                'lokasi',
+                'po.lokasi',
                 'perusahaan',
                 'detail'
             ]

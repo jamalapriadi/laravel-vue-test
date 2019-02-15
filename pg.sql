@@ -14,7 +14,7 @@
 -- Dumping structure for table db_penjualan.bank
 DROP TABLE IF EXISTS `bank`;
 CREATE TABLE IF NOT EXISTS `bank` (
-  `kd_bank` varchar(5) NOT NULL,
+  `kd_bank` int(11) NOT NULL AUTO_INCREMENT,
   `nm` varchar(50) NOT NULL,
   `status` varchar(15) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -22,14 +22,15 @@ CREATE TABLE IF NOT EXISTS `bank` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`kd_bank`),
   UNIQUE KEY `nm` (`nm`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.bank: 2 rows
+-- Dumping data for table db_penjualan.bank: 3 rows
 DELETE FROM `bank`;
 /*!40000 ALTER TABLE `bank` DISABLE KEYS */;
 INSERT INTO `bank` (`kd_bank`, `nm`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	('21', 'Mandiri', 'Active', '2019-02-02 05:48:44', '2019-02-02 05:48:44', NULL),
-	('22', 'BCA', 'Active', '2019-02-02 07:13:19', '2019-02-02 07:13:19', NULL);
+	(21, 'Mandiri', 'Active', '2019-02-02 05:48:44', '2019-02-02 05:48:44', NULL),
+	(22, 'BCA', 'Active', '2019-02-02 07:13:19', '2019-02-02 07:13:19', NULL),
+	(23, 'Test Bank', 'Active', '2019-02-13 21:11:03', '2019-02-13 21:11:07', '2019-02-13 21:11:07');
 /*!40000 ALTER TABLE `bank` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.brg
@@ -66,6 +67,7 @@ DROP TABLE IF EXISTS `customer`;
 CREATE TABLE IF NOT EXISTS `customer` (
   `kd` varchar(50) NOT NULL,
   `nm` varchar(50) DEFAULT NULL,
+  `nm_toko` varchar(50) DEFAULT NULL,
   `alamat` varchar(50) DEFAULT NULL,
   `alias` varchar(25) DEFAULT NULL,
   `kota_id` int(11) DEFAULT NULL,
@@ -86,13 +88,14 @@ CREATE TABLE IF NOT EXISTS `customer` (
   PRIMARY KEY (`kd`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.customer: 3 rows
+-- Dumping data for table db_penjualan.customer: 4 rows
 DELETE FROM `customer`;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` (`kd`, `nm`, `alamat`, `alias`, `kota_id`, `tlpn`, `nmtk`, `kontak`, `fax`, `plafon`, `top`, `npwp`, `nik`, `jenis`, `insert_user`, `update_user`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	('CST001', 'Jamal Apriadi', 'Jakarta', 'jamal', 1, '1234', '23', '234', '234', 234, 234, '23432', '1234', 'Wk', 'jamal.apriadi', NULL, '2019-02-05 23:18:09', '2019-02-05 23:18:09', NULL),
-	('CST002', 'Wiwik Putri', 'Pangkah', 'wiwi', 1, '123', '234', '234', '234', 123, 234, '1234', '1234', 'sdf', 'jamal.apriadi', NULL, '2019-02-05 23:19:12', '2019-02-05 23:19:12', NULL),
-	('CST003', 'Dwi Maulidia', 'Debong', '234', 1, '234', '234', '234', '234', 234, 234, '234', '234', '234', 'jamal.apriadi', NULL, '2019-02-05 23:19:45', '2019-02-05 23:23:35', NULL);
+INSERT INTO `customer` (`kd`, `nm`, `nm_toko`, `alamat`, `alias`, `kota_id`, `tlpn`, `nmtk`, `kontak`, `fax`, `plafon`, `top`, `npwp`, `nik`, `jenis`, `insert_user`, `update_user`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	('CST001', 'Jamal Apriadi', 'Maju Jaya', 'Jakarta', 'jamal', 1, '1234', '23', '234', '234', 234, 234, '23432', '1234', 'Wk', 'jamal.apriadi', NULL, '2019-02-05 23:18:09', '2019-02-13 21:23:45', NULL),
+	('CST002', 'Wiwik Putri', NULL, 'Pangkah', 'wiwi', 1, '123', '234', '234', '234', 123, 234, '1234', '1234', 'sdf', 'jamal.apriadi', NULL, '2019-02-05 23:19:12', '2019-02-05 23:19:12', NULL),
+	('CST003', 'Dwi Maulidia', NULL, 'Debong', '234', 1, '234', '234', '234', '234', 234, 234, '234', '234', '234', 'jamal.apriadi', NULL, '2019-02-05 23:19:45', '2019-02-05 23:23:35', NULL),
+	('CS0005', 'Nazar', 'Larva', 'T', 'Zulmi', 1, '234', NULL, NULL, NULL, 234, 23, '234534', '234', NULL, 'jamal.apriadi', NULL, '2019-02-13 21:24:42', '2019-02-13 21:24:42', NULL);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.ket
@@ -221,6 +224,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `kd_picking` varchar(50) DEFAULT NULL,
   `tgl` date DEFAULT NULL,
   `ket` varchar(150) DEFAULT NULL,
+  `sales_id` int(11) DEFAULT NULL,
   `perusahaan_id` varchar(50) DEFAULT NULL,
   `total` float DEFAULT NULL,
   `insert_user` varchar(50) DEFAULT NULL,
@@ -231,11 +235,9 @@ CREATE TABLE IF NOT EXISTS `orders` (
   PRIMARY KEY (`no_order`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='tgljt adalah tgl jatuh tempo, akan keisi jika kd_trans yang dipilih adalah kredit,\r\nformat no_order nanti nya adalah 19-000001 dan seterusnya,\r\nangka 19 adalah tahun sekarang';
 
--- Dumping data for table db_penjualan.orders: 0 rows
+-- Dumping data for table db_penjualan.orders: 1 rows
 DELETE FROM `orders`;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` (`no_order`, `kd_picking`, `tgl`, `ket`, `perusahaan_id`, `total`, `insert_user`, `update_user`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	('19-000001', 'PCK-TLG-19-000001', NULL, NULL, '1', 10000, 'jamal.apriadi', 'jamal.apriadi', '2019-02-13 01:40:58', '2019-02-13 01:40:58', NULL);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.perusahaan
@@ -263,11 +265,9 @@ CREATE TABLE IF NOT EXISTS `picking` (
   `kd_picking` varchar(20) NOT NULL,
   `no_po` varchar(50) DEFAULT NULL,
   `ket` varchar(250) DEFAULT NULL,
-  `sales_id` int(11) DEFAULT NULL,
   `kd_trans` varchar(15) DEFAULT NULL,
   `tgl` date DEFAULT NULL,
   `tglj` date DEFAULT NULL,
-  `lokasi_id` int(11) DEFAULT NULL,
   `perusahaan_id` int(11) DEFAULT NULL,
   `insert_user` varchar(50) DEFAULT NULL,
   `update_user` varchar(50) DEFAULT NULL,
@@ -277,11 +277,9 @@ CREATE TABLE IF NOT EXISTS `picking` (
   PRIMARY KEY (`kd_picking`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.picking: 0 rows
+-- Dumping data for table db_penjualan.picking: 1 rows
 DELETE FROM `picking`;
 /*!40000 ALTER TABLE `picking` DISABLE KEYS */;
-INSERT INTO `picking` (`kd_picking`, `no_po`, `ket`, `sales_id`, `kd_trans`, `tgl`, `tglj`, `lokasi_id`, `perusahaan_id`, `insert_user`, `update_user`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	('PCK-TLG-19-000001', 'PO-TLG-19-000001', 'bayar ya', 1, 'Tunai', '2019-02-12', '2019-02-12', 1, 1, 'jamal.apriadi', 'jamal.apriadi', '2019-02-12 20:12:14', '2019-02-12 20:12:14', NULL);
 /*!40000 ALTER TABLE `picking` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.po
@@ -291,6 +289,7 @@ CREATE TABLE IF NOT EXISTS `po` (
   `customer_id` varchar(50) DEFAULT NULL,
   `ket` varchar(150) DEFAULT NULL,
   `tgl` date DEFAULT NULL,
+  `lokasi_id` int(11) DEFAULT NULL,
   `perusahaan_id` varchar(50) DEFAULT NULL,
   `insert_user` varchar(50) DEFAULT NULL,
   `update_user` varchar(50) DEFAULT NULL,
@@ -300,12 +299,15 @@ CREATE TABLE IF NOT EXISTS `po` (
   PRIMARY KEY (`no_po`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.po: 1 rows
+-- Dumping data for table db_penjualan.po: 4 rows
 DELETE FROM `po`;
 /*!40000 ALTER TABLE `po` DISABLE KEYS */;
-INSERT INTO `po` (`no_po`, `customer_id`, `ket`, `tgl`, `perusahaan_id`, `insert_user`, `update_user`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	('PO-TLG-19-000001', 'CST001', NULL, '2019-02-10', '1', 'jamal.apriadi', 'jamal.apriadi', '2019-02-10 17:26:23', '2019-02-10 17:26:23', NULL),
-	('PO-TLG-19-000002', 'CST002', 'Testing aja yaa', '2019-02-12', '1', 'jamal.apriadi', 'jamal.apriadi', '2019-02-12 14:44:39', '2019-02-12 14:44:39', NULL);
+INSERT INTO `po` (`no_po`, `customer_id`, `ket`, `tgl`, `lokasi_id`, `perusahaan_id`, `insert_user`, `update_user`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	('PO-TLG-19-000001', 'CST001', NULL, '2019-02-10', 1, '1', 'jamal.apriadi', 'jamal.apriadi', '2019-02-10 17:26:23', '2019-02-10 17:26:23', NULL),
+	('PO-TLG-19-000002', 'CST002', 'Testing aja yaa', '2019-02-12', 1, '1', 'jamal.apriadi', 'jamal.apriadi', '2019-02-12 14:44:39', '2019-02-12 14:44:39', NULL),
+	('PO-TLG-19-000003', 'CST002', 'keterangannya', '2019-02-13', 1, '1', 'jamal.apriadi', 'jamal.apriadi', '2019-02-13 20:36:58', '2019-02-13 20:36:58', NULL),
+	('PO-TLG-19-000004', 'CST002', 'k', '2019-02-13', 1, '1', 'jamal.apriadi', 'jamal.apriadi', '2019-02-13 20:38:35', '2019-02-13 20:38:35', NULL),
+	('PO-TLG-19-000005', 'CST001', 'test dari nama lokasi', '2019-02-14', 1, '1', 'jamal.apriadi', 'jamal.apriadi', '2019-02-14 20:32:16', '2019-02-14 20:32:16', NULL);
 /*!40000 ALTER TABLE `po` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.prgrm
@@ -342,12 +344,12 @@ CREATE TABLE IF NOT EXISTS `rak` (
   PRIMARY KEY (`kd`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.rak: 1 rows
+-- Dumping data for table db_penjualan.rak: 2 rows
 DELETE FROM `rak`;
 /*!40000 ALTER TABLE `rak` DISABLE KEYS */;
 INSERT INTO `rak` (`kd`, `nm`, `lokasi_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
-	(1, 'Rak as', 1, '2019-02-05 22:58:48', '2019-02-05 23:01:36', NULL),
-	(2, 'Rak 2', 1, '2019-02-12 18:05:59', '2019-02-12 18:05:59', NULL);
+	(1, 'Rak as', 1, '2019-02-13 21:02:00', '2019-02-13 21:02:00', NULL),
+	(2, 'Rak 2', 1, '2019-02-13 21:02:00', '2019-02-13 21:02:00', NULL);
 /*!40000 ALTER TABLE `rak` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rmutasi
@@ -375,17 +377,15 @@ CREATE TABLE IF NOT EXISTS `rorder` (
   `dos` int(4) DEFAULT NULL,
   `pcs` int(4) DEFAULT NULL,
   `hrg` int(8) DEFAULT NULL,
-  `diskon` int(7) DEFAULT NULL,
+  `diskon_persen` int(7) DEFAULT NULL,
+  `diskon_rupiah` int(7) DEFAULT NULL,
   `jumlah` int(12) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.rorder: 0 rows
+-- Dumping data for table db_penjualan.rorder: 2 rows
 DELETE FROM `rorder`;
 /*!40000 ALTER TABLE `rorder` DISABLE KEYS */;
-INSERT INTO `rorder` (`id`, `no_order`, `kd_brg`, `dos`, `pcs`, `hrg`, `diskon`, `jumlah`) VALUES
-	(1, '19-000001', 'BRG001', 2, 4, 1000, NULL, 4),
-	(2, '19-000001', 'BRG003', 3, 1, 3000, NULL, 2);
 /*!40000 ALTER TABLE `rorder` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rpicking
@@ -400,14 +400,11 @@ CREATE TABLE IF NOT EXISTS `rpicking` (
   `dos` int(5) DEFAULT NULL,
   `pcs` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.rpicking: 0 rows
+-- Dumping data for table db_penjualan.rpicking: 2 rows
 DELETE FROM `rpicking`;
 /*!40000 ALTER TABLE `rpicking` DISABLE KEYS */;
-INSERT INTO `rpicking` (`id`, `kd_picking`, `kd_brg`, `kd_rak`, `pdos`, `ppcs`, `dos`, `pcs`) VALUES
-	(4, 'PCK-TLG-19-000001', 'BRG001', '2', 2, 4, 2, 4),
-	(3, 'PCK-TLG-19-000001', 'BRG003', '1', 3, 1, 3, 1);
 /*!40000 ALTER TABLE `rpicking` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rpo
@@ -419,14 +416,19 @@ CREATE TABLE IF NOT EXISTS `rpo` (
   `pcs` int(5) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
--- Dumping data for table db_penjualan.rpo: 2 rows
+-- Dumping data for table db_penjualan.rpo: 8 rows
 DELETE FROM `rpo`;
 /*!40000 ALTER TABLE `rpo` DISABLE KEYS */;
 INSERT INTO `rpo` (`no_po`, `kd_brg`, `dos`, `pcs`) VALUES
 	('PO-TLG-19-000001', 'BRG003', 3, 1),
 	('PO-TLG-19-000001', 'BRG001', 2, 4),
 	('PO-TLG-19-000002', 'BRG001', 1, 3),
-	('PO-TLG-19-000002', 'BRG002', 3, 4);
+	('PO-TLG-19-000002', 'BRG002', 3, 4),
+	('PO-TLG-19-000003', 'BRG002', 3, 1),
+	('PO-TLG-19-000003', 'BRG003', 2, 1),
+	('PO-TLG-19-000004', 'BRG001', 0, 0),
+	('PO-TLG-19-000004', 'BRG002', 2, 3),
+	('PO-TLG-19-000005', 'BRG001', 3, 4);
 /*!40000 ALTER TABLE `rpo` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rprogram
@@ -451,17 +453,31 @@ INSERT INTO `rprogram` (`id`, `nmr_program`, `kd_brg`, `qty`, `point`) VALUES
 -- Dumping structure for table db_penjualan.rstoring
 DROP TABLE IF EXISTS `rstoring`;
 CREATE TABLE IF NOT EXISTS `rstoring` (
-  `no_storing` varchar(20) NOT NULL,
-  `kd_brg` varchar(11) NOT NULL,
-  `nm_brg` varchar(50) NOT NULL,
-  `rak` varchar(15) NOT NULL,
-  `dos` int(5) NOT NULL,
-  `pcs` int(5) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `no_storing` varchar(20) DEFAULT NULL,
+  `kd_brg` varchar(11) DEFAULT NULL,
+  `rak_id` int(11) DEFAULT NULL,
+  `dos` int(5) DEFAULT NULL,
+  `pcs` int(5) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table db_penjualan.rstoring: 0 rows
 DELETE FROM `rstoring`;
 /*!40000 ALTER TABLE `rstoring` DISABLE KEYS */;
+INSERT INTO `rstoring` (`id`, `no_storing`, `kd_brg`, `rak_id`, `dos`, `pcs`) VALUES
+	(1, 'STR-TLG-19-000001', 'BRG001', 1, 2, 3),
+	(2, 'STR-TLG-19-000001', 'BRG002', 2, 1, 4),
+	(3, 'STR-TLG-19-000002', 'BRG001', 1, 2, 4),
+	(4, 'STR-TLG-19-000003', 'BRG002', 1, 2, 1),
+	(5, 'STR-TLG-19-000004', 'BRG001', 1, 23, 2),
+	(6, 'STR-TLG-19-000004', 'BRG002', 2, 2, 1),
+	(7, 'STR-TLG-19-000005', 'BRG001', 1, 10, 10),
+	(8, 'STR-TLG-19-000006', 'BRG001', 1, 2, 3),
+	(9, 'STR-TLG-19-000007', 'BRG001', 1, 2, 4),
+	(10, 'STR-TLG-19-000008', 'BRG001', 1, 23, 12),
+	(11, 'STR-TLG-19-000009', 'BRG001', 1, 1, 12),
+	(12, 'STR-TLG-19-000010', 'BRG001', 1, 2, 4);
 /*!40000 ALTER TABLE `rstoring` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rterima
@@ -504,13 +520,16 @@ DROP TABLE IF EXISTS `stok`;
 CREATE TABLE IF NOT EXISTS `stok` (
   `kd_brg` varchar(20) NOT NULL,
   `lokasi_id` int(11) NOT NULL,
-  `rak` varchar(25) NOT NULL,
+  `rak_id` int(11) NOT NULL,
   `pcs` int(5) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- Dumping data for table db_penjualan.stok: 0 rows
 DELETE FROM `stok`;
 /*!40000 ALTER TABLE `stok` DISABLE KEYS */;
+INSERT INTO `stok` (`kd_brg`, `lokasi_id`, `rak_id`, `pcs`) VALUES
+	('BRG001', 1, 1, 16),
+	('BRG002', 1, 2, 1);
 /*!40000 ALTER TABLE `stok` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.storing
@@ -520,12 +539,26 @@ CREATE TABLE IF NOT EXISTS `storing` (
   `no_ref` varchar(15) NOT NULL,
   `tgl` date NOT NULL,
   `lokasi_id` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`no_storing`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- Dumping data for table db_penjualan.storing: 0 rows
 DELETE FROM `storing`;
 /*!40000 ALTER TABLE `storing` DISABLE KEYS */;
+INSERT INTO `storing` (`no_storing`, `no_ref`, `tgl`, `lokasi_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	('STR-TLG-19-000001', 'Ref0001', '2019-02-14', 1, '2019-02-14 20:02:06', '2019-02-14 20:02:06', NULL),
+	('STR-TLG-19-000002', '34', '2019-02-14', 1, '2019-02-14 20:02:48', '2019-02-14 20:02:48', NULL),
+	('STR-TLG-19-000003', '45', '2019-02-14', 1, '2019-02-14 20:07:35', '2019-02-14 20:07:35', NULL),
+	('STR-TLG-19-000004', 'df', '2019-02-14', 1, '2019-02-14 20:23:40', '2019-02-14 20:23:40', NULL),
+	('STR-TLG-19-000005', '34', '2019-02-14', 1, '2019-02-14 22:09:54', '2019-02-14 22:09:54', NULL),
+	('STR-TLG-19-000006', 'sd', '2019-02-14', 1, '2019-02-14 22:11:55', '2019-02-14 22:11:55', NULL),
+	('STR-TLG-19-000007', 'asd', '2019-02-14', 1, '2019-02-14 22:13:01', '2019-02-14 22:13:01', NULL),
+	('STR-TLG-19-000008', 'asd', '2019-02-14', 1, '2019-02-14 22:13:33', '2019-02-14 22:13:33', NULL),
+	('STR-TLG-19-000009', 'asd', '2019-02-14', 1, '2019-02-14 22:16:27', '2019-02-14 22:16:27', NULL),
+	('STR-TLG-19-000010', 'asd', '2019-02-14', 1, '2019-02-14 22:17:04', '2019-02-14 22:17:04', NULL);
 /*!40000 ALTER TABLE `storing` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.suplier

@@ -20,6 +20,10 @@
                             <th>{{state.customer}}</th>
                         </tr>
                         <tr>
+                            <th>Lokasi</th>
+                            <th>{{state.lokasi}}</th>
+                        </tr>
+                        <tr>
                             <th>Perusahaan</th>
                             <th>{{state.perusahaan}}</th>
                         </tr>
@@ -80,6 +84,7 @@ export default {
                 kode:'',
                 nama: '',
                 customer:'',
+                lokasi:'',
                 tanggal:new Date(),
                 perusahaan:'',
                 keterangan:'',
@@ -101,6 +106,7 @@ export default {
                     this.state.customer= response.data.customer.nm;
                     this.state.tanggal= response.data.tgl;
                     this.state.perusahaan= response.data.perusahaan.nama;
+                    this.state.lokasi = response.data.lokasi.nm;
                     this.state.keterangan= response.data.ket;
                     this.state.listBarang= response.data.detail;
                 })

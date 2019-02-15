@@ -22,6 +22,14 @@
                         </select>
                     </div>
 
+                    <div class="form-grou">
+                        <label for="" class="control-label">Sales</label>
+                        <select name="sales" id="sales" class="form-control" v-model="state.sales">
+                            <option value="" disabled selected>--Pilih Sales--</option>
+                            <option v-for="(l, index) in saless" v-bind:key="index"  v-bind:value="l.id">{{l.id}} - [{{l.nm}}]</option>
+                        </select>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -52,10 +60,6 @@
                                 <th>Lokasi</th>
                                 <td>{{state.lokasi}}</td>
                             </tr>
-                            <tr>
-                                <th>Sales</th>
-                                <td>{{state.sales}}</td>
-                            </tr>
                         <!-- </thead> -->
                     </table>
 
@@ -80,7 +84,7 @@
                                 <td>{{l.pivot.dos}}</td>
                                 <td>{{l.pivot.pcs}}</td>
                                 <td>
-                                    <input type="number" class="form-control" v-model="state.jual[index]" readonly>
+                                    <input type="text" class="form-control" v-model="state.jual[index]">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="state.jumlah[index]" v-bind:enter="ubahJumlah(index)">
@@ -162,7 +166,8 @@ export default {
                 diskon:[],
                 subtotal:[],
                 dos:[],
-                pcs:[]
+                pcs:[],
+                saless:[]
             },
             date: new Date(),
             options: {
@@ -213,7 +218,7 @@ export default {
         this.getPicking();
         // this.getCustomer();
         // this.getPerusahaan();
-        // this.getSales();
+        this.getSales();
         // this.getLokasi();
     },
     methods: {
@@ -234,8 +239,8 @@ export default {
                     this.state.tanggal=response.data.tgl;
                     this.state.customer=response.data.po.customer.nm;
                     this.state.kd_trans=response.data.kd_trans;
-                    this.state.lokasi=response.data.lokasi.nm;
-                    this.state.sales=response.data.sales.nm;
+                    this.state.lokasi=response.data.po.lokasi.nm;
+                    // this.state.sales=response.data.sales.nm;
                     this.barangs=response.data.detail;
 
                     for (var i = 0; i < this.barangs.length; i++) {
@@ -246,9 +251,18 @@ export default {
                         this.state.diskon.push(0);
                         this.state.jumlah.push(0);
                         this.state.subtotal.push(this.barangs[i].jual);
+
+                        // this.state.jual[i]=this.barangs[i].jual;
                     }
 
                     this.total();
+                })
+        },
+
+        getSales(){
+            axios.get('/data/list-sales')
+                .then(response => {
+                    this.saless = response.data;
                 })
         },
 

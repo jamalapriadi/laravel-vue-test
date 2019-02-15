@@ -37,4 +37,8 @@ class Po extends Model
         return $this->belongsTo('App\Models\Perusahaan','perusahaan_id');
     }
 
+    public function lokasi(){
+        return $this->belongsTo('App\Models\Lokasi','lokasi_id');
+    }
+
 }

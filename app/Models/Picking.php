@@ -41,16 +41,18 @@ class Picking extends Model
 
     public function detail(){
         return $this->belongsToMany('App\Models\Barang','rpicking','kd_picking','kd_brg','kd_picking','kd')
+            ->select(['rak.nm as nama_rak','brg.kd','brg.nm'])
             ->withPivot(
                 [
                     'kd_picking',
                     'kd_brg',
+                    'kd_rak',
                     'pdos',
                     'ppcs',
                     'dos',
                     'pcs'
                 ]
-            );
+            )->leftJoin('rak','rak.kd','=','rpicking.kd_rak');
     }
 
 }

@@ -72,7 +72,7 @@
                         </div>
 
                         <div class="col-lg-6">
-                            <div class="form-group row">
+                            <!-- <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Sales</label>
                                 <div class="col-lg-9">
                                     <select name="sales" id="sales" class="form-control" v-model="state.sales">
@@ -80,7 +80,7 @@
                                         <option v-for="(l, index) in saless" v-bind:key="index"  v-bind:value="l.id">{{l.id}} - [{{l.nm}}]</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Lokasi</label>
@@ -112,6 +112,7 @@
                                 <th>Rak</th>
                                 <th>Dos</th>
                                 <th>PCS</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -119,20 +120,28 @@
                                 <!-- <input type="hidden" v-model="state.kodes[index]" :value="l.kd">
                                 <input type="hidden" v-model="state.pdoss[index]" :value="l.pivot.dos">
                                 <input type="hidden" v-model="state.ppcss[index]" :value="l.pivot.pcs"> -->
-                                <td>{{ index+1 }}</td>
+                                <td>{{ index + 1 }}</td>
                                 <td>{{l.kd}} / {{l.nm}}</td>
                                 <td>{{l.pivot.dos}} / {{l.pivot.pcs}}</td>
                                 <td>
-                                    <select name="rak" id="rak" class="form-control" v-model="state.rak[index]">
+                                    <select name="rak" id="rak" class="form-control" v-model="state.rak[index]" v-on:change="changeRak(index,state.rak[index], l.kd, state.lokasi,l.pivot.pcs)">
                                         <option value="" disabled selected>--Pilih Rak--</option>
-                                        <option v-for="(k,index) in raks" v-bind:key="index" v-bind:value="k.kd">{{k.kd}} [ {{k.nm}} ]</option>
+                                        <option v-for="k in raks" v-bind:key="k.kd" v-bind:value="k.kd">{{k.kd}} [ {{k.nm}} ]</option>
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" id="dos" placeholder="Dos" v-model="state.dos[index]">
+                                    <input type="number" class="form-control" id="dos" placeholder="Dos" v-model.number="state.dos[index]">
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]">
+                                    <small>
+                                        {{ stok[index] }}
+                                    </small>
+                                </td>
+                                <td>
+                                    <div v-if="tampilTambah[index]==true">
+                                        <a class="btn btn-info text-white" v-on:click="tambahBarang(l)">Pilih Dari Rak Lain</a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -226,6 +235,11 @@ export default {
             lokasis:[],
             pos:[],
             raks:[],
+            stok:[],
+            tampilTambah:[],
+            pcs:[],
+            dos:[],
+            hasilpcs:[]
         }
     },
     watch: {
@@ -235,14 +249,14 @@ export default {
             }else{
                 this.showData();
             }
-        }
+        },
     },
     mounted() {
         this.getCode();
         // this.getCustomer();
         // this.getPerusahaan();
         this.getNoPo();
-        this.getSales();
+        // this.getSales();
         this.getLokasi();
     },
     methods: {
@@ -262,6 +276,7 @@ export default {
             axios.get('/data/po/'+this.state.no_po)
                 .then(response => {
                     this.state.customer=response.data.customer.nm;
+                    this.state.lokasi=response.data.lokasi_id;
                     this.barang=response.data.detail;
 
                     for (var i = 0; i < this.barang.length; i++) {
@@ -269,6 +284,8 @@ export default {
                         this.state.pdos.push(this.barang[i].pivot.dos)
                         this.state.ppcs.push(this.barang[i].pivot.pcs)
                     }
+
+                    this.changeLokasi();
                 })
         },
         changeLokasi(){
@@ -333,6 +350,34 @@ export default {
                 .then(response => {
                     this.lokasis = response.data;
                 })
+        },
+
+        changeRak(i, r , b, l,p){
+            console.log(p);
+            var hasilpcs=0;
+            
+            axios.get('/data/stok-dirak?rak='+r+"&barang="+b+"&lokasi="+l)
+                .then(response => {
+                    this.hasilpcs[i]=response.data.pcs;
+                    hasilpcs=response.data.pcs;
+                    // console.log(response.data.pcs);
+                })
+
+            // console.log(parseInt(this.hasilpcs[i]));
+            console.log(hasilpcs)
+            if(this.hasilpcs[i] > parseInt(p)){
+                this.stok[i]="Stok Cukup di rak ada : "+this.hasilpcs[i]+" PCs";
+                this.state.dos[i]=0;
+                this.state.pcs[i]=p;
+                this.tampilTambah[i]=false;
+                // this.$refs.nm.inputValue =pcs;
+            }else{
+                // alert('stok di rak ini tidak mencukupi');
+                this.state.dos[i]=0;
+                this.stok[i]="Stok Kurang, di rak ada : "+this.hasilpcs[i]+" PCs";
+                this.tampilTambah[i]=true;
+                this.state.pcs[i]=0;
+            }
         },
 
         saveBarang(){
@@ -470,6 +515,13 @@ export default {
                 })
         },
 
+        tambahBarang(br){
+            this.barang.push(br);
+            this.state.kodes.push(br.kd);
+            this.state.pdos.push(br.pivot.dos)
+            this.state.ppcs.push(br.pivot.pcs)
+        },
+
         saveProgram(){
             // console.log(this.state);
             // console.log(this.kodes);
@@ -482,12 +534,6 @@ export default {
 
             if(this.state.customer==""){
                 alert('Customer harus diisi');
-
-                return false;
-            }
-
-            if(this.state.sales==""){
-                alert('Sales Barang harus diisi');
 
                 return false;
             }

@@ -46,20 +46,20 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <!-- <div class="form-group row">
-                            <label for="" class="control-label col-lg-3">Perusahaan</label>
+                        <div class="form-group row">
+                            <label for="" class="control-label col-lg-3">Lokasi</label>
                             <div class="col-lg-9">
-                                <select name="perusahaan" id="perusahaan" class="form-control" v-model="state.perusahaan">
-                                    <option value="" disabled selected>--Pilih Perusahaan--</option>
-                                    <option v-for="(l, index) in perusahaans" v-bind:key="index"  v-bind:value="l.id">{{l.nama}}</option>
+                                <select name="lokasi" id="lokasi" class="form-control" v-model="state.lokasi" @change="changeLokasi">
+                                    <option value="" disabled selected>--Pilih Lokasi--</option>
+                                    <option v-for="(l, index) in lokasis" v-bind:key="index"  v-bind:value="l.id">{{l.id}} - [{{l.nm}}]</option>
                                 </select>
                             </div>
-                        </div> -->
+                        </div>
 
                         <div class="form-group row">
                             <label for="" class="control-label col-lg-3">Keterangan</label>
                             <div class="col-lg-9">
-                                <textarea name="keterangan" id="keterangan" cols="30" rows="5" class="form-control" v-model="state.keterangan"></textarea>
+                                <input type="text" class="form-control" v-model="state.keterangan">
                             </div>
                         </div>
                     </div>
@@ -284,7 +284,8 @@ export default {
             carinamabarang:'',
             carikodebarang:'',
             carinamacustomer:'',
-            carikodecustomer:''
+            carikodecustomer:'',
+            lokasis:[]
         }
     },
     watch: {
@@ -315,6 +316,7 @@ export default {
     mounted() {
         this.getCode();
         this.getCustomer();
+        this.getLokasi();
         // this.getPerusahaan();
     },
     methods: {
@@ -548,6 +550,20 @@ export default {
             this.barang.pcs=0;
             this.$refs.kodebarang.inputValue = '';
             this.$refs.namabarang.inputValue = '';
+        },
+
+        getLokasi(){
+            axios.get('/data/list-lokasi')
+                .then(response => {
+                    this.lokasis = response.data;
+                })
+        },
+
+        changeLokasi(){
+            axios.get('/data/list-rak?lokasi='+this.state.lokasi)
+                .then(response => {
+                    this.raks=response.data;
+                })
         },
 
         deleteBarang: function(index) {

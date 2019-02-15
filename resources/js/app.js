@@ -138,6 +138,9 @@ const routes = [
     { path: '/add-new-order', name: 'addOrderIndex', component: require('./components/order/Create.vue').default },
     { path: '/list-order', name: 'listOrder', component: require('./components/order/List.vue').default },
     { path: '/order-detail/:id', name: 'orderDetail', component: require('./components/order/Detail.vue').default},
+
+    { path: '/storing', name:'storeIndex', component: require('./components/storing/Index.vue').default},
+    { path: '/add-new-storing', name: 'storingCreate', component: require('./components/storing/Create.vue').default },
 ]
 
 const router = new VueRouter({ routes });

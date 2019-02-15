@@ -35,10 +35,6 @@
                         </tr>
                         
                         <tr>
-                            <th>Sales</th>
-                            <th>{{state.sales}}</th>
-                        </tr>
-                        <tr>
                             <th>Lokasi</th>
                             <th>{{state.lokasi}}</th>
                         </tr>
@@ -62,6 +58,7 @@
                                     <th>No.</th>
                                     <th>Kode Barang</th>
                                     <th>Nama Barang</th>
+                                    <th>Rak</th>
                                     <th>PDos</th>
                                     <th>PPcs</th>
                                     <th>Dos</th>
@@ -73,6 +70,7 @@
                                     <td>{{index+1}}</td>
                                     <td>{{l.kd}}</td>
                                     <td>{{l.nm}}</td>
+                                    <td>{{l.nama_rak}}</td>
                                     <td>{{l.pivot.pdos}}</td>
                                     <td>{{l.pivot.ppcs}}</td>
                                     <td>{{l.pivot.dos}}</td>
@@ -135,8 +133,7 @@ export default {
                     this.state.tanggaljt= response.data.tglj;
                     this.state.perusahaan= response.data.perusahaan.nama;
                     this.state.keterangan= response.data.keterangan;
-                    this.state.lokasi= response.data.lokasi.nm;
-                    this.state.sales= response.data.sales.nm;
+                    this.state.lokasi= response.data.po.lokasi.nm;
                     this.state.kd_trans= response.data.kd_trans;
                     this.state.listBarang= response.data.detail;
                 })

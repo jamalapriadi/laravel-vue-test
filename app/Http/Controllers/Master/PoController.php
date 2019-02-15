@@ -19,7 +19,8 @@ class PoController extends Controller
             [
                 'detail',
                 'customer',
-                'perusahaan'
+                'perusahaan',
+                'lokasi'
             ]
         )->where('perusahaan_id',auth()->user()->perusahaan_id);
 
@@ -53,7 +54,8 @@ class PoController extends Controller
         $rules=[
             'kode'=>'required',
             'tanggal'=>'required',
-            'customer'=>'required'
+            'customer'=>'required',
+            'lokasi'=>'required'
         ];
 
         $validasi=\Validator::make($request->all(),$rules);
@@ -70,6 +72,7 @@ class PoController extends Controller
             $cus->customer_id=request('customer');
             $cus->ket=request('keterangan');
             $cus->tgl=date('Y-m-d',strtotime(request('tanggal')));
+            $cus->lokasi_id=request('lokasi');
             $cus->perusahaan_id=auth()->user()->perusahaan_id;
             $cus->insert_user=auth()->user()->username;
             $cus->update_user=auth()->user()->username;
@@ -123,7 +126,8 @@ class PoController extends Controller
             [
                 'detail',
                 'customer',
-                'perusahaan'
+                'perusahaan',
+                'lokasi'
             ]
         )->find($id);
 

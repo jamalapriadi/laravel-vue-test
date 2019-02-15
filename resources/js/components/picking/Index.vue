@@ -35,7 +35,6 @@
                         <th>No. PO</th>
                         <th>Customer</th>
                         <th>Keterangan</th>
-                        <th>Sales</th>
                         <th>Kd Transaksi</th>
                         <th>Tgl</th>
                         <th>Tgl Jatuh Tempo</th>
@@ -52,11 +51,10 @@
                         <td>{{l.no_po}}</td>
                         <td>{{l.po.customer.nm}}</td>
                         <td>{{l.ket}}</td>
-                        <td>{{l.sales.nm}}</td>
                         <td>{{l.kd_trans}}</td>
                         <td>{{l.tgl}}</td>
                         <td>{{l.tglj}}</td>
-                        <td>{{l.lokasi.nm}}</td>
+                        <td>{{l.po.lokasi.nm}}</td>
                         <!-- <td>{{l.ket}}</td>
                         <td>{{l.detail.length}}</td>
                         <td>{{l.total}}</td> -->

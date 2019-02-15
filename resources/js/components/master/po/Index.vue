@@ -33,6 +33,7 @@
                         <th width="5%">No.</th>
                         <th>Nmr. PO</th>
                         <th>Customer</th>
+                        <th>Lokasi</th>
                         <th>Perusahaan</th>
                         <th>Tgl</th>
                         <th>Keterangan</th>
@@ -45,6 +46,7 @@
                         <td>{{index+1}}</td>
                         <td>{{l.no_po}}</td>
                         <td>{{l.customer.nm}}</td>
+                        <td>{{l.lokasi.nm}}</td>
                         <td>{{l.perusahaan.nama}}</td>
                         <td>{{l.tgl}}</td>
                         <td>{{l.ket}}</td>
