@@ -10,7 +10,7 @@
                     {{ message }}
                 </div>
 
-                <form @submit.prevent="store" action="/data/rak" method="post">
+                <div>
                     <div class="form-group">
                         <label for="" class="control-label">Gudang</label>
                         <!-- <input type="text" class="form-control" :class="{ 'is-invalid': errors.lokasi }" v-model="state.lokasi"> -->
@@ -21,9 +21,38 @@
                     </div>
                     <div class="form-group">
                         <label for="" class="control-label">Nomor Rak</label>
-                        <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="state.nama">
+                        <div class="input-prepend input-group">
+                            <input type="text" class="form-control" :class="{ 'is-invalid': errors.nama }" v-model="nama" v-on:keyup.enter="tambahRak()">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" @click="tambahRak()">
+                                    <i class="icon-plus"></i>
+                                </span>
+                            </div>
+                        </div>    
                     </div>
+                    
                     <hr>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Nama</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(l,index) in state.raks" v-bind:key="index">
+                                <td>{{index+1}}</td>
+                                <td>{{l}}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger text-white" @click="hapusRak(index)">
+                                        <i class="icon-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     
                     <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
 
@@ -32,12 +61,12 @@
                             <i class="fa fa-backward"></i> Back
                         </router-link>
 
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" v-on:click="store">
                             <i class="fa fa-save"></i>
                             Save
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -54,8 +83,9 @@ export default {
         return {
             state: {
                 lokasi:'',
-                nama: ''
+                raks:[]
             },
+            nama: '',
             message:'',
             loading:false,
             errors: [],
@@ -63,16 +93,38 @@ export default {
         }
     },
     methods: {
+        tambahRak(){
+            this.state.raks.push(this.nama);
+            this.nama='';
+        },
+
+        hapusRak(index){
+            this.state.raks.splice(index, 1);
+        },
+
         store(e) {
+            if(this.state.lokasi==""){
+                alert('Lokasi harus diisi');
+
+                return false;
+            }
+
+            if(this.state.raks.length === 0){
+                alert('Rak harus diisi');
+
+                return false;
+            }
+
+
             this.loading = true;
 
-            axios.post(e.target.action, this.state).then(response => {
+            axios.post('/data/rak', this.state).then(response => {
                 if(response.data.success==true){
                     this.loading=false;
                     this.errors = [];
                     this.state = {
                         lokasi:'',
-                        nama: ''
+                        raks: []
                     }
                     this.message = 'Data has been saved.';
                 }else{
