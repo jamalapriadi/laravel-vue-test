@@ -16,19 +16,6 @@
                         <date-picker v-model="state.tanggal" :config="options"></date-picker>
                     </div>
 
-                    <div class="form-group">
-                        <label for="" class="control-label">Kode Transaksi</label>
-                        <select name="kd_trans" id="kd_trans" class="form-control" v-model="state.kd_trans">
-                            <option v-for="(l,index) in kodetrans" v-bind:value="l" v-bind:key="index">{{l}}</option>
-                        </select>
-                    </div>
-
-                     <!-- v-if="state.kd_trans == 'Kredit'" -->
-                    <div class="form-group">
-                        <label for="" class="control-label">Tanggal Jatuh Tempo</label>
-                        <date-picker v-model="state.tanggaljt" :config="options"></date-picker>
-                    </div>
-
                     <br>
                     <br>
                     <br>

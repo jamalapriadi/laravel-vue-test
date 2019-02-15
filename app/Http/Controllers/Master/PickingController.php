@@ -50,7 +50,6 @@ class PickingController extends Controller
         $rules=[
             'kode'=>'required',
             'no_po'=>'required',
-            'kd_trans'=>'required',
             'tanggal'=>'required',
             'kodes'=>'required',
             'dos'=>'required',
@@ -70,9 +69,7 @@ class PickingController extends Controller
             $p->kd_picking=request('kode');
             $p->no_po=request('no_po');
             $p->ket=request('keterangan');
-            $p->kd_trans=request('kd_trans');
             $p->tgl=date('Y-m-d',strtotime(request('tanggal')));
-            $p->tglj=date('Y-m-d',strtotime(request('tanggaljt')));
             $p->perusahaan_id=auth()->user()->perusahaan_id;
             $p->insert_user=auth()->user()->username;
             $p->update_user=auth()->user()->username;

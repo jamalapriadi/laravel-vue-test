@@ -1,19 +1,29 @@
 <template>
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="card card-default">
-                <div class="card-header">Order</div>
-                <div class="card-body">
+    <div class="card card-default">
+        <div class="card-heading">
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
                     <div class="form-group">
                         <label for="" class="control-label">Nomor Order</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
                     </div>
+                </div>
 
+                <div class="col-lg-6">
                     <div class="form-group">
                         <label for="" class="control-label">Tanggal</label>
                         <date-picker v-model="state.tanggal" :config="options"></date-picker>
                     </div>
+                </div>
+            </div>
 
+            <hr>
+
+            <div class="row">
+                <div class="col-lg-6">
                     <div class="form-group">
                         <label for="" class="control-label">Kd. Picking</label>
                         <select name="kd_picking" id="kd_picking" class="form-control" v-model="state.kd_picking" @change="ubahPicking">
@@ -22,19 +32,32 @@
                         </select>
                     </div>
 
-                    <div class="form-grou">
+                    <div class="form-group">
                         <label for="" class="control-label">Sales</label>
                         <select name="sales" id="sales" class="form-control" v-model="state.sales">
                             <option value="" disabled selected>--Pilih Sales--</option>
                             <option v-for="(l, index) in saless" v-bind:key="index"  v-bind:value="l.id">{{l.id}} - [{{l.nm}}]</option>
                         </select>
+                    </div>  
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="form-group">
+                        <label for="" class="control-label">Kode Transaksi</label>
+                        <select name="kd_trans" id="kd_trans" class="form-control" v-model="state.kd_trans" @change="ubahKdTrans(state.kd_trans)">
+                            <option v-for="(l,index) in kodetrans" v-bind:value="l" v-bind:key="index">{{l}}</option>
+                        </select>
                     </div>
 
+                        <!-- v-if="state.kd_trans == 'Kredit'" -->
+                    <div class="form-group">
+                        <label for="" class="control-label">Tanggal Jatuh Tempo</label>
+                        <date-picker v-model="state.tanggaljt" :config="options"></date-picker>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-8">
             <div class="card card-default" v-show="tampilDetail">
                 <div class="card-header">Detail Picking</div>
                 <div class="card-body">
@@ -52,13 +75,13 @@
                                 <th>Customer</th>
                                 <td>{{state.customer}}</td>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <th>Kode Transaksi</th>
                                 <td>{{state.kd_trans}}</td>
-                            </tr>
+                            </tr> -->
                             <tr>
                                 <th>Lokasi</th>
-                                <td>{{state.lokasi}}</td>
+                                <td>{{state.lokkasiname}}</td>
                             </tr>
                         <!-- </thead> -->
                     </table>
@@ -69,11 +92,10 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Kode / Nama Barang</th>
-                                <th>Dos</th>
-                                <th>PCS</th>
-                                <th>Harga</th>
+                                <th>Dos / </th>
+                                <th width='15%'>Harga</th>
                                 <th width='11%'>Jumlah</th>
-                                <!-- <th width='11%'>Diskon %</th> -->
+                                <th width='20%' colspan='2'>Diskon</th>
                                 <th>Subtotal</th>
                             </tr>
                         </thead>
@@ -81,17 +103,34 @@
                             <tr v-for="(l,index) in barangs" v-bind:key="index">
                                 <td>{{ index+1 }}</td>
                                 <td>{{l.kd}} / {{l.nm}}</td>
-                                <td>{{l.pivot.dos}}</td>
-                                <td>{{l.pivot.pcs}}</td>
+                                <td>{{l.pivot.dos}} / {{l.pivot.pcs}}</td>
                                 <td>
                                     <input type="text" class="form-control" v-model="state.jual[index]">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="state.jumlah[index]" v-bind:enter="ubahJumlah(index)">
                                 </td>
-                                <!-- <td>
-                                    <input type="number" class="form-control" v-model="state.diskon[index]" @change="ubahDiskon(index)">
-                                </td> -->
+                                <td>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" v-model="state.diskon_persen[index]">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                %
+                                            </span>
+                                        </div>
+                                    </div>
+                                     <!-- @change="ubahDiskon(index)" -->
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                Rp.
+                                            </span>
+                                        </div>
+                                        <input type="number" class="form-control" v-model="state.diskon_persen[index]">
+                                    </div>
+                                </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="state.subtotal[index]" readonly>
                                 </td>
@@ -155,19 +194,24 @@ export default {
                 tanggaljt:new Date(),
                 perusahaan:'',
                 keterangan:'',
-                lokasi:'',
                 sales:'',
+                lokkasiname:'',
+                lokasiid:'',
+                customertop:'',
                 total:0,
                 kd_trans:'Tunai',
                 listBarang:[],
                 kodes:[],
                 jual:[],
                 jumlah:[],
-                diskon:[],
+                diskon_persen:[],
+                diskon_rupiah:[],
                 subtotal:[],
                 dos:[],
                 pcs:[],
-                saless:[]
+                saless:[],
+                lokasi:[],
+                rak:[]
             },
             date: new Date(),
             options: {
@@ -229,6 +273,15 @@ export default {
                 })
         },
 
+        ubahKdTrans(kode){
+            var date = new Date();
+
+            if(kode=="Kredit"){
+                date.setDate(date.getDate() + this.state.customertop);
+                this.state.tanggaljt=date;
+            }
+        },
+
         ubahPicking(){
             console.log(this.state.kd_picking);
             axios.get('/data/picking/'+this.state.kd_picking)
@@ -238,8 +291,10 @@ export default {
                     this.state.no_po=response.data.no_po;
                     this.state.tanggal=response.data.tgl;
                     this.state.customer=response.data.po.customer.nm;
-                    this.state.kd_trans=response.data.kd_trans;
-                    this.state.lokasi=response.data.po.lokasi.nm;
+                    this.state.customertop=response.data.po.customer.top;
+                    this.state.kd_trans='Tunai';
+                    this.state.lokkasiname=response.data.po.lokasi.nm;
+                    this.state.lokasiid=response.data.po.lokasi_id;
                     // this.state.sales=response.data.sales.nm;
                     this.barangs=response.data.detail;
 
@@ -248,12 +303,17 @@ export default {
                         this.state.jual.push(this.barangs[i].jual);
                         this.state.dos.push(this.barangs[i].pivot.dos);
                         this.state.pcs.push(this.barangs[i].pivot.pcs);
-                        this.state.diskon.push(0);
+                        this.state.rak.push(this.barangs[i].pivot.kd_rak);
+                        this.state.diskon_persen.push(0);
+                        this.state.diskon_rupiah.push(0);
+
                         this.state.jumlah.push(0);
                         this.state.subtotal.push(this.barangs[i].jual);
 
                         // this.state.jual[i]=this.barangs[i].jual;
                     }
+
+                    console.log(this.state.rak);
 
                     this.total();
                 })

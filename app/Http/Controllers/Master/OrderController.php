@@ -56,7 +56,11 @@ class OrderController extends Controller
         $rules=[
             'kode'=>'required',
             'tanggal'=>'required',
-            'kd_picking'=>'required'
+            'kd_trans'=>'required',
+            'kd_picking'=>'required',
+            'lokasiid'=>'required',
+            'rak'=>'required',
+            'sales'=>'required'
         ];
 
         $validasi=\Validator::make($request->all(),$rules);
@@ -71,7 +75,11 @@ class OrderController extends Controller
             $cus=new Order;
             $cus->no_order=request('kode');
             $cus->kd_picking=request('kd_picking');
+            $cus->kd_trans=request('kd_trans');
+            $cus->tgl=date('Y-m-d',strtotime(request('tanggal')));
+            $cus->tgljt=date('Y-m-d',strtotime(request('tanggaljt')));
             $cus->ket=request('keterangan');
+            $cus->sales_id=request('sales');
             $cus->total=request('total');
             $cus->perusahaan_id=auth()->user()->perusahaan_id;
             $cus->insert_user=auth()->user()->username;
@@ -91,10 +99,16 @@ class OrderController extends Controller
                                     'dos'=>$request->input('dos')[$key],
                                     'pcs'=>$request->input('pcs')[$key],
                                     'hrg'=>$request->input('jual')[$key],
-                                    // 'diskon'=>$val['diskon'],
+                                    'diskon_persen'=>$request->input('diskon_persen')[$key],
+                                    'diskon_rupiah'=>$request->input('diskon_rupiah')[$key],
                                     'jumlah'=>$request->input('jumlah')[$key]
                                 ]
                             );
+
+                        \DB::statement("UPDATE stok SET pcs = pcs-".$request->input('pcs')[$key]." 
+                            where kd_brg='".$val."' 
+                            and lokasi_id='".$request->input('lokasiid')."' 
+                            and rak_id='".$request->input('rak')[$key]."'");
                     }
                 }
 
