@@ -24,7 +24,8 @@ class Order extends Model
                     'dos',
                     'pcs',
                     'hrg',
-                    'diskon',
+                    'diskon_rupiah',
+                    'diskon_persen',
                     'jumlah'
                 ]
             );

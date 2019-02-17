@@ -92,7 +92,7 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Kode / Nama Barang</th>
-                                <th>Dos / </th>
+                                <th>Dos / Pcs</th>
                                 <th width='15%'>Harga</th>
                                 <th width='11%'>Jumlah</th>
                                 <th width='20%' colspan='2'>Diskon</th>
@@ -108,18 +108,17 @@
                                     <input type="text" class="form-control" v-model="state.jual[index]">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" v-model="state.jumlah[index]" v-bind:enter="ubahJumlah(index)">
+                                    <input type="number" class="form-control" v-model="state.jumlah[index]"  @keyup.enter="ubahJumlah(index)">
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="number" class="form-control" v-model="state.diskon_persen[index]">
+                                        <input type="number" class="form-control" v-model="state.diskon_persen[index]" @keyup.enter="ubahJumlahDiskonPersen(index)">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">
                                                 %
                                             </span>
                                         </div>
                                     </div>
-                                     <!-- @change="ubahDiskon(index)" -->
                                 </td>
                                 <td>
                                     <div class="input-group">
@@ -128,7 +127,7 @@
                                                 Rp.
                                             </span>
                                         </div>
-                                        <input type="number" class="form-control" v-model="state.diskon_persen[index]">
+                                        <input type="number" class="form-control" v-model="state.diskon_rupiah[index]" @keyup.enter="ubahJumlahDiskonRupiah(index)">
                                     </div>
                                 </td>
                                 <td>
@@ -138,7 +137,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="6">TOTAL</th>
+                                <th colspan="7">TOTAL</th>
                                 <th>{{state.total}}</th>
                             </tr>
                         </tfoot>
@@ -304,13 +303,15 @@ export default {
                         this.state.dos.push(this.barangs[i].pivot.dos);
                         this.state.pcs.push(this.barangs[i].pivot.pcs);
                         this.state.rak.push(this.barangs[i].pivot.kd_rak);
-                        this.state.diskon_persen.push(0);
-                        this.state.diskon_rupiah.push(0);
+                        this.state.diskon_persen[i]=0;
+                        this.state.diskon_rupiah[i]=0;
 
-                        this.state.jumlah.push(0);
-                        this.state.subtotal.push(this.barangs[i].jual);
+                        this.state.jumlah[i]=this.barangs[i].pivot.pcs;
+                        // this.state.subtotal.push(this.barangs[i].jual);
 
                         // this.state.jual[i]=this.barangs[i].jual;
+
+                        this.ubahJumlah(i);
                     }
 
                     console.log(this.state.rak);
@@ -336,6 +337,26 @@ export default {
 
         ubahJumlah(index){
             this.state.subtotal[index]=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
+
+            this.total();
+        },
+
+        ubahJumlahDiskonPersen(index){
+            var diskonnya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]) * parseInt(this.state.diskon_persen[index]) / 100;
+            var harganya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
+
+            this.state.diskon_rupiah[index]= diskonnya;
+            this.state.subtotal[index]=harganya - diskonnya;
+
+            this.total();
+        },
+
+        ubahJumlahDiskonRupiah(index){
+            var diskonnya=parseInt(this.state.diskon_rupiah[index]);
+            var harganya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
+
+            this.state.diskon_persen[index]= Math.round(diskonnya / harganya * 100);
+            this.state.subtotal[index]=harganya - parseInt(this.state.diskon_rupiah[index]);
 
             this.total();
         },

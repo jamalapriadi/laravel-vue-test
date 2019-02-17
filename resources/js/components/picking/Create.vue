@@ -41,6 +41,12 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Po Baru?</label>
+                                <div class="col-lg-9">
+                                    <toggle-button :value="true" :labels="{checked: 'No', unchecked: 'Yes'}" v-model="state.po_pending" @change="ubahPoPending(state.po_pending)"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Nomor PO</label>
                                 <div class="col-lg-9">
                                     <select name="po" id="po" class="form-control" v-model="state.no_po" @change="changePo">
@@ -109,7 +115,7 @@
                                 <input type="hidden" v-model="state.ppcss[index]" :value="l.pivot.pcs"> -->
                                 <td>{{ index + 1 }}</td>
                                 <td>{{l.kd}} / {{l.nm}}</td>
-                                <td>{{l.pivot.dos}} / {{l.pivot.pcs}}</td>
+                                <td>{{l.dos}} / {{l.pcs}}</td>
                                 <td>
                                     <select name="rak" id="rak" class="form-control" v-model="state.rak[index]" v-on:change="changeRak(index,state.rak[index], l.kd, state.lokasi,l.pivot.pcs)">
                                         <option value="" disabled selected>--Pilih Rak--</option>
@@ -133,6 +139,12 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <div class="alert alert-info" v-show="state.kurang.length>0">
+                        <ol>
+                            <li v-for="(l,index) in state.kurang" v-bind:key="index">Barang <strong>{{l.nm}}</strong> masih kurang <strong>{{l.kurang_nya}}</strong> Pcs</li>
+                        </ol>
+                    </div>
 
                     <hr>
             
@@ -177,6 +189,7 @@ export default {
     data() {
         return {
             state: {
+                po_pending:'',
                 kode:'',
                 no_po:'',
                 customer:'',
@@ -194,7 +207,9 @@ export default {
                 ppcs:[],
                 rak:[],
                 dos:[],
-                pcs:[]
+                pcs:[],
+                kurang:[],
+                status_kurang:'Y'
             },
             date: new Date(),
             options: {
@@ -226,7 +241,9 @@ export default {
             tampilTambah:[],
             pcs:[],
             dos:[],
-            hasilpcs:[]
+            hasilpcs:[],
+            
+            
         }
     },
     watch: {
@@ -242,13 +259,13 @@ export default {
         this.getCode();
         // this.getCustomer();
         // this.getPerusahaan();
-        this.getNoPo();
+        this.getNoPo("true");
         // this.getSales();
         this.getLokasi();
     },
     methods: {
-        getNoPo(){
-            axios.get('/data/list-po-not-in-picking')
+        getNoPo(status){
+            axios.get('/data/list-po-not-in-picking?status='+status)
                 .then(response => {
                     this.pos= response.data
                 })
@@ -259,28 +276,66 @@ export default {
                     this.state.kode = response.data;
                 })
         },
+
+        ubahPoPending(ppending){
+            this.state.no_po='';
+            this.state.customer='';
+            this.state.tanggal=new Date();
+            this.state.tanggaljt=new Date();
+            this.state.perusahaan='';
+            this.state.keterangan='';
+            this.state.lokasi='';
+            this.state.sales='';
+            this.state.kd_trans='Tunai';
+            this.state.rak=[];
+            this.state.kodes=[];
+            this.state.pdos=[];
+            this.state.ppcs=[];
+            this.state.rak=[];
+            this.state.dos=[];
+            this.state.pcs=[];
+            this.barang=[];
+
+            this.getNoPo(ppending);
+        },
+
         changePo(){
-            axios.get('/data/po/'+this.state.no_po)
+            axios.get('/data/po-by-id/'+this.state.no_po)
                 .then(response => {
-                    this.state.customer=response.data.customer.nm;
-                    this.state.lokasi=response.data.lokasi_id;
-                    this.barang=response.data.detail;
+                    this.state.customer=response.data.po.customer.nm;
+                    this.state.lokasi=response.data.po.lokasi_id;
+                    this.changeLokasi();
+                    // this.state.listBarang=response.data.list;
+
+                    this.barang=response.data.list;
+                    this.state.kurang=response.data.kurang;
+
+                    if(this.state.kurang.length>0){
+                        this.state.status_kurang='N';
+                    }else{
+                        this.state.status_kurang='Y';
+                    }
 
                     for (var i = 0; i < this.barang.length; i++) {
                         this.state.kodes.push(this.barang[i].kd);
-                        this.state.pdos.push(this.barang[i].pivot.dos)
-                        this.state.ppcs.push(this.barang[i].pivot.pcs)
+                        this.state.pdos.push(this.barang[i].dos);
+                        this.state.ppcs.push(this.barang[i].pcs);
+                        this.state.pcs[i]=this.barang[i].pcsnya;
+                        this.state.dos[i]=this.barang[i].dos;
+                        this.state.rak[i]=this.barang[i].rak;
                     }
 
-                    this.changeLokasi();
+                    
                 })
         },
+
         changeLokasi(){
             axios.get('/data/list-rak?lokasi='+this.state.lokasi)
                 .then(response => {
                     this.raks=response.data;
                 })
         },
+
         store(e) {
             this.loading = true;
 

@@ -39,9 +39,9 @@
                         <th>Kd Transaksi</th>
                         <th>Tgl</th>
                         <th>Tgl Jatuh Tempo</th>
-                        <th>Lokasi</th>
+                        <!-- <th>Lokasi</th> -->
                         <th>Keterangan</th>
-                        <!-- <th>Jumlah Barang</th> -->
+                        <th>Jumlah Barang</th>
                         <th>Total</th>
                         <th width="17%"></th>
                     </tr>
@@ -53,13 +53,13 @@
                         <td>{{l.kd_picking}}</td>
                         <td>{{l.picking.po.customer.nm}}</td>
                         <!-- <td>{{l.perusahaan.nama}}</td> -->
-                        <td>{{l.picking.sales.nm}}</td>
-                        <td>{{l.picking.kd_trans}}</td>
-                        <td>{{l.picking.tgl}}</td>
-                        <td>{{l.picking.tglj}}</td>
-                        <td>{{l.picking.lokasi.nm}}</td>
-                        <td>{{l.picking.ket}}</td>
-                        <!-- <td>{{l.picking.detail.length}}</td> -->
+                        <td>{{l.sales.nm}}</td>
+                        <td>{{l.kd_trans}}</td>
+                        <td>{{l.tgl}}</td>
+                        <td>{{l.tgljt}}</td>
+                        <!-- <td></td> -->
+                        <td>{{l.ket}}</td>
+                        <td>{{l.detail.length}}</td>
                         <td>{{l.total}}</td>
                         <td>
                             <div class="btn-group">
@@ -67,9 +67,9 @@
                                     <i class="fa fa-list text-white"></i>
                                 </router-link>
 
-                                <a class="btn btn-danger" v-on:click="hapus(l.no_order, index, l.nm)" v-bind:id="'delete'+l.no_order">
+                                <!-- <a class="btn btn-danger" v-on:click="hapus(l.no_order, index, l.nm)" v-bind:id="'delete'+l.no_order">
                                     <i class="fa fa-trash text-white"></i>
-                                </a>
+                                </a> -->
                             </div>
                         </td>
                     </tr>

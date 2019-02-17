@@ -25,10 +25,10 @@
                             <th>{{state.customer}}</th>
                         </tr>
                         
-                        <tr>
+                        <!-- <tr>
                             <th>Kd. Trans</th>
                             <th>{{state.kd_trans}}</th>
-                        </tr>
+                        </tr> -->
                         <tr v-if="state.kd_trans=='Kredit'">
                             <th>Tanggal Jatuh Tempo</th>
                             <th>{{state.tanggaljt}}</th>

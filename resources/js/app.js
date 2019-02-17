@@ -37,6 +37,7 @@ import BootstrapVue from 'bootstrap-vue';
 import Vuelidate from 'vuelidate';
 import Autocomplete from 'v-autocomplete'
 import 'v-autocomplete/dist/v-autocomplete.css'
+import ToggleButton from 'vue-js-toggle-button'
 
 
 Vue.use(VueRouter);
@@ -45,6 +46,7 @@ Vue.use(Spinner);
 Vue.use(BootstrapVue);
 Vue.use(Vuelidate);
 Vue.use(Autocomplete)
+Vue.use(ToggleButton)
 
 //define routes for users
 const routes = [

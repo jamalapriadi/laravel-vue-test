@@ -148,44 +148,110 @@ class PoController extends Controller
 
         $list=array();
         $jumlah=0;
+        $rak=array();
         foreach($po->detail as $row){
             $pcs=$row->pivot->pcs;
             $jumlah=0;
             $sisa=$row->pivot->pcs;
-            $rak=array();
+            $diambil=0;
+            
+            $rowspan=1;
+            if(count($row->stok)>0){
+                $rowspan=count($row->stok);
 
-            for($a=0; $a< count($row->stok); $a++){
-                if($sisa > $row->stok[$a]->pcs){
-                    $diambil=$sisa;
-                    $sisa=$row->stok[$a]->pcs-$sisa ;
-                    $rak[]=array(
-                        'stok'=>$row->stok[$a]->pcs,
-                        'diambil'=>$diambil,
-                        'sisa'=>$sisa,
-                        'rak'=>$row->stok[$a]->rak_id
-                    );
-                }else{
-                    $diambil=$sisa;
-                    $sisa=$diambil + $row->stok[$a]->pcs;
-                    $rak[]=array(
-                        'stok'=>$row->stok[$a]->pcs,
-                        'diambil'=>$diambil,
-                        'sisa'=>$sisa,
-                        'rak'=>$row->stok[$a]->rak_id
-                    );
-                    break;
+                for($a=0; $a< count($row->stok); $a++){
+                    if($sisa > $row->stok[$a]->pcs){
+                        $diambil=$sisa;
+                        $sisa=$sisa - $row->stok[$a]->pcs ;
+                        $h=0;
+                        if($sisa>0){
+                            $h=$sisa;
+                        }
+
+                        $rak[]=array(
+                            'kd'=>$row->kd,
+                            'nm'=>$row->nm,
+                            'jual'=>$row->jual,
+                            'dos'=>$row->pivot->dos,
+                            'pcs'=>$row->pivot->pcs,
+                            'pcsnya'=>$diambil - $h,
+                            'stok'=>$row->stok[$a]->pcs,
+                            'diambil'=>$diambil,
+                            'kurang'=>$h,
+                            'rak'=>$row->stok[$a]->rak_id
+                        );
+                    }else{
+                        $diambil=$sisa;
+                        $sisa=$diambil - $row->stok[$a]->pcs;
+                        $h=0;
+                        if($sisa>0){
+                            $h=$sisa;
+                        }
+                        $rak[]=array(
+                            'kd'=>$row->kd,
+                            'nm'=>$row->nm,
+                            'jual'=>$row->jual,
+                            'dos'=>$row->pivot->dos,
+                            'pcs'=>$row->pivot->pcs,
+                            'pcsnya'=>$diambil - $h,
+                            'stok'=>$row->stok[$a]->pcs,
+                            'diambil'=>$diambil,
+                            'kurang'=>$h,
+                            'rak'=>$row->stok[$a]->rak_id
+                        );
+
+                        break;
+                    }
                 }
+            }else{
+                $rak[]=array(
+                    'kd'=>$row->kd,
+                    'nm'=>$row->nm,
+                    'jual'=>$row->jual,
+                    'dos'=>$row->pivot->dos,
+                    'pcs'=>$row->pivot->pcs,
+                    'pcsnya'=>0,
+                    'stok'=>0,
+                    'diambil'=>0,
+                    'kurang'=>0,
+                    'rak'=>''
+                );
             }
-
-            $list[]=array(
-                'pcs'=>$row->pivot->pcs,
-                'sisa'=>$sisa,
-                'rak'=>$rak,
-                'stok'=>$row->stok
-            );
         }
 
-        return $list;
+        /*cari barang terakhir dan cek apakah kurangnya masih ada yang lebih dari 0 */
+        $listbarang=$rak;
+        usort($listbarang, function($a, $b) {
+            return $a['kurang'] <=> $b['kurang'];
+        });
+
+        $tempArr = array_unique(array_column($listbarang, 'kd'));
+        $hasil=array_intersect_key($listbarang, $tempArr);
+
+        $listKurang=array();
+        foreach($hasil as $key=>$val){
+            if($val['kurang'] > 0){
+                array_push($listKurang,[
+                    'kd'=>$val['kd'],
+                    'nm'=>$val['nm'],
+                    'jual'=>$val['jual'],
+                    'dos'=>$val['dos'],
+                    'pcs'=>$val['pcs'],
+                    'kurang_nya'=>$val['kurang'],
+                    'pcsnya'=>0,
+                    'stok'=>0,
+                    'diambil'=>0,
+                    'kurang'=>0,
+                    'rak'=>''
+                ]);
+            }
+        }
+
+        return array(
+            'po'=>$po,
+            'list'=>$rak,
+            'kurang'=>$listKurang
+        );
     }
 
     /**
@@ -260,9 +326,21 @@ class PoController extends Controller
 
     public function list_po_not_in_picking(Request $request)
     {
-        $po=\DB::table('po')
-            ->whereRaw("no_po not in (select no_po from picking)")
-            ->get();
+        $dimana="";
+
+        if($request->has('status')){
+            $status=$request->input('status');
+
+            if($status=="true"){
+                $dimana="and no_ref_po is null";
+            }
+
+            if($status=="false"){
+                $dimana="and no_ref_po is not null";
+            }
+        }
+
+        $po=\DB::select("select * from po where no_po not in (select no_po from picking) $dimana");
 
         return $po;
     }

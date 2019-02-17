@@ -28,16 +28,8 @@
                             <th>{{state.tanggaljt}}</th>
                         </tr>
                         <tr>
-                            <th>Customer</th>
-                            <th>{{state.customer}}</th>
-                        </tr>
-                        <tr>
                             <th>Sales</th>
                             <th>{{state.sales}}</th>
-                        </tr>
-                        <tr>
-                            <th>Lokasi</th>
-                            <th>{{state.lokasi}}</th>
                         </tr>
                         <tr>
                             <th>Perusahaan</th>
@@ -62,7 +54,8 @@
                                     <th>Dos</th>
                                     <th>Pcs</th>
                                     <th>Harga</th>
-                                    <!-- <th>Diskon</th> -->
+                                    <th>Diskon %</th>
+                                    <th>Diskon (Rp.)</th>
                                     <th>Jumlah</th>
                                     <th>Subtotal</th>
                                 </tr>
@@ -75,14 +68,15 @@
                                     <td>{{l.pivot.dos}}</td>
                                     <td>{{l.pivot.pcs}}</td>
                                     <td>{{l.pivot.hrg}}</td>
-                                    <!-- <td>{{l.pivot.diskon}}</td> -->
+                                    <td>{{l.pivot.diskon_persen}} %</td>
+                                    <td>Rp. {{l.pivot.diskon_rupiah}}</td>
                                     <td>{{l.pivot.jumlah}}</td>
-                                    <td>{{parseInt(l.pivot.hrg) * parseInt(l.pivot.jumlah)}}</td>
+                                    <td>{{parseInt(l.pivot.hrg) * parseInt(l.pivot.jumlah) - parseInt(l.pivot.diskon_rupiah)}}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="7">Total</th>
+                                    <th colspan="9">Total</th>
                                     <th>{{state.total}}</th>
                                 </tr>
                             </tfoot>
@@ -137,17 +131,16 @@ export default {
             axios.get('/data/order/'+id)
                 .then(response => {
                     this.state.kode= response.data.no_order;
+                    this.state.kd_picking=response.data.kd_picking;
                     this.state.customer= response.data.picking.po.customer.nm;
-                    this.state.tanggal= response.data.picking.tgl;
-                    this.state.tanggaljt= response.data.picking.tglj;
-                    this.state.perusahaan= response.data.picking.perusahaan.nama;
-                    this.state.keterangan= response.data.picking.ket;
-                    this.state.lokasi= response.data.picking.lokasi.nm;
-                    this.state.sales= response.data.picking.sales.nm;
-                    this.state.kd_trans= response.data.picking.kd_trans;
+                    this.state.tanggal= response.data.tgl;
+                    this.state.tanggaljt= response.data.tgljt;
+                    this.state.sales= response.data.sales.nm;
+                    this.state.perusahaan= response.data.perusahaan.nama;
+                    this.state.keterangan= response.data.ket;
+                    this.state.kd_trans= response.data.kd_trans;
                     this.state.listBarang= response.data.detail;
                     this.state.total= response.data.total;
-                    this.state.kd_picking=response.data.kd_picking;
                 })
                 .catch( error => {
                     alert('data tidak dapat di load');

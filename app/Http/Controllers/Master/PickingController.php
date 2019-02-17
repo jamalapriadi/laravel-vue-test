@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Master;
 
 use App\Models\Picking;
+use App\Models\Po;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -53,7 +54,8 @@ class PickingController extends Controller
             'tanggal'=>'required',
             'kodes'=>'required',
             'dos'=>'required',
-            'pcs'=>'required'
+            'pcs'=>'required',
+            'status_kurang'=>'required'
         ];
 
         $validasi=\Validator::make($request->all(),$rules);
@@ -73,10 +75,50 @@ class PickingController extends Controller
             $p->perusahaan_id=auth()->user()->perusahaan_id;
             $p->insert_user=auth()->user()->username;
             $p->update_user=auth()->user()->username;
+            $p->status_terpenuhi=request('status_kurang');
 
             $simpan=$p->save();
 
             if($simpan){
+
+                if($request->has('status_kurang')){
+                    $statuskurang=$request->input('status_kurang');
+
+                    if($statuskurang=="N"){
+                        $posekarang=Po::find(request('no_po'));
+
+                        $cus=new Po;
+                        $cus->no_po=$this->autonumber_po();
+                        $cus->no_ref_po=request('no_po');
+                        $cus->customer_id=$posekarang->customer_id;
+                        $cus->ket=$posekarang->ket;
+                        $cus->tgl=$posekarang->tgl;
+                        $cus->lokasi_id=$posekarang->lokasi_id;
+                        $cus->perusahaan_id=auth()->user()->perusahaan_id;
+                        $cus->insert_user=auth()->user()->username;
+                        $cus->update_user=auth()->user()->username;
+                        $simpancus=$cus->save();
+
+                        if($simpancus){
+                            if($request->has('kurang')){
+                                $kurang=request('kurang');
+            
+                                foreach($kurang as $key=>$val){
+                                    \DB::table('rpo')
+                                        ->insert(
+                                            [
+                                                'no_po'=>$cus->no_po,
+                                                'kd_brg'=>$val['kd'],
+                                                'dos'=>$val['dos'],
+                                                'pcs'=>$val['kurang_nya']
+                                            ]
+                                        );
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if($request->has('kodes')){
                     $kodes=request('kodes');
 
@@ -199,6 +241,19 @@ class PickingController extends Controller
         $noUrut= (int) substr($kodeBarang, 11,11);
         $noUrut++;
         $char = "PCK-TLG-".date('y')."-";
+        $newId= $char.sprintf("%06s",$noUrut);
+
+        return $newId;
+    }
+
+    public function autonumber_po()
+    {
+        $sql=Po::select(\DB::Raw("max(no_po) as maxKode"))
+            ->first();
+        $kodeBarang = $sql->maxKode;
+        $noUrut= (int) substr($kodeBarang, 10,10);
+        $noUrut++;
+        $char = "PO-TLG-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;

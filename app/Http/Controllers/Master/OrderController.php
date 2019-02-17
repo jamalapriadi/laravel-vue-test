@@ -23,6 +23,7 @@ class OrderController extends Controller
                 'picking.lokasi',
                 'detail',
                 'perusahaan',
+                'sales'
             ]
         );
 
@@ -162,11 +163,11 @@ class OrderController extends Controller
             [
                 'picking',
                 'picking.po.customer',
-                'picking.sales',
                 'picking.lokasi',
                 'picking.perusahaan',
                 'detail',
                 'perusahaan',
+                'sales'
             ]
         )->find($id);
 
