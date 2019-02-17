@@ -141,6 +141,11 @@ const routes = [
 
     { path: '/storing', name:'storeIndex', component: require('./components/storing/Index.vue').default},
     { path: '/add-new-storing', name: 'storingCreate', component: require('./components/storing/Create.vue').default },
+    { path: '/storing-detail/:id', name: 'storingDetail', component: require('./components/storing/Detail.vue').default},
+
+    { path: '/list-mutasi', name: 'listMutasi', component: require('./components/mutasi/Index.vue').default },
+    { path: '/add-new-mutasi', name: 'mutasiCreate', component: require('./components/mutasi/Create.vue').default },
+    { path: '/mutasi-detail/:id', name: 'mutasiDetail', component: require('./components/mutasi/Detail.vue').default},
 ]
 
 const router = new VueRouter({ routes });

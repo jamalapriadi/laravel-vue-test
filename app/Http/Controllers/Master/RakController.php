@@ -42,7 +42,7 @@ class RakController extends Controller
     public function store(Request $request)
     {
         $rules=[
-            'nama'=>'required',
+            'raks'=>'required',
             'lokasi'=>'required'
         ];
 
@@ -55,10 +55,13 @@ class RakController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
-            $rak=new Rak;
-            $rak->nm=request('nama');
-            $rak->lokasi_id=request('lokasi');
-            $rak->save();
+            $raks=request('raks');
+            foreach($raks as $key=>$val){
+                $rak=new Rak;
+                $rak->lokasi_id=request('lokasi');
+                $rak->nm=$val;
+                $rak->save();
+            }
 
             $data=array(
                 'success'=>true,

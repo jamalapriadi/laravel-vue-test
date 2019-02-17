@@ -13,7 +13,7 @@ class StoringController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $storing=Storing::with(
             [
@@ -22,9 +22,10 @@ class StoringController extends Controller
             ]
         );
 
-        // if($request->has('q')){
-        //     $storing=$storing->where('customer_id','like','%'.request('q').'%');
-        // }
+        if($request->has('q')){
+            $storing=$storing->where('no_storing','like','%'.request('q').'%')
+                ->orWhere('no_ref','like','%'.request('q').'%');
+        }
 
         $storing=$storing->paginate(25);
 
@@ -181,7 +182,7 @@ class StoringController extends Controller
     {
         $storing=Storing::find($id);
 
-        $hapus=$cus->delete();
+        $hapus=$storing->delete();
 
         if($hapus){
             \DB::table('rstoring')

@@ -49,11 +49,11 @@
                         <!-- <td>{{l.picking.detail.length}}</td> -->
                         <td>
                             <div class="btn-group">
-                                <router-link :to="{ name: 'orderDetail', params: {id: l.no_order}}" class="btn btn-info">
+                                <router-link :to="{ name: 'storingDetail', params: {id: l.no_storing}}" class="btn btn-info">
                                     <i class="fa fa-list text-white"></i>
                                 </router-link>
 
-                                <a class="btn btn-danger" v-on:click="hapus(l.no_order, index, l.nm)" v-bind:id="'delete'+l.no_order">
+                                <a class="btn btn-danger" v-on:click="hapus(l.no_storing, index, l.nm)" v-bind:id="'delete'+l.no_storing">
                                     <i class="fa fa-trash text-white"></i>
                                 </a>
                             </div>

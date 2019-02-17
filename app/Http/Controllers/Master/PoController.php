@@ -134,6 +134,60 @@ class PoController extends Controller
         return $po;
     }
 
+    public function po_by_id(Request $request,$id)
+    {
+        $po=Po::with(
+            [
+                'detail',
+                'detail.stok',
+                'customer',
+                'perusahaan',
+                'lokasi'
+            ]
+        )->find($id);
+
+        $list=array();
+        $jumlah=0;
+        foreach($po->detail as $row){
+            $pcs=$row->pivot->pcs;
+            $jumlah=0;
+            $sisa=$row->pivot->pcs;
+            $rak=array();
+
+            for($a=0; $a< count($row->stok); $a++){
+                if($sisa > $row->stok[$a]->pcs){
+                    $diambil=$sisa;
+                    $sisa=$row->stok[$a]->pcs-$sisa ;
+                    $rak[]=array(
+                        'stok'=>$row->stok[$a]->pcs,
+                        'diambil'=>$diambil,
+                        'sisa'=>$sisa,
+                        'rak'=>$row->stok[$a]->rak_id
+                    );
+                }else{
+                    $diambil=$sisa;
+                    $sisa=$diambil + $row->stok[$a]->pcs;
+                    $rak[]=array(
+                        'stok'=>$row->stok[$a]->pcs,
+                        'diambil'=>$diambil,
+                        'sisa'=>$sisa,
+                        'rak'=>$row->stok[$a]->rak_id
+                    );
+                    break;
+                }
+            }
+
+            $list[]=array(
+                'pcs'=>$row->pivot->pcs,
+                'sisa'=>$sisa,
+                'rak'=>$rak,
+                'stok'=>$row->stok
+            );
+        }
+
+        return $list;
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

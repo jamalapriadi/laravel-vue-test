@@ -38,4 +38,8 @@ class Barang extends Model
         return $this->belongsTo('App\Models\Merk','merk_id');
     }
 
+    public function stok(){
+        return $this->hasMany('App\Models\Stok','kd_brg','kd');
+    }
+
 }

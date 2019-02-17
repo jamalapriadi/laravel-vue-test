@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -77,6 +77,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('autonumber-picking','Master\PickingController@autonumber_picking');
     Route::get('autonumber-order','Master\OrderController@autonumber_order');
     Route::get('autonumber-storing','Master\StoringController@autonumber_storing');
+    Route::get('autonumber-mutasi','Master\MutasiController@autonumber_mutasi');
     Route::get('list-barang','Master\BarangController@list_barang');
     Route::get('cari-barang-by-kode/{id}','Master\BarangController@cari_barang_by_kode');
     Route::get('cari-barang-by-nama','Master\BarangController@cari_barang_by_nama');
@@ -84,4 +85,5 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('list-po-not-in-picking','Master\PoController@list_po_not_in_picking');
     Route::get('list-picking-not-in-order','Master\PickingController@list_picking_not_in_order');
     Route::get('stok-dirak','Master\StoringController@stok_di_rak');
+    Route::get('po-by-id/{id}','Master\PoController@po_by_id');
 });

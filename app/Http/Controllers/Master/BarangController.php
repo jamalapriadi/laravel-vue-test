@@ -325,8 +325,13 @@ class BarangController extends Controller
         $barang=Barang::select('kd','nm');
 
         if($request->has('q')){
-            $barnag=$barang->where('nm','like','%'.request('q').'%')
+            $barang=$barang->where('nm','like','%'.request('q').'%')
                 ->orWhere('kd','like','%'.request('q').'%');
+        }
+
+        if($request->has('rak')){
+            $rak=request('rak');
+            $barang=$barang->whereRaw("kd in (select kd_brg from stok where rak_id=$rak)");
         }
 
         return $barang->get();
