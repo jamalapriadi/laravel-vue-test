@@ -82,7 +82,7 @@
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">Dos</label>
-                        <input type="text" class="form-control" v-model="barang.dos">
+                        <input type="text" class="form-control" v-model="barang.dos" @change="changePcs">
                     </div>
 
                     <div class="form-group col-md-2">
@@ -285,6 +285,7 @@ export default {
             carikodebarang:'',
             carinamacustomer:'',
             carikodecustomer:'',
+            hasilpcs:0,
             lokasis:[]
         }
     },
@@ -365,7 +366,8 @@ export default {
                         this.listCBarang.push(
                             {
                                 kd:response.data[i].kd,
-                                nm:response.data[i].nm
+                                nm:response.data[i].nm,
+                                pcs:response.data[i].pcs
                             }
                         );
                     }
@@ -383,7 +385,8 @@ export default {
                         this.listCBarang.push(
                             {
                                 kd:response.data[i].kd,
-                                nm:response.data[i].nm
+                                nm:response.data[i].nm,
+                                pcs:response.data[i].pcs
                             }
                         );
                     }
@@ -429,15 +432,20 @@ export default {
         getNamaBarang(item){
             let unique = [...new Set(this.listCBarang)]; 
             var nama="";
+            var pcs=0;
             
             for(var i=0; i< unique.length; i++){
                 if(unique[i].nm == item){
                     nama=unique[i].kd;
+                    pcs=unique[i].pcs;
                 }
             }
 
             this.barang.nama=item;
             this.barang.kode=nama;
+            this.barang.pcs=pcs;
+            this.barang.dos=1;
+            this.hasilpcs=pcs;
             // this.carinamabarang=nama;
             this.$refs.kodebarang.inputValue = nama
         },
@@ -445,17 +453,25 @@ export default {
         getKodeBarang(item){
             let unique = [...new Set(this.listCBarang)]; 
             var nama="";
+            var pcs=0;
             
             for(var i=0; i< unique.length; i++){
                 if(unique[i].kd == item){
                     nama=unique[i].nm;
+                    pcs=unique[i].pcs;
                 }
             }
 
             this.barang.kode=item;
             this.barang.nama=nama;
-            // this.carinamabarang=nama;
+            this.barang.pcs=pcs;
+            this.barang.dos=1;
+            this.hasilpcs=pcs;
             this.$refs.namabarang.inputValue = nama;
+        },
+
+        changePcs(){
+            this.barang.pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs);
         },
 
         getNamaCustomer(item){

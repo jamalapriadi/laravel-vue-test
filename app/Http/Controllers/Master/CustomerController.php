@@ -237,11 +237,12 @@ class CustomerController extends Controller
 
     public function cari_customer_by_nama(Request $request)
     {
-        $cus=Customer::select('kd','nm');
+        $cus=Customer::select('kd','nm','nm_toko');
 
         if($request->has('q')){
             $cus=$cus->where('nm','like','%'.request('q').'%')
-                ->orWhere('kd','like','%'.request('q').'%');
+                ->orWhere('kd','like','%'.request('q').'%')
+                ->orWhere('nm_toko','like','%'.request('q').'%');
         }
 
         $cus=$cus->get();

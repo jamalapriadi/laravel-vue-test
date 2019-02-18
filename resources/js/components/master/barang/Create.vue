@@ -63,7 +63,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="" class="control-label">Jual</label>
+                        <label for="" class="control-label">HET</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.jual }" v-model="state.jual">
                     </div>
                     <hr>

@@ -172,6 +172,10 @@ class RakController extends Controller
             $rak=$rak->where('lokasi_id',$request->input('lokasi'));
         }
 
+        if($request->has('q')){
+            $rak=$rak->where('nm','like','%'.$request->input('q').'%');
+        }
+
         $rak=$rak->get();
 
         return $rak;

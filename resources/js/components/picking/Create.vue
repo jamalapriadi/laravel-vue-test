@@ -46,6 +46,22 @@
                                     <toggle-button :value="true" :labels="{checked: 'No', unchecked: 'Yes'}" v-model="state.po_pending" @change="ubahPoPending(state.po_pending)"/>
                                 </div>
                             </div>
+                            
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Customer</label>
+                                <div class="col-lg-9">
+                                    <div class="row">
+                                        <div class="col-lg-5">
+                                            <vue-bootstrap-typeahead v-model="caritokocustomer" :data="listtokocustomer" placeholder="Nama Toko" @hit="getTokoCustomer($event)" ref="tokocustomer"/>
+                                        </div>
+
+                                        <div class="col-lg-7">
+                                            <vue-bootstrap-typeahead v-model="carinamacustomer" :data="listcaricustomer" placeholder="Cari Customer..." @hit="getNamaCustomer($event)" ref="namacustomer"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Nomor PO</label>
                                 <div class="col-lg-9">
@@ -53,13 +69,6 @@
                                         <option value="" disabled selected>--Pilih PO--</option>
                                         <option v-for="(l,index) in pos" v-bind:key="index" v-bind:value="l.no_po">{{l.no_po}}</option>
                                     </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="" class="control-label col-lg-3">Customer</label>
-                                <div class="col-lg-9">
-                                    <input type="text" class="form-control" v-model="state.customer" readonly>
                                 </div>
                             </div>
                         </div>
@@ -179,12 +188,15 @@ import datePicker from 'vue-bootstrap-datetimepicker';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
 import Multiselect from 'vue-multiselect'
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
+import uniq from 'lodash/uniq'
 
 export default {
     components: {
         VueLoading,
         datePicker,
-        Multiselect 
+        Multiselect,
+        VueBootstrapTypeahead
     },
     data() {
         return {
@@ -242,6 +254,10 @@ export default {
             pcs:[],
             dos:[],
             hasilpcs:[],
+            carinamacustomer:'',
+            caritokocustomer:'',
+            listcaricustomer:[],
+            listtokocustomer:[],
             
             
         }
@@ -254,18 +270,26 @@ export default {
                 this.showData();
             }
         },
+
+        carinamacustomer: _.debounce(function(q){
+            this.cariNamaCustomerByName(q);
+        },500),
+
+        caritokocustomer: _.debounce(function(q){
+            this.cariTokoCustomerById(q);
+        },500),
     },
     mounted() {
         this.getCode();
         // this.getCustomer();
         // this.getPerusahaan();
-        this.getNoPo("true");
+        // this.getNoPo("true");
         // this.getSales();
         this.getLokasi();
     },
     methods: {
         getNoPo(status){
-            axios.get('/data/list-po-not-in-picking?status='+status)
+            axios.get('/data/list-po-not-in-picking?status='+status+"&customer="+this.state.customer)
                 .then(response => {
                     this.pos= response.data
                 })
@@ -277,7 +301,81 @@ export default {
                 })
         },
 
+        async cariNamaCustomerByName(q){
+            this.listcaricustomer=[];
+            this.listCCustomer=[];
+            axios.get('/data/cari-customer-by-nama?q='+q)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listcaricustomer.push(response.data[i].nm);
+
+                        this.listCCustomer.push(
+                            {
+                                kd:response.data[i].kd,
+                                nm:response.data[i].nm,
+                                nm_toko:response.data[i].nm_toko
+                            }
+                        );
+                    }
+                })
+        },
+
+        async cariTokoCustomerById(q){
+            this.listtokocustomer=[];
+            this.listCCustomer=[];
+            axios.get('/data/cari-customer-by-nama?q='+q)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listtokocustomer.push(response.data[i].nm_toko);
+
+                        this.listCCustomer.push(
+                            {
+                                kd:response.data[i].kd,
+                                nm:response.data[i].nm,
+                                nm_toko:response.data[i].nm_toko
+                            }
+                        );
+                    }
+                })
+        },
+
+        getNamaCustomer(item){
+            let uniqueCus = [...new Set(this.listCCustomer)]; 
+            var nama="";
+            var toko="";
+            
+            for(var i=0; i< uniqueCus.length; i++){
+                if(uniqueCus[i].nm == item){
+                    nama=uniqueCus[i].kd;
+                    toko=uniqueCus[i].nm_toko;
+                }
+            };
+
+            this.$refs.tokocustomer.inputValue = toko
+            this.state.customer=nama;
+            this.getNoPo(this.state.po_pending);
+        },
+
+        getTokoCustomer(item){
+            let uniqueCus = [...new Set(this.listCCustomer)]; 
+            var nama="";
+            var kode="";
+            
+            for(var i=0; i< uniqueCus.length; i++){
+                if(uniqueCus[i].nm_toko == item){
+                    nama=uniqueCus[i].nm;
+                    kode=uniqueCus[i].kd;
+                }
+            };
+            
+            this.$refs.namacustomer.inputValue = nama
+            this.state.customer=kode;
+            this.getNoPo(this.state.po_pending);
+        },
+
         ubahPoPending(ppending){
+            this.listcaricustomer=[];
+            this.listCCustomer=[];
             this.state.no_po='';
             this.state.customer='';
             this.state.tanggal=new Date();
@@ -295,6 +393,8 @@ export default {
             this.state.dos=[];
             this.state.pcs=[];
             this.barang=[];
+            this.$refs.tokocustomer.inputValue = ""
+            this.$refs.namacustomer.inputValue = ""
 
             this.getNoPo(ppending);
         },

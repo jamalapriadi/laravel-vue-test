@@ -165,9 +165,13 @@ class LokasiController extends Controller
         return $data;
     }
 
-    public function list_lokasi()
+    public function list_lokasi(Request $request)
     {
         $lokasi=Lokasi::select('id','lokasi','nm');
+
+        if($request->has('q')){
+            $lokasi=$lokasi->where('nm','like','%'.$request->input('q').'%');
+        }
 
         $lokasi=$lokasi->get();
 

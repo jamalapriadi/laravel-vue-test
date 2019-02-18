@@ -52,13 +52,13 @@
             <br><br>
             <div>
                 <div class="row">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="" class="control-label">Kode / Nama barang</label>
                         <div class="row">
-                            <div class="col-lg-5">
+                            <div class="col-lg-6">
                                 <vue-bootstrap-typeahead v-model="carikodebarang" :data="listkodebarang" placeholder="Kode Barang..." @hit="getKodeBarang($event)" ref="kodebarang"/>
                             </div>
-                            <div class="col-lg-7">
+                            <div class="col-lg-6">
                                 <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Nama Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
                             </div>
                         </div>
@@ -66,16 +66,17 @@
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">Rak</label>
-                        <select name="rak" id="rak" class="form-control" v-model="barang.rak">
+                        <!-- <select name="rak" id="rak" class="form-control" v-model="barang.rak">
                             <option value="">--Pilih Rak--</option>
                             <option v-for="(l,index) in raks" v-bind:key="index" v-bind:value="l">{{l.kd}} [ {{l.nm}} ]</option>
-                        </select>
+                        </select> -->
+                        <multiselect v-model="barang.rak" :options="raks" placeholder="Cari Rak" label="nm" track-by="kd"></multiselect>
                         
                     </div>
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">Dos</label>
-                        <input type="text" class="form-control" v-model="barang.dos">
+                        <input type="text" class="form-control" v-model="barang.dos" @change="changePcs">
                     </div>
 
                     <div class="form-group col-md-2">
@@ -278,6 +279,7 @@ export default {
             carikodebarang:'',
             carinamacustomer:'',
             carikodecustomer:'',
+            hasilpcs:0,
             lokasis:[],
             raks:[]
         }
@@ -306,6 +308,7 @@ export default {
         carikodecustomer: _.debounce(function(q){
             this.cariKodeCustomerById(q);
         },500),
+
     },
     mounted() {
         this.getCode();
@@ -359,7 +362,8 @@ export default {
                         this.listCBarang.push(
                             {
                                 kd:response.data[i].kd,
-                                nm:response.data[i].nm
+                                nm:response.data[i].nm,
+                                pcs:response.data[i].pcs
                             }
                         );
                     }
@@ -377,7 +381,8 @@ export default {
                         this.listCBarang.push(
                             {
                                 kd:response.data[i].kd,
-                                nm:response.data[i].nm
+                                nm:response.data[i].nm,
+                                pcs:response.data[i].pcs
                             }
                         );
                     }
@@ -423,16 +428,20 @@ export default {
         getNamaBarang(item){
             let unique = [...new Set(this.listCBarang)]; 
             var nama="";
+            var pcs=0;
             
             for(var i=0; i< unique.length; i++){
                 if(unique[i].nm == item){
                     nama=unique[i].kd;
+                    pcs=unique[i].pcs;
                 }
             }
 
             this.barang.nama=item;
             this.barang.kode=nama;
-            // this.carinamabarang=nama;
+            this.barang.pcs=pcs;
+            this.barang.dos=1;
+            this.hasilpcs=pcs;
             this.$refs.kodebarang.inputValue = nama
         },
 
@@ -446,16 +455,20 @@ export default {
         getKodeBarang(item){
             let unique = [...new Set(this.listCBarang)]; 
             var nama="";
+            var pcs=0;
             
             for(var i=0; i< unique.length; i++){
                 if(unique[i].kd == item){
                     nama=unique[i].nm;
+                    pcs=unique[i].pcs;
                 }
             }
 
             this.barang.kode=item;
             this.barang.nama=nama;
-            // this.carinamabarang=nama;
+            this.barang.pcs=pcs;
+            this.barang.dos=1;
+            this.hasilpcs=pcs;
             this.$refs.namabarang.inputValue = nama;
         },
 
@@ -485,6 +498,10 @@ export default {
             
             this.$refs.namacustomer.inputValue = nama
             this.state.customer=item;
+        },
+
+        changePcs(){
+            this.barang.pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs);
         },
 
         limitText (count) {
@@ -559,6 +576,7 @@ export default {
             this.barang.rak='';
             this.barang.dos=0;
             this.barang.pcs=0;
+            this.hasilpcs=0;
             this.$refs.kodebarang.inputValue = '';
             this.$refs.namabarang.inputValue = '';
         },

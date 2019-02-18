@@ -95,7 +95,7 @@
                                 <th>Dos / Pcs</th>
                                 <th width='15%'>Harga</th>
                                 <th width='11%'>Jumlah</th>
-                                <th width='20%' colspan='2'>Diskon</th>
+                                <th width='30%' colspan='2'>Diskon</th>
                                 <th>Subtotal</th>
                             </tr>
                         </thead>
@@ -111,13 +111,9 @@
                                     <input type="number" class="form-control" v-model="state.jumlah[index]"  @keyup.enter="ubahJumlah(index)">
                                 </td>
                                 <td>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" v-model="state.diskon_persen[index]" @keyup.enter="ubahJumlahDiskonPersen(index)">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                %
-                                            </span>
-                                        </div>
+                                    <div class="input-group" style="width:80px;">
+                                        <input type="number" class="form-control" v-model="state.diskon_persen[index]" @keyup.enter="ubahJumlahDiskonPersen(index)" placeholder="%">
+                                        <span style="margin-top:5px;margin-left:5px;">%</span>
                                     </div>
                                 </td>
                                 <td>

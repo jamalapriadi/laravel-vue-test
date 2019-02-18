@@ -340,6 +340,11 @@ class PoController extends Controller
             }
         }
 
+        if($request->has('customer')){
+            $customer=$request->input('customer');
+            $dimana.=" and customer_id='".$customer."'";
+        }
+
         $po=\DB::select("select * from po where no_po not in (select no_po from picking) $dimana");
 
         return $po;

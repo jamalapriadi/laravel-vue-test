@@ -55,7 +55,7 @@
                         <th>PCS</th>
                         <!-- <th>Harga Beli</th> -->
                         <th>Harga Pokok</th>
-                        <th>Jual</th>
+                        <th>HET</th>
                         <th width="17%"></th>
                     </tr>
                 </thead>

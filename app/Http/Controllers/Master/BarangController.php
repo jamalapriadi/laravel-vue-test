@@ -322,7 +322,7 @@ class BarangController extends Controller
 
     public function cari_barang_by_nama(Request $request)
     {
-        $barang=Barang::select('kd','nm');
+        $barang=Barang::select('kd','nm','pcs');
 
         if($request->has('q')){
             $barang=$barang->where('nm','like','%'.request('q').'%')
