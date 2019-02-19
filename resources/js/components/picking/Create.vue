@@ -17,19 +17,6 @@
                     </div>
 
                     <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
                 </div>
             </div>
         </div>
@@ -105,6 +92,15 @@
 
                     <br>
 
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card card-default">
+                <div class="card-header">Detail Barang</div>
+                <div class="card-body">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -124,7 +120,7 @@
                                 <input type="hidden" v-model="state.ppcss[index]" :value="l.pivot.pcs"> -->
                                 <td>{{ index + 1 }}</td>
                                 <td>{{l.kd}} / {{l.nm}}</td>
-                                <td>{{l.dos}} / {{l.pcs}}</td>
+                                <td>{{l.dos}} Dos / {{l.pcs}} Pcs</td>
                                 <td>
                                     <select name="rak" id="rak" class="form-control" v-model="state.rak[index]" v-on:change="changeRak(index,state.rak[index], l.kd, state.lokasi,l.pivot.pcs)">
                                         <option value="" disabled selected>--Pilih Rak--</option>
@@ -221,7 +217,8 @@ export default {
                 dos:[],
                 pcs:[],
                 kurang:[],
-                status_kurang:'Y'
+                status_kurang:'Y',
+                tampil:[]
             },
             date: new Date(),
             options: {
@@ -402,6 +399,9 @@ export default {
         changePo(){
             axios.get('/data/po-by-id/'+this.state.no_po)
                 .then(response => {
+                    this.state.kodes=[];
+                    this.state.pdos=[];
+                    this.state.ppc=[];
                     this.state.customer=response.data.po.customer.nm;
                     this.state.lokasi=response.data.po.lokasi_id;
                     this.changeLokasi();
@@ -420,8 +420,13 @@ export default {
                         this.state.kodes.push(this.barang[i].kd);
                         this.state.pdos.push(this.barang[i].dos);
                         this.state.ppcs.push(this.barang[i].pcs);
-                        this.state.pcs[i]=this.barang[i].pcs;
-                        this.state.dos[i]=this.barang[i].dos;
+                        // if(this.barang[i].realisasi_pcsnya > 0 && this.barang[i].realisasi_dosnya > 0){
+                        //     this.state.tampil[i]=true;
+                        // }else{
+                        //     this.state.tampil[i]=false;
+                        // }
+                        this.state.pcs[i]=this.barang[i].realisasi_pcsnya;
+                        this.state.dos[i]=this.barang[i].realisasi_dosnya;
                         this.state.rak[i]=this.barang[i].rak;
                     }
 

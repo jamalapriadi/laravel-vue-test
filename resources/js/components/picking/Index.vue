@@ -35,9 +35,9 @@
                         <th>No. PO</th>
                         <th>Customer</th>
                         <th>Keterangan</th>
-                        <th>Kd Transaksi</th>
+                        <!-- <th>Kd Transaksi</th> -->
                         <th>Tgl</th>
-                        <th>Tgl Jatuh Tempo</th>
+                        <!-- <th>Tgl Jatuh Tempo</th> -->
                         <th>Lokasi</th>
                         <!-- <th>Jumlah Barang</th>
                         <th>Total</th> -->
@@ -51,13 +51,13 @@
                         <td>{{l.no_po}}</td>
                         <td>{{l.po.customer.nm}}</td>
                         <td>{{l.ket}}</td>
-                        <td>{{l.kd_trans}}</td>
+                        <!-- <td>{{l.kd_trans}}</td> -->
                         <td>{{l.tgl}}</td>
-                        <td>{{l.tglj}}</td>
+                        <!-- <td>{{l.tglj}}</td> -->
                         <td>{{l.po.lokasi.nm}}</td>
                         <!-- <td>{{l.ket}}</td>
-                        <td>{{l.detail.length}}</td>
-                        <td>{{l.total}}</td> -->
+                        <td>{{l.detail.length}}</td> -->
+                        <!-- <td>{{l.total}}</td> -->
                         <td>
                             <div class="btn-group">
                                 <router-link :to="{ name: 'pickingDetail', params: {id: l.kd_picking}}" class="btn btn-info">
