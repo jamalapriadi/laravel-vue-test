@@ -420,7 +420,7 @@ export default {
                         this.state.kodes.push(this.barang[i].kd);
                         this.state.pdos.push(this.barang[i].dos);
                         this.state.ppcs.push(this.barang[i].pcs);
-                        this.state.pcs[i]=this.barang[i].pcsnya;
+                        this.state.pcs[i]=this.barang[i].pcs;
                         this.state.dos[i]=this.barang[i].dos;
                         this.state.rak[i]=this.barang[i].rak;
                     }

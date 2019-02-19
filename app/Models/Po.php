@@ -22,7 +22,8 @@ class Po extends Model
                     'no_po',
                     'kd_brg',
                     'dos',
-                    'pcs'
+                    'pcs',
+                    'total_pcs'
                 ]
             );
     }

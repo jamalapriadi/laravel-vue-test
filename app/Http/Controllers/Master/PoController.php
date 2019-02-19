@@ -151,9 +151,9 @@ class PoController extends Controller
         $jumlah=0;
         $rak=array();
         foreach($po->detail as $row){
-            $pcs=$row->pivot->pcs;
+            $pcs=$row->pivot->total_pcs;
             $jumlah=0;
-            $sisa=$row->pivot->pcs;
+            $sisa=$row->pivot->total_pcs;
             $diambil=0;
             
             $rowspan=1;
@@ -175,6 +175,7 @@ class PoController extends Controller
                             'jual'=>$row->jual,
                             'dos'=>$row->pivot->dos,
                             'pcs'=>$row->pivot->pcs,
+                            'total_pcs'=>$row->pivot->total_pcs,
                             'pcsnya'=>$diambil - $h,
                             'stok'=>$row->stok[$a]->pcs,
                             'diambil'=>$diambil,
@@ -194,6 +195,7 @@ class PoController extends Controller
                             'jual'=>$row->jual,
                             'dos'=>$row->pivot->dos,
                             'pcs'=>$row->pivot->pcs,
+                            'total_pcs'=>$row->pivot->total_pcs,
                             'pcsnya'=>$diambil - $h,
                             'stok'=>$row->stok[$a]->pcs,
                             'diambil'=>$diambil,
@@ -211,6 +213,7 @@ class PoController extends Controller
                     'jual'=>$row->jual,
                     'dos'=>$row->pivot->dos,
                     'pcs'=>$row->pivot->pcs,
+                    'total_pcs'=>$row->pivot->total_pcs,
                     'pcsnya'=>0,
                     'stok'=>0,
                     'diambil'=>0,
@@ -238,6 +241,7 @@ class PoController extends Controller
                     'jual'=>$val['jual'],
                     'dos'=>$val['dos'],
                     'pcs'=>$val['pcs'],
+                    'total_pcs'=>$val['total_pcs'],
                     'kurang_nya'=>$val['kurang'],
                     'pcsnya'=>0,
                     'stok'=>0,

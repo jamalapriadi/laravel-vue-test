@@ -40,7 +40,6 @@ class Barang extends Model
 
     public function stok(){
         return $this->hasMany('App\Models\Stok','kd_brg','kd')
-            ->where('stok.pcs','>',0)
             ->orderBy('tgl');
     }
 
