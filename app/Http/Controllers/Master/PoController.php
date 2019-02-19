@@ -89,7 +89,8 @@ class PoController extends Controller
                                     'no_po'=>request('kode'),
                                     'kd_brg'=>$val['kd_barang'],
                                     'dos'=>$val['dos'],
-                                    'pcs'=>$val['pcs']
+                                    'pcs'=>$val['pcs'],
+                                    'total_pcs'=>$val['total_pcs']
                                 ]
                             );
                     }

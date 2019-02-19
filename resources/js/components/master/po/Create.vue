@@ -70,27 +70,35 @@
             <br><br>
             <div>
                 <div class="row">
-                    <div class="form-group col-md-3">
-                        <label for="" class="control-label">Kode barang</label>
-                        <vue-bootstrap-typeahead v-model="carikodebarang" :data="listkodebarang" placeholder="Cari Kode Barang..." @hit="getKodeBarang($event)" ref="kodebarang"/>
-                    </div>
-
-                    <div class="form-group col-md-2">
-                        <label for="" class="control-label">Nama Barang</label>
-                        <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Cari Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
+                    <div class="form-group col-md-4">
+                        <label for="" class="control-label">Kode / Nama Barang</label>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <vue-bootstrap-typeahead v-model="carikodebarang" :data="listkodebarang" placeholder="Cari Kode Barang..." @hit="getKodeBarang($event)" ref="kodebarang"/>
+                            </div>
+                            <div class="col-lg-6">
+                                <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Cari Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">Dos</label>
-                        <input type="text" class="form-control" v-model="barang.dos" @change="changePcs">
+                        <input type="text" class="form-control" v-model="barang.dos" v-on:keyup="changeDos">
                     </div>
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">PCS</label>
-                        <input type="text" class="form-control" v-model="barang.pcs">
+                        <input type="text" class="form-control" v-model="barang.pcs" v-on:keyup="changePcs(barang.pcs)">
                     </div>
 
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
+                        <label for="" class="control-label">Total Pcs</label>
+                        <input type="text" class="form-control" v-model="barang.total_pcs" readonly>
+                    </div>
+
+
+                    <div class="form-group col-md-1">
                         <div class="btn-group">
                             <button v-on:click="saveBarang()" class="btn btn-primary" style="margin-top:25px;">
                                 <i class="fa fa-plus"></i>
@@ -114,6 +122,7 @@
                         <th>Nama Barang</th>
                         <th>Dos</th>
                         <th>Pcs</th>
+                        <th>Total Pcs</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -124,6 +133,7 @@
                         <td>{{l.nm_barang}}</td>
                         <td>{{l.dos}}</td>
                         <td>{{l.pcs}}</td>
+                        <td>{{l.total_pcs}}</td>
                         <td>
                             <a @click="deleteBarang(index)" class="btn btn-danger text-white">
                                 <i class="fa fa-trash"></i>
@@ -266,7 +276,8 @@ export default {
                 qty:'',
                 point:'',
                 dos:0,
-                pcs:0
+                pcs:0,
+                total_pcs:0
             },
             listBarang:[],
             list:[],
@@ -444,7 +455,8 @@ export default {
             this.barang.nama=item;
             this.barang.kode=nama;
             this.barang.pcs=pcs;
-            this.barang.dos=1;
+            this.barang.dos=0;
+            this.barang.pcs=0;
             this.hasilpcs=pcs;
             // this.carinamabarang=nama;
             this.$refs.kodebarang.inputValue = nama
@@ -465,13 +477,32 @@ export default {
             this.barang.kode=item;
             this.barang.nama=nama;
             this.barang.pcs=pcs;
-            this.barang.dos=1;
+            this.barang.dos=0;
+            this.barang.pcs=0;
             this.hasilpcs=pcs;
             this.$refs.namabarang.inputValue = nama;
         },
 
-        changePcs(){
-            this.barang.pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs);
+        changeDos(){
+            if(this.barang.kode==""){
+                alert('Barang harus diisi');
+
+                return false;
+            }
+
+
+            this.barang.total_pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs) + parseInt(this.barang.pcs);
+        },
+
+        changePcs(nya){
+            if(this.barang.kode==""){
+                alert('Barang harus diisi');
+
+                return false;
+            }
+
+
+            this.barang.total_pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs) + parseInt(nya);
         },
 
         getNamaCustomer(item){
@@ -551,8 +582,9 @@ export default {
                     // kd_barang:this.barang.kode.kd,
                     kd_barang:this.barang.kode,
                     nm_barang:this.barang.nama,
-                    dos:this.barang.dos,
-                    pcs:this.barang.pcs
+                    dos:parseInt(this.barang.dos),
+                    pcs:parseInt(this.barang.pcs),
+                    total_pcs:parseInt(this.barang.total_pcs)
                 }
             );
 
@@ -564,6 +596,7 @@ export default {
             this.barang.nama='';
             this.barang.dos=0;
             this.barang.pcs=0;
+            this.barang.total_pcs=0;
             this.$refs.kodebarang.inputValue = '';
             this.$refs.namabarang.inputValue = '';
         },
