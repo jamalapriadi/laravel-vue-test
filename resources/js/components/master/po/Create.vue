@@ -84,12 +84,17 @@
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">Dos</label>
-                        <input type="text" class="form-control" v-model="barang.dos" v-on:keyup="changeDos">
+                        <input type="text" class="form-control" v-model="barang.dos" @keyup.enter="changeDos">
                     </div>
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">PCS</label>
-                        <input type="text" class="form-control" v-model="barang.pcs" v-on:keyup="changePcs(barang.pcs)">
+                        <input type="text" class="form-control" v-model="barang.pcs" @keyup.enter="changePcs(barang.pcs)">
+                        <p>
+                            <small>
+                                {{hasilpcs}} jumlah per 1 dos
+                            </small>
+                        </p>
                     </div>
 
                     <div class="form-group col-md-2">
@@ -457,6 +462,7 @@ export default {
             this.barang.pcs=pcs;
             this.barang.dos=0;
             this.barang.pcs=0;
+            this.barang.total_pcs=0;
             this.hasilpcs=pcs;
             // this.carinamabarang=nama;
             this.$refs.kodebarang.inputValue = nama
@@ -479,6 +485,7 @@ export default {
             this.barang.pcs=pcs;
             this.barang.dos=0;
             this.barang.pcs=0;
+            this.barang.total_pcs=0;
             this.hasilpcs=pcs;
             this.$refs.namabarang.inputValue = nama;
         },

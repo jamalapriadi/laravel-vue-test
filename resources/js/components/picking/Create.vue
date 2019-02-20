@@ -128,10 +128,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" id="dos" placeholder="Dos" v-model.number="state.dos[index]">
+                                    <input type="number" class="form-control" id="dos" placeholder="Dos" v-model.number="state.dos[index]" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]">
+                                    <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]" readonly>
                                     <small>
                                         {{ stok[index] }}
                                     </small>
