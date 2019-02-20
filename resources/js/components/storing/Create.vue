@@ -76,7 +76,7 @@
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">Dos</label>
-                        <input type="text" class="form-control" v-model="barang.dos" @change="changePcs">
+                        <input type="text" class="form-control" v-model="barang.dos">
                     </div>
 
                     <div class="form-group col-md-2">
@@ -439,8 +439,8 @@ export default {
 
             this.barang.nama=item;
             this.barang.kode=nama;
-            this.barang.pcs=pcs;
-            this.barang.dos=1;
+            this.barang.pcs=0;
+            this.barang.dos=0;
             this.hasilpcs=pcs;
             this.$refs.kodebarang.inputValue = nama
         },
@@ -466,8 +466,8 @@ export default {
 
             this.barang.kode=item;
             this.barang.nama=nama;
-            this.barang.pcs=pcs;
-            this.barang.dos=1;
+            this.barang.pcs=0;
+            this.barang.dos=0;
             this.hasilpcs=pcs;
             this.$refs.namabarang.inputValue = nama;
         },
