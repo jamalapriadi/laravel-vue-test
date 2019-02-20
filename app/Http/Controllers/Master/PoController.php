@@ -175,17 +175,18 @@ class PoController extends Controller
                         $realisasi_pcsnya=0;
 
                         if($row->stok[$a]->pcs > 0){
-                            if($row->stok[$a]->pcs > $row->pcs){
-                                if($row->stok[$a]->pcs - $row->pivot->total_pcs > 0){
-                                    $realisasi_pcsnya=$row->stok[$a]->pcs - $row->pivot->total_pcs;
-                                }else{
-                                    $realisasi_pcsnya=0;
-                                }
-                            }else{
-                                $realisasi_pcsnya=0;
-                            }
+                            // if($row->stok[$a]->pcs > $row->pcs){
+                            //     if($row->stok[$a]->pcs - $row->pivot->total_pcs > 0){
+                            //         $realisasi_pcsnya=$row->stok[$a]->pcs - $row->pivot->total_pcs;
+                            //     }else{
+                            //         $realisasi_pcsnya=0;
+                            //     }
+                            // }else{
+                            //     $realisasi_pcsnya=0;
+                            // }
                             
                             $realisasi_dosnya=floor($row->stok[$a]->pcs/$row->pcs);
+                            $realisasi_pcsnya=$row->stok[$a]->pcs%$row->pcs;
                         }
 
                         $rak[]=array(
@@ -221,16 +222,17 @@ class PoController extends Controller
                         $realisasi_pcsnya=0;
 
                         if($row->stok[$a]->pcs > 0){
-                            if($row->stok[$a]->pcs > $row->pcs){
-                                if($row->stok[$a]->pcs - $row->pivot->total_pcs > 0){
-                                    $realisasi_pcsnya=$row->stok[$a]->pcs - $row->pivot->total_pcs;
-                                }else{
-                                    $realisasi_pcsnya=0;
-                                }
-                            }else{
-                                $realisasi_pcsnya=0;
-                            }
+                            // if($row->stok[$a]->pcs > $row->pcs){
+                            //     if($row->stok[$a]->pcs - $row->pivot->total_pcs > 0){
+                            //         $realisasi_pcsnya=$row->stok[$a]->pcs - $row->pivot->total_pcs;
+                            //     }else{
+                            //         $realisasi_pcsnya=0;
+                            //     }
+                            // }else{
+                            //     $realisasi_pcsnya=0;
+                            // }
                             $realisasi_dosnya=floor($row->stok[$a]->pcs/$row->pcs);
+                            $realisasi_pcsnya=$row->stok[$a]->pcs%$row->pcs;
                         }
 
                         $rak[]=array(
