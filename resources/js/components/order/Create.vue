@@ -355,11 +355,11 @@ export default {
         },
 
         ubahJumlahDiskonRupiah(index){
-            var diskonnya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]) - parseInt(this.state.diskon_rupiah[index]);
+            var diskonnya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]) * parseInt(this.state.diskon_persen[index]) / 100;
             var harganya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
 
-            // this.state.diskon_persen[index]= Math.round(diskonnya / harganya * 100);
-            this.state.subtotal[index]=(harganya - diskonnya) * parseInt(this.state.diskon_persen[index]) / 100;
+            // this.state.diskon_rupiah[index]= diskonnya;
+            this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]);
 
             this.total();
         },
