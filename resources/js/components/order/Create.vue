@@ -4,6 +4,12 @@
 
         </div>
         <div class="card-body">
+
+            <div v-if="message" class="alert alert-success">
+                {{ message }}
+            </div>
+
+
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
@@ -108,7 +114,7 @@
                                     <input type="text" class="form-control" v-model="state.jual[index]">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" v-model="state.jumlah[index]"  @keyup.enter="ubahJumlah(index)">
+                                    <input type="number" class="form-control" v-model="state.jumlah[index]">
                                 </td>
                                 <td>
                                     <div class="input-group" style="width:80px;">
@@ -206,7 +212,8 @@ export default {
                 pcs:[],
                 saless:[],
                 lokasi:[],
-                rak:[]
+                rak:[],
+                stokid:[]
             },
             date: new Date(),
             options: {
@@ -294,15 +301,15 @@ export default {
                     this.barangs=response.data.detail;
 
                     for (var i = 0; i < this.barangs.length; i++) {
+                        this.state.stokid.push(this.barangs[i].pivot.id);
                         this.state.kodes.push(this.barangs[i].kd);
                         this.state.jual.push(this.barangs[i].jual);
                         this.state.dos.push(this.barangs[i].pivot.dos);
                         this.state.pcs.push(this.barangs[i].pivot.pcs);
                         this.state.rak.push(this.barangs[i].pivot.kd_rak);
+                        this.state.jumlah[i]=this.barangs[i].total;
                         this.state.diskon_persen[i]=0;
                         this.state.diskon_rupiah[i]=0;
-
-                        this.state.jumlah[i]=this.barangs[i].pivot.pcs;
                         // this.state.subtotal.push(this.barangs[i].jual);
 
                         // this.state.jual[i]=this.barangs[i].jual;
@@ -341,8 +348,8 @@ export default {
             var diskonnya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]) * parseInt(this.state.diskon_persen[index]) / 100;
             var harganya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
 
-            this.state.diskon_rupiah[index]= diskonnya;
-            this.state.subtotal[index]=harganya - diskonnya;
+            // this.state.diskon_rupiah[index]= diskonnya;
+            this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]);
 
             this.total();
         },
@@ -351,8 +358,8 @@ export default {
             var diskonnya=parseInt(this.state.diskon_rupiah[index]);
             var harganya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
 
-            this.state.diskon_persen[index]= Math.round(diskonnya / harganya * 100);
-            this.state.subtotal[index]=harganya - parseInt(this.state.diskon_rupiah[index]);
+            // this.state.diskon_persen[index]= Math.round(diskonnya / harganya * 100);
+            this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_persen[index]);
 
             this.total();
         },

@@ -676,6 +676,7 @@ export default {
                         this.state.tanggal=new Date();
                         // this.$refs.kodecustomer.inputValue = '';
                         // this.$refs.namacustomer.inputValue = '';
+                        this.raks=[];
                         this.state.listBarang=[];
 
                         this.getCode();

@@ -74,6 +74,7 @@
 
 <script>
 import { VueLoading } from 'vue-loading-template'
+import uniq from 'lodash/uniq'
 
 export default {
     components: {

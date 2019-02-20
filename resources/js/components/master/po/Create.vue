@@ -604,6 +604,7 @@ export default {
             this.barang.dos=0;
             this.barang.pcs=0;
             this.barang.total_pcs=0;
+            this.hasilpcs=0;
             this.$refs.kodebarang.inputValue = '';
             this.$refs.namabarang.inputValue = '';
         },
