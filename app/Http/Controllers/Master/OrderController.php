@@ -55,6 +55,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $rules=[
+            'stokid'=>'required',
             'kode'=>'required',
             'tanggal'=>'required',
             'kd_trans'=>'required',
@@ -106,10 +107,13 @@ class OrderController extends Controller
                                 ]
                             );
 
-                        \DB::statement("UPDATE stok SET pcs = pcs-".$request->input('pcs')[$key]." 
-                            where kd_brg='".$val."' 
-                            and lokasi_id='".$request->input('lokasiid')."' 
-                            and rak_id='".$request->input('rak')[$key]."'");
+                        // \DB::statement("UPDATE stok SET pcs = pcs-".$request->input('jumlah')[$key]." 
+                        //     where kd_brg='".$val."' 
+                        //     and lokasi_id='".$request->input('lokasiid')."' 
+                        //     and rak_id='".$request->input('rak')[$key]."'");
+
+                        \DB::statement("UPDATE stok SET pcs = pcs-".$request->input('jumlah')[$key]." 
+                        where id='".$request->input('stokid')[$key]."'");
                     }
                 }
 

@@ -190,6 +190,7 @@ class PoController extends Controller
                         }
 
                         $rak[]=array(
+                            'idstok'=>$row->stok[$a]->id,
                             'kd'=>$row->kd,
                             'nm'=>$row->nm,
                             'jual'=>$row->jual,
@@ -236,6 +237,7 @@ class PoController extends Controller
                         }
 
                         $rak[]=array(
+                            'idstok'=>$row->stok[$a]->id,
                             'kd'=>$row->kd,
                             'nm'=>$row->nm,
                             'jual'=>$row->jual,
@@ -258,6 +260,7 @@ class PoController extends Controller
                 }
             }else{
                 $rak[]=array(
+                    'idstok'=>'',
                     'kd'=>$row->kd,
                     'nm'=>$row->nm,
                     'jual'=>$row->jual,

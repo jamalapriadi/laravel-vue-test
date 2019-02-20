@@ -3,17 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Barang extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
     protected $table="brg";
     protected $primaryKey="kd";
     public $incrementing=false;
 
-    protected $dates=['deleted_at'];
+    // protected $dates=['deleted_at'];
 
     protected $fillable = [
         'kd', 

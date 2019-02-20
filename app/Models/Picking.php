@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Picking extends Model
 {
@@ -45,6 +45,7 @@ class Picking extends Model
             \DB::raw("brg.pcs*rpicking.dos+rpicking.pcs as total")])
             ->withPivot(
                 [
+                    'id',
                     'kd_picking',
                     'kd_brg',
                     'kd_rak',

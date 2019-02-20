@@ -90,35 +90,51 @@ class StoringController extends Controller
                                 ]
                             );
 
-                        //cek di tabel stok ada gak barang ini
-                        $cek=\DB::table('stok')
-                            ->where('kd_brg',$val['kd_barang'])
-                            ->where('lokasi_id',request('lokasi'))
-                            ->where('rak_id',$val['rak'])
-                            ->count();
-
                         $brg=\App\Models\Barang::find($val['kd_barang']);
                         $stk=$brg->pcs*$val['dos']+$val['pcs'];
 
-                        if($cek > 0){
+                        \DB::table('stok')
+                            ->insert(
+                                [
+                                    'kd_brg'=>$val['kd_barang'],
+                                    'lokasi_id'=>request('lokasi'),
+                                    'rak_id'=>$val['rak'],
+                                    'pcs'=>$stk,
+                                    'tgl'=>date('Y-m-d'),
+                                    'created_at'=>date('Y-m-d H:i:s'),
+                                    'updated_at'=>date('Y-m-d H:i:s')
+                                ]
+                            );
+
+                        //cek di tabel stok ada gak barang ini
+                        // $cek=\DB::table('stok')
+                        //     ->where('kd_brg',$val['kd_barang'])
+                        //     ->where('lokasi_id',request('lokasi'))
+                        //     ->where('rak_id',$val['rak'])
+                        //     ->count();
+
+                        // $brg=\App\Models\Barang::find($val['kd_barang']);
+                        // $stk=$brg->pcs*$val['dos']+$val['pcs'];
+
+                        // if($cek > 0){
                             
-                            \DB::statement("UPDATE stok SET pcs = pcs+".$stk." , updated_at='".date('Y-m-d H:i:s')."', tgl='".date('Y-m-d')."'
-                                            where kd_brg='".$val['kd_barang']."' 
-                                            and lokasi_id='".request('lokasi')."' and rak_id='".$val['rak']."'");
-                        }else{
-                            \DB::table('stok')
-                                ->insert(
-                                    [
-                                        'kd_brg'=>$val['kd_barang'],
-                                        'lokasi_id'=>request('lokasi'),
-                                        'rak_id'=>$val['rak'],
-                                        'pcs'=>$stk,
-                                        'tgl'=>date('Y-m-d'),
-                                        'created_at'=>date('Y-m-d H:i:s'),
-                                        'updated_at'=>date('Y-m-d H:i:s')
-                                    ]
-                                );
-                        }
+                        //     \DB::statement("UPDATE stok SET pcs = pcs+".$stk." , updated_at='".date('Y-m-d H:i:s')."', tgl='".date('Y-m-d')."'
+                        //                     where kd_brg='".$val['kd_barang']."' 
+                        //                     and lokasi_id='".request('lokasi')."' and rak_id='".$val['rak']."'");
+                        // }else{
+                        //     \DB::table('stok')
+                        //         ->insert(
+                        //             [
+                        //                 'kd_brg'=>$val['kd_barang'],
+                        //                 'lokasi_id'=>request('lokasi'),
+                        //                 'rak_id'=>$val['rak'],
+                        //                 'pcs'=>$stk,
+                        //                 'tgl'=>date('Y-m-d'),
+                        //                 'created_at'=>date('Y-m-d H:i:s'),
+                        //                 'updated_at'=>date('Y-m-d H:i:s')
+                        //             ]
+                        //         );
+                        // }
                     }
                 }
 
