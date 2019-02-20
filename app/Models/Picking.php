@@ -41,7 +41,8 @@ class Picking extends Model
 
     public function detail(){
         return $this->belongsToMany('App\Models\Barang','rpicking','kd_picking','kd_brg','kd_picking','kd')
-            ->select(['rak.nm as nama_rak','brg.kd','brg.nm','brg.jual'])
+            ->select(['rak.nm as nama_rak','brg.kd','brg.nm','brg.jual','brg.pcs',
+            \DB::raw("brg.pcs*rpicking.dos+rpicking.pcs as total")])
             ->withPivot(
                 [
                     'kd_picking',

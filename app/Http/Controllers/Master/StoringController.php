@@ -97,8 +97,12 @@ class StoringController extends Controller
                             ->where('rak_id',$val['rak'])
                             ->count();
 
+                        $brg=\App\Models\Barang::find($val['kd_barang']);
+                        $stk=$brg->pcs*$val['dos']+$val['pcs'];
+
                         if($cek > 0){
-                            \DB::statement("UPDATE stok SET pcs = pcs+".$val['pcs']." , updated_at='".date('Y-m-d H:i:s')."', tgl='".date('Y-m-d')."'
+                            
+                            \DB::statement("UPDATE stok SET pcs = pcs+".$stk." , updated_at='".date('Y-m-d H:i:s')."', tgl='".date('Y-m-d')."'
                                             where kd_brg='".$val['kd_barang']."' 
                                             and lokasi_id='".request('lokasi')."' and rak_id='".$val['rak']."'");
                         }else{
@@ -108,7 +112,7 @@ class StoringController extends Controller
                                         'kd_brg'=>$val['kd_barang'],
                                         'lokasi_id'=>request('lokasi'),
                                         'rak_id'=>$val['rak'],
-                                        'pcs'=>$val['pcs'],
+                                        'pcs'=>$stk,
                                         'tgl'=>date('Y-m-d'),
                                         'created_at'=>date('Y-m-d H:i:s'),
                                         'updated_at'=>date('Y-m-d H:i:s')

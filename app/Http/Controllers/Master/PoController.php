@@ -169,11 +169,34 @@ class PoController extends Controller
                             $h=$sisa;
                         }
 
+                        $ekspetasi_dosnya=floor($row->pivot->total_pcs / $row->pcs);
+                        $ekspetasi_pcsnya=$row->pivot->total_pcs % $row->pcs;
+                        $realisasi_dosnya=0;
+                        $realisasi_pcsnya=0;
+
+                        if($row->stok[$a]->pcs > 0){
+                            if($row->stok[$a]->pcs > $row->pcs){
+                                if($row->stok[$a]->pcs - $row->pivot->total_pcs > 0){
+                                    $realisasi_pcsnya=$row->stok[$a]->pcs - $row->pivot->total_pcs;
+                                }else{
+                                    $realisasi_pcsnya=0;
+                                }
+                            }else{
+                                $realisasi_pcsnya=0;
+                            }
+                            
+                            $realisasi_dosnya=floor($row->stok[$a]->pcs/$row->pcs);
+                        }
+
                         $rak[]=array(
                             'kd'=>$row->kd,
                             'nm'=>$row->nm,
                             'jual'=>$row->jual,
                             'dos'=>$row->pivot->dos,
+                            'ekspetasi_dosnya'=>$ekspetasi_dosnya,
+                            'ekspetasi_pcsnya'=>$ekspetasi_pcsnya,
+                            'realisasi_dosnya'=>$realisasi_dosnya,
+                            'realisasi_pcsnya'=>$realisasi_pcsnya,
                             'pcs'=>$row->pivot->pcs,
                             'total_pcs'=>$row->pivot->total_pcs,
                             'pcsnya'=>$diambil - $h,
@@ -182,6 +205,8 @@ class PoController extends Controller
                             'kurang'=>$h,
                             'rak'=>$row->stok[$a]->rak_id
                         );
+
+
                     }else{
                         $diambil=$sisa;
                         $sisa=$diambil - $row->stok[$a]->pcs;
@@ -189,11 +214,34 @@ class PoController extends Controller
                         if($sisa>0){
                             $h=$sisa;
                         }
+
+                        $ekspetasi_dosnya=floor($row->pivot->total_pcs / $row->pcs);
+                        $ekspetasi_pcsnya=$row->pivot->total_pcs % $row->pcs;
+                        $realisasi_dosnya=0;
+                        $realisasi_pcsnya=0;
+
+                        if($row->stok[$a]->pcs > 0){
+                            if($row->stok[$a]->pcs > $row->pcs){
+                                if($row->stok[$a]->pcs - $row->pivot->total_pcs > 0){
+                                    $realisasi_pcsnya=$row->stok[$a]->pcs - $row->pivot->total_pcs;
+                                }else{
+                                    $realisasi_pcsnya=0;
+                                }
+                            }else{
+                                $realisasi_pcsnya=0;
+                            }
+                            $realisasi_dosnya=floor($row->stok[$a]->pcs/$row->pcs);
+                        }
+
                         $rak[]=array(
                             'kd'=>$row->kd,
                             'nm'=>$row->nm,
                             'jual'=>$row->jual,
                             'dos'=>$row->pivot->dos,
+                            'ekspetasi_dosnya'=>$ekspetasi_dosnya,
+                            'ekspetasi_pcsnya'=>$ekspetasi_pcsnya,
+                            'realisasi_dosnya'=>$realisasi_dosnya,
+                            'realisasi_pcsnya'=>$realisasi_pcsnya,
                             'pcs'=>$row->pivot->pcs,
                             'total_pcs'=>$row->pivot->total_pcs,
                             'pcsnya'=>$diambil - $h,
@@ -212,6 +260,10 @@ class PoController extends Controller
                     'nm'=>$row->nm,
                     'jual'=>$row->jual,
                     'dos'=>$row->pivot->dos,
+                    'ekspetasi_dosnya'=>floor($row->pivot->total_pcs / $row->pcs),
+                    'ekspetasi_pcsnya'=>$row->pivot->total_pcs % $row->pcs,
+                    'realisasi_dosnya'=>0,
+                    'realisasi_pcsnya'=>0,
                     'pcs'=>$row->pivot->pcs,
                     'total_pcs'=>$row->pivot->total_pcs,
                     'pcsnya'=>0,
