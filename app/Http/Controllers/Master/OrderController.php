@@ -89,10 +89,10 @@ class OrderController extends Controller
             $simpan=$cus->save();
 
             if($simpan){
-                if($request->has('kodes')){
-                    $kodes=request('kodes');
+                if($request->has('rorder')){
+                    $ro=$request->input('ro');
 
-                    foreach($kodes as $key=>$val){
+                    foreach($ro as $key=>$val){
                         \DB::table('rorder')
                             ->insert(
                                 [
@@ -103,9 +103,15 @@ class OrderController extends Controller
                                     'hrg'=>$request->input('jual')[$key],
                                     'diskon_persen'=>$request->input('diskon_persen')[$key],
                                     'diskon_rupiah'=>$request->input('diskon_rupiah')[$key],
-                                    'jumlah'=>$request->input('jumlah')[$key]
+                                    'jumlah'=>$request->input('jumlahhit')[$key]
                                 ]
                             );
+                    }
+                }
+                if($request->has('kodes')){
+                    $kodes=request('kodes');
+
+                    foreach($kodes as $key=>$val){
 
                         // \DB::statement("UPDATE stok SET pcs = pcs-".$request->input('jumlah')[$key]." 
                         //     where kd_brg='".$val."' 

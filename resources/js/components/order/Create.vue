@@ -237,6 +237,15 @@ export default {
                 diskon:'',
                 jumlah:''
             },
+            hitungan:{
+                kd_picking:'',
+                kd_brg:'',
+                harga:'',
+                dos:'',
+                pcs:'',
+                diskon_persen:'',
+                diskon_rupiah:''
+            },
             listBarang:[],
             list:[],
             listData:{},
@@ -307,7 +316,7 @@ export default {
                         this.state.dos.push(this.barangs[i].pivot.dos);
                         this.state.pcs.push(this.barangs[i].pivot.pcs);
                         this.state.rak.push(this.barangs[i].pivot.kd_rak);
-                        this.state.jumlah[i]=this.barangs[i].total;
+                        this.state.jumlah.push(this.barangs[i].total);
                         this.state.diskon_persen[i]=0;
                         this.state.diskon_rupiah[i]=0;
                         // this.state.subtotal.push(this.barangs[i].jual);

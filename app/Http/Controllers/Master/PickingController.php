@@ -173,6 +173,20 @@ class PickingController extends Controller
             ]
         )->find($id);
 
+        $lis=\DB::select("select semua.kd_picking,semua.kd_brg, semua.nm, semua.jual as harga,sum(semua.dos) as dos, sum(semua.pcs) as pcs,
+            sum(semua.total_pcs) as jumlah, sum(semua.total_harga) as subtotal
+            from 
+            (select a.kd_picking,a.kd_brg, a.kd_rak, b.nm, b.pcs as pcs_barang,a.dos, a.pcs,b.jual,
+            (a.dos * b.pcs + a.pcs) as total_pcs,
+            (b.jual * (a.dos * b.pcs + a.pcs)) as total_harga
+            from rpicking a 
+            left join brg b on b.kd=a.kd_brg
+            where a.kd_picking='$id')
+            as semua
+            group by semua.kd_brg");
+
+        $picking->hitungan=$lis;
+
         return $picking;
     }
 
