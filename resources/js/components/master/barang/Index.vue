@@ -64,8 +64,16 @@
                         <td>{{index+1}}</td>
                         <td>{{l.kd}}</td>
                         <td>{{l.nm}}</td>
-                        <td>{{l.kelompok.nm}}</td>
-                        <td>{{l.merk.nm}}</td>
+                        <td>
+                            <div v-if="l.kelompok!=null">
+                                {{l.kelompok.nm}}
+                            </div>
+                        </td>
+                        <td>
+                            <div v-if="l.merk!=null">
+                                {{l.merk.nm}}
+                            </div>
+                        </td>
                         <!-- <td>{{l.status}}</td> -->
                         <!-- <td>{{l.satuan}}</td> -->
                         <td>{{l.pcs}}</td>

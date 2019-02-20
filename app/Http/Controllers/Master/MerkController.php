@@ -15,7 +15,7 @@ class MerkController extends Controller
      */
     public function index(Request $request)
     {
-        $merk=Merk::select('nm','persen');
+        $merk=Merk::select('nm','persen','id');
 
         if($request->has('q')){
             $merk=$merk->where('nm','like','%'.request('q').'%')

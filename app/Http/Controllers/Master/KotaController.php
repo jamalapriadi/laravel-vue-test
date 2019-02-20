@@ -45,7 +45,7 @@ class KotaController extends Controller
     public function store(Request $request)
     {
         $rules=[
-            'nama'=>'required',
+            'nama'=>'required|unique:kota,nm',
             'jenis'=>'required'
         ];
 

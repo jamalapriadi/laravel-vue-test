@@ -60,10 +60,10 @@ class BarangController extends Controller
             'nama'=>'required',
             'kelompok'=>'required',
             'merk'=>'required',
-            'status'=>'required',
-            'satuan'=>'required',
+            // 'status'=>'required',
+            // 'satuan'=>'required',
             'pcs'=>'required',
-            'hrgb'=>'required',
+            // 'hrgb'=>'required',
             'hrgp'=>'required',
             'jual'=>'required'
         ];
@@ -138,10 +138,10 @@ class BarangController extends Controller
             'nama'=>'required',
             'kelompok'=>'required',
             'merk'=>'required',
-            'status'=>'required',
-            'satuan'=>'required',
+            // 'status'=>'required',
+            // 'satuan'=>'required',
             'pcs'=>'required',
-            'hrgb'=>'required',
+            // 'hrgb'=>'required',
             'hrgp'=>'required',
             'jual'=>'required'
         ];
