@@ -373,6 +373,7 @@ export default {
         },
 
         ubahJumlahDiskonPersen(index){
+            this.state.subtotal[index]=0;
             var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
             var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
@@ -383,6 +384,8 @@ export default {
         },
 
         ubahJumlahDiskonRupiah(index){
+            this.state.subtotal[index]=0;
+            
             var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
             var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
