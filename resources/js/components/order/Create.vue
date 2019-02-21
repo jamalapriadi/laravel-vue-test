@@ -300,6 +300,8 @@ export default {
 
         ubahPicking(){
             console.log(this.state.kd_picking);
+            this.hitungan=[];
+            this.barangs=[];
             axios.get('/data/picking/'+this.state.kd_picking)
                 .then(response => {
                     this.tampilDetail=true;
@@ -420,8 +422,41 @@ export default {
                     this.loading=false;
                     this.errors = [];
                     this.state = {
-                        nama: ''
-                    }
+                        kd_picking:'',
+                        kode:'',
+                        nama: '',
+                        customer:'',
+                        tanggal:new Date(),
+                        tanggaljt:new Date(),
+                        perusahaan:'',
+                        keterangan:'',
+                        sales:'',
+                        lokkasiname:'',
+                        lokasiid:'',
+                        customertop:'',
+                        total:0,
+                        kd_trans:'Tunai',
+                        listBarang:[],
+                        kodes:[],
+                        kodehit:[],
+                        jual:[],
+                        jumlah:[],
+                        diskon_persen:[],
+                        diskon_rupiah:[],
+                        subtotal:[],
+                        dos:[],
+                        pcs:[],
+                        saless:[],
+                        lokasi:[],
+                        rak:[],
+                        stokid:[],
+                        doshit:[],
+                        pcshit:[],
+                        jualhit:[],
+                        jumlahhit:[]
+                    },
+                    this.barangs=[];
+                    this.hitungan=[]
                     this.message = 'Data has been saved.';
                 }else{
                     this.loading=false;
@@ -623,24 +658,38 @@ export default {
             axios.post('/data/order', this.state)
                 .then(response => {
                     if(response.data.success==true){
-                        this.state.kd_picking='';
-                        this.state.kode='';
-                        this.state.nama= '';
-                        this.state.customer='';
-                        this.state.tanggal=new Date();
-                        this.state.tanggaljt=new Date();
-                        this.state.perusahaan='';
-                        this.state.keterangan='';
-                        this.state.lokasi='';
-                        this.state.sales='';
-                        this.state.total=0;
-                        this.state.kd_trans='Tunai';
-                        this.state.listBarang=[];
-                        this.state.kodes=[];
-                        this.state.jual=[];
-                        this.state.jumlah=[];
-                        this.state.diskon=[];
-                        this.state.subtotal=[];
+                        this.stete.kd_picking='';
+                        this.stete.kode='';
+                        this.stete.nama= '';
+                        this.stete.customer='';
+                        this.stete.tanggal=new Date();
+                        this.stete.tanggaljt=new Date();
+                        this.stete.perusahaan='';
+                        this.stete.keterangan='';
+                        this.stete.sales='';
+                        this.stete.lokkasiname='';
+                        this.stete.lokasiid='';
+                        this.stete.customertop='';
+                        this.stete.total=0;
+                        this.stete.kd_trans='Tunai';
+                        this.stete.listBarang=[];
+                        this.stete.kodes=[];
+                        this.stete.kodehit=[];
+                        this.stete.jual=[];
+                        this.stete.jumlah=[];
+                        this.stete.diskon_persen=[];
+                        this.stete.diskon_rupiah=[];
+                        this.stete.subtotal=[];
+                        this.stete.dos=[];
+                        this.stete.pcs=[];
+                        this.stete.saless=[];
+                        this.stete.lokasi=[];
+                        this.stete.rak=[];
+                        this.stete.stokid=[];
+                        this.stete.doshit=[];
+                        this.stete.pcshit=[];
+                        this.stete.jualhit=[];
+                        this.stete.jumlahhit=[]
 
                         this.tampilDetail=false;
 
