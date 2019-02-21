@@ -54,6 +54,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request->all();
         $rules=[
             'stokid'=>'required',
             'kode'=>'required',
@@ -61,8 +62,7 @@ class OrderController extends Controller
             'kd_trans'=>'required',
             'kd_picking'=>'required',
             'lokasiid'=>'required',
-            'rak'=>'required',
-            'sales'=>'required'
+            'kodehit'=>'required'
         ];
 
         $validasi=\Validator::make($request->all(),$rules);
@@ -89,8 +89,8 @@ class OrderController extends Controller
             $simpan=$cus->save();
 
             if($simpan){
-                if($request->has('rorder')){
-                    $ro=$request->input('ro');
+                if($request->has('kodehit')){
+                    $ro=$request->input('kodehit');
 
                     foreach($ro as $key=>$val){
                         \DB::table('rorder')
@@ -98,9 +98,9 @@ class OrderController extends Controller
                                 [
                                     'no_order'=>request('kode'),
                                     'kd_brg'=>$val,
-                                    'dos'=>$request->input('dos')[$key],
-                                    'pcs'=>$request->input('pcs')[$key],
-                                    'hrg'=>$request->input('jual')[$key],
+                                    'dos'=>$request->input('doshit')[$key],
+                                    'pcs'=>$request->input('pcshit')[$key],
+                                    'hrg'=>$request->input('jualhit')[$key],
                                     'diskon_persen'=>$request->input('diskon_persen')[$key],
                                     'diskon_rupiah'=>$request->input('diskon_rupiah')[$key],
                                     'jumlah'=>$request->input('jumlahhit')[$key]

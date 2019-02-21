@@ -173,7 +173,8 @@ class PickingController extends Controller
             ]
         )->find($id);
 
-        $lis=\DB::select("select semua.kd_picking,semua.kd_brg, semua.nm, semua.jual as harga,sum(semua.dos) as dos, sum(semua.pcs) as pcs,
+        $lis=\DB::select("select semua.kd_picking,semua.kd_brg, semua.nm, 
+            semua.jual as harga,sum(semua.dos) as dos, sum(semua.pcs) as pcs,
             sum(semua.total_pcs) as jumlah, sum(semua.total_harga) as subtotal
             from 
             (select a.kd_picking,a.kd_brg, a.kd_rak, b.nm, b.pcs as pcs_barang,a.dos, a.pcs,b.jual,

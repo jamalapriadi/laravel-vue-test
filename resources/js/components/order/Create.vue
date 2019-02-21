@@ -106,15 +106,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(l,index) in barangs" v-bind:key="index">
+                            <tr v-for="(l,index) in hitungan" v-bind:key="index">
                                 <td>{{ index+1 }}</td>
-                                <td>{{l.kd}} / {{l.nm}}</td>
-                                <td>{{l.pivot.dos}} / {{l.pivot.pcs}}</td>
+                                <td>{{l.kd_brg}} / {{l.nm}}</td>
+                                <td>{{l.dos}} / {{l.pcs}}</td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="state.jual[index]">
+                                    <input type="text" class="form-control" v-model="state.jualhit[index]" readonly>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" v-model="state.jumlah[index]">
+                                    <input type="number" class="form-control" v-model="state.jumlahhit[index]" readonly>
                                 </td>
                                 <td>
                                     <div class="input-group" style="width:80px;">
@@ -203,6 +203,7 @@ export default {
                 kd_trans:'Tunai',
                 listBarang:[],
                 kodes:[],
+                kodehit:[],
                 jual:[],
                 jumlah:[],
                 diskon_persen:[],
@@ -213,7 +214,11 @@ export default {
                 saless:[],
                 lokasi:[],
                 rak:[],
-                stokid:[]
+                stokid:[],
+                doshit:[],
+                pcshit:[],
+                jualhit:[],
+                jumlahhit:[]
             },
             date: new Date(),
             options: {
@@ -238,9 +243,9 @@ export default {
                 jumlah:''
             },
             hitungan:{
-                kd_picking:'',
                 kd_brg:'',
                 harga:'',
+                jumlah:'',
                 dos:'',
                 pcs:'',
                 diskon_persen:'',
@@ -308,22 +313,34 @@ export default {
                     this.state.lokasiid=response.data.po.lokasi_id;
                     // this.state.sales=response.data.sales.nm;
                     this.barangs=response.data.detail;
+                    this.hitungan = response.data.hitungan;
+
+                    for(var c=0; c < this.hitungan.length; c++){
+                        this.state.kodehit.push(this.hitungan[c].kd_brg);
+                        this.state.doshit.push(this.hitungan[c].dos);
+                        this.state.pcshit.push(this.hitungan[c].pcs);
+                        this.state.jumlahhit.push(this.hitungan[c].jumlah);
+                        this.state.jualhit.push(this.hitungan[c].harga);
+                        this.state.subtotal[c]=this.hitungan[c].subtotal;
+                        this.state.diskon_persen[c]=0;
+                        this.state.diskon_rupiah[c]=0;
+                        // this.ubahJumlah(c);
+                    }
 
                     for (var i = 0; i < this.barangs.length; i++) {
                         this.state.stokid.push(this.barangs[i].pivot.id);
                         this.state.kodes.push(this.barangs[i].kd);
-                        this.state.jual.push(this.barangs[i].jual);
-                        this.state.dos.push(this.barangs[i].pivot.dos);
-                        this.state.pcs.push(this.barangs[i].pivot.pcs);
-                        this.state.rak.push(this.barangs[i].pivot.kd_rak);
+                        // this.state.jual.push(this.barangs[i].jual);
+                        // this.state.dos.push(this.barangs[i].pivot.dos);
+                        // this.state.pcs.push(this.barangs[i].pivot.pcs);
+                        // this.state.rak.push(this.barangs[i].pivot.kd_rak);
                         this.state.jumlah.push(this.barangs[i].total);
-                        this.state.diskon_persen[i]=0;
-                        this.state.diskon_rupiah[i]=0;
+                        
                         // this.state.subtotal.push(this.barangs[i].jual);
 
                         // this.state.jual[i]=this.barangs[i].jual;
 
-                        this.ubahJumlah(i);
+                        
                     }
 
                     console.log(this.state.rak);
@@ -354,8 +371,8 @@ export default {
         },
 
         ubahJumlahDiskonPersen(index){
-            var diskonnya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]) * parseInt(this.state.diskon_persen[index]) / 100;
-            var harganya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
+            var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
+            var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
             // this.state.diskon_rupiah[index]= diskonnya;
             this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]);
@@ -364,8 +381,8 @@ export default {
         },
 
         ubahJumlahDiskonRupiah(index){
-            var diskonnya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]) * parseInt(this.state.diskon_persen[index]) / 100;
-            var harganya=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
+            var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
+            var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
             // this.state.diskon_rupiah[index]= diskonnya;
             this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]);
