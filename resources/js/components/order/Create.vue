@@ -321,8 +321,8 @@ export default {
                         this.state.kodehit.push(this.hitungan[c].kd_brg);
                         this.state.doshit.push(this.hitungan[c].dos);
                         this.state.pcshit.push(this.hitungan[c].pcs);
-                        this.state.jumlahhit.push(this.hitungan[c].jumlah);
-                        this.state.jualhit.push(this.hitungan[c].harga);
+                        this.state.jumlahhit[c]=this.hitungan[c].jumlah;
+                        this.state.jualhit[c]=this.hitungan[c].harga;
                         this.state.subtotal[c]=this.hitungan[c].subtotal;
                         this.state.diskon_persen[c]=0;
                         this.state.diskon_rupiah[c]=0;
