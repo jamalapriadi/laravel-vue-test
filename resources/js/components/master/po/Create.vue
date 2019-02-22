@@ -84,12 +84,12 @@
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">Dos</label>
-                        <input type="text" class="form-control" v-model="barang.dos" @keyup.enter="changeDos">
+                        <input type="text" class="form-control" v-model="barang.dos" @keyup.enter="changeDos" @input="hitungTotal($event)">
                     </div>
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">PCS</label>
-                        <input type="text" class="form-control" v-model="barang.pcs" @keyup.enter="changePcs(barang.pcs)">
+                        <input type="text" class="form-control" v-model="barang.pcs" @keyup.enter="changePcs(barang.pcs)" @input="hitungTotalPcs($event)">
                         <p>
                             <small>
                                 {{hasilpcs}} jumlah per 1 dos
@@ -500,6 +500,28 @@ export default {
 
             this.barang.total_pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs) + parseInt(this.barang.pcs);
         },
+
+        hitungTotal(event){
+            if(this.barang.kode==""){
+                alert('Barang harus diisi');
+
+                return false;
+            }
+
+
+            this.barang.total_pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs) + parseInt(this.barang.pcs);
+       },
+
+       hitungTotalPcs(event){
+           if(this.barang.kode==""){
+                alert('Barang harus diisi');
+
+                return false;
+            }
+
+
+            this.barang.total_pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs) + parseInt(this.barang.pcs);
+       },
 
         changePcs(nya){
             if(this.barang.kode==""){
