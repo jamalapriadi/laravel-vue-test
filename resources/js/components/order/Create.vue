@@ -321,8 +321,8 @@ export default {
                         this.state.kodehit.push(this.hitungan[c].kd_brg);
                         this.state.doshit.push(this.hitungan[c].dos);
                         this.state.pcshit.push(this.hitungan[c].pcs);
-                        this.state.jumlahhit.push(this.hitungan[c].jumlah);
-                        this.state.jualhit.push(this.hitungan[c].harga);
+                        this.state.jumlahhit[c]=this.hitungan[c].jumlah;
+                        this.state.jualhit[c]=this.hitungan[c].harga;
                         this.state.subtotal[c]=this.hitungan[c].subtotal;
                         this.state.diskon_persen[c]=0;
                         this.state.diskon_rupiah[c]=0;
@@ -373,6 +373,7 @@ export default {
         },
 
         ubahJumlahDiskonPersen(index){
+            this.state.subtotal[index]=0;
             var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
             var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
@@ -403,6 +404,8 @@ export default {
         },
 
         ubahJumlahDiskonRupiah(index){
+            this.state.subtotal[index]=0;
+            
             var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
             var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
