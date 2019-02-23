@@ -457,8 +457,8 @@ export default {
                 }
             }
 
-            this.barang.nama=item;
             this.barang.kode=nama;
+            this.barang.nama=item;
             this.barang.pcs=pcs;
             this.barang.dos=0;
             this.barang.pcs=0;
@@ -696,6 +696,11 @@ export default {
             console.log(brg);
             this.barang.kode=brg.kd;
             this.barang.nama=brg.nm;
+            this.hasilpcs=brg.pcs;
+            this.barang.pcs=brg.pcs;
+            this.barang.dos=0;
+            this.barang.pcs=0;
+            this.barang.total_pcs=0;
             this.$refs.kodebarang.inputValue = brg.kd;
             this.$refs.namabarang.inputValue = brg.nm;
 
