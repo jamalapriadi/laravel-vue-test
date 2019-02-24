@@ -175,8 +175,8 @@ class PoController extends Controller
                         }else{
                             $status='kurang';
                             $jumlah_yang_diminta=$jumlah_yang_diminta - $row2->pcs;
-                            $dos=FLOOR($row2->pcs/$jumlah_yang_diminta);
-                            $pcs=FLOOR($row2->pcs % $jumlah_yang_diminta);
+                            $dos=FLOOR($row2->pcs/$row->pcs);
+                            $pcs=FLOOR($row2->pcs % $row->pcs);
                         }
     
                         $list[]=array(
@@ -198,6 +198,24 @@ class PoController extends Controller
                         );
                     }
                 }
+            }else{
+                $list[]=array(
+                    'idstok'=>'',
+                    'kd'=>$row->kd,
+                    'nm'=>$row->nm,
+                    'jual'=>$row->jual,
+                    'dos'=>$row->pivot->dos,
+                    'pcs'=>$row->pivot->pcs,
+                    'pcs_per_dos'=>$row->pcs,
+                    'lokasi_id'=>$po->lokasi_id,
+                    'rak_id'=>'',
+                    'jumlah_stok'=>0,
+                    'status'=>'stok tidak ada',
+                    'realisasi_dosnya'=>0,
+                    'realisasi_pcsnya'=>0,
+                    'default_jml_yg_diminta'=>0,
+                    'jumlah_yg_diminta'=>0
+                );
             }
         }
 
