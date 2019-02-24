@@ -108,9 +108,9 @@ class PickingController extends Controller
                                         ->insert(
                                             [
                                                 'no_po'=>$cus->no_po,
-                                                'kd_brg'=>$val['kd'],
+                                                'kd_brg'=>$val['kd_brg'],
                                                 'dos'=>$val['dos'],
-                                                'pcs'=>$val['kurang_nya']
+                                                'pcs'=>$val['kurangnya']
                                             ]
                                         );
                                 }

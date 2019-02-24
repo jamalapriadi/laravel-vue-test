@@ -147,7 +147,7 @@
 
                     <div class="alert alert-info" v-show="state.kurang.length>0">
                         <ol>
-                            <li v-for="(l,index) in state.kurang" v-bind:key="index">Barang <strong>{{l.nm}}</strong> masih kurang <strong>{{l.kurang_nya}}</strong> Pcs</li>
+                            <li v-for="(l,index) in state.kurang" v-bind:key="index">Barang <strong>{{l.nm}}</strong> masih kurang <strong>{{l.kurangnya}}</strong> Pcs</li>
                         </ol>
                     </div>
 
@@ -427,7 +427,7 @@ export default {
                         // }
                         this.state.pcs[i]=this.barang[i].realisasi_pcsnya;
                         this.state.dos[i]=this.barang[i].realisasi_dosnya;
-                        this.state.rak[i]=this.barang[i].rak;
+                        this.state.rak[i]=this.barang[i].rak_id;
                     }
 
                     
@@ -708,6 +708,7 @@ export default {
                         this.state.dos=[];
                         this.state.pcs=[];
                         this.barang=[];
+                        this.state.status_kurang='N';
 
                         this.getCode();
                         this.getNoPo();
