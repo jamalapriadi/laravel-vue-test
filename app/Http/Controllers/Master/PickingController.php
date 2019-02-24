@@ -135,7 +135,8 @@ class PickingController extends Controller
                                     'pdos'=>$request->input('pdos')[$key],
                                     'ppcs'=>$request->input('ppcs')[$key],
                                     'dos'=>$request->input('dos')[$key],
-                                    'pcs'=>$request->input('pcs')[$key]
+                                    'pcs'=>$request->input('pcs')[$key],
+                                    'stok_id'=>$request->input('idstok')[$key]
                                 ]
                             );
                     }

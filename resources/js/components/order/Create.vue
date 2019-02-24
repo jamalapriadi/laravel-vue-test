@@ -218,7 +218,8 @@ export default {
                 doshit:[],
                 pcshit:[],
                 jualhit:[],
-                jumlahhit:[]
+                jumlahhit:[],
+                idstok:[]
             },
             date: new Date(),
             options: {
@@ -331,12 +332,14 @@ export default {
 
                     for (var i = 0; i < this.barangs.length; i++) {
                         this.state.stokid.push(this.barangs[i].pivot.id);
+                        this.state.idstok.push(this.barangs[i].pivot.stok_id);
                         this.state.kodes.push(this.barangs[i].kd);
                         // this.state.jual.push(this.barangs[i].jual);
                         // this.state.dos.push(this.barangs[i].pivot.dos);
                         // this.state.pcs.push(this.barangs[i].pivot.pcs);
                         // this.state.rak.push(this.barangs[i].pivot.kd_rak);
                         this.state.jumlah.push(this.barangs[i].total);
+                        
                         
                         // this.state.subtotal.push(this.barangs[i].jual);
 

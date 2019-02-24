@@ -119,7 +119,7 @@ class OrderController extends Controller
                         //     and rak_id='".$request->input('rak')[$key]."'");
 
                         \DB::statement("UPDATE stok SET pcs = pcs-".$request->input('jumlah')[$key]." 
-                        where id='".$request->input('stokid')[$key]."'");
+                        where id='".$request->input('idstok')[$key]."'");
                     }
                 }
 

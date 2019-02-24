@@ -216,6 +216,7 @@ export default {
                 rak:[],
                 dos:[],
                 pcs:[],
+                idstok:[],
                 kurang:[],
                 status_kurang:'Y',
                 tampil:[]
@@ -402,6 +403,7 @@ export default {
                     this.state.kodes=[];
                     this.state.pdos=[];
                     this.state.ppc=[];
+                    this.state.idstok=[];
                     this.state.customer=response.data.po.customer.nm;
                     this.state.lokasi=response.data.po.lokasi_id;
                     this.changeLokasi();
@@ -417,6 +419,7 @@ export default {
                     }
 
                     for (var i = 0; i < this.barang.length; i++) {
+                        this.state.idstok.push(this.barang[i].idstok);
                         this.state.kodes.push(this.barang[i].kd);
                         this.state.pdos.push(this.barang[i].dos);
                         this.state.ppcs.push(this.barang[i].pcs);
@@ -707,7 +710,9 @@ export default {
                         this.state.rak=[];
                         this.state.dos=[];
                         this.state.pcs=[];
+                        this.state.idstok=[];
                         this.barang=[];
+                        this.state.kurang=[];
                         this.state.status_kurang='N';
 
                         this.getCode();
