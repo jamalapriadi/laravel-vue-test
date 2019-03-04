@@ -118,7 +118,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group" style="width:80px;">
-                                        <input type="number" class="form-control" v-model="state.diskon_persen[index]" @keyup.enter="ubahJumlahDiskonPersen(index)" placeholder="%">
+                                        <input type="number" class="form-control" v-model="state.diskon_persen[index]" @keyup.enter="ubahJumlahDiskonPersen(index)" @input="hitungTotal($event, index)" placeholder="%">
                                         <span style="margin-top:5px;margin-left:5px;">%</span>
                                     </div>
                                 </td>
@@ -129,7 +129,7 @@
                                                 Rp.
                                             </span>
                                         </div>
-                                        <input type="number" class="form-control" v-model="state.diskon_rupiah[index]" @keyup.enter="ubahJumlahDiskonRupiah(index)">
+                                        <input type="number" class="form-control" v-model="state.diskon_rupiah[index]" @keyup.enter="ubahJumlahDiskonRupiah(index)" @input="hitungTotalRupiah($event, index)">
                                     </div>
                                 </td>
                                 <td>
@@ -218,7 +218,8 @@ export default {
                 doshit:[],
                 pcshit:[],
                 jualhit:[],
-                jumlahhit:[]
+                jumlahhit:[],
+                idstok:[]
             },
             date: new Date(),
             options: {
@@ -331,12 +332,14 @@ export default {
 
                     for (var i = 0; i < this.barangs.length; i++) {
                         this.state.stokid.push(this.barangs[i].pivot.id);
+                        this.state.idstok.push(this.barangs[i].pivot.stok_id);
                         this.state.kodes.push(this.barangs[i].kd);
                         // this.state.jual.push(this.barangs[i].jual);
                         // this.state.dos.push(this.barangs[i].pivot.dos);
                         // this.state.pcs.push(this.barangs[i].pivot.pcs);
                         // this.state.rak.push(this.barangs[i].pivot.kd_rak);
                         this.state.jumlah.push(this.barangs[i].total);
+                        
                         
                         // this.state.subtotal.push(this.barangs[i].jual);
 
@@ -374,6 +377,26 @@ export default {
 
         ubahJumlahDiskonPersen(index){
             this.state.subtotal[index]=0;
+            var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
+            var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
+
+            // this.state.diskon_rupiah[index]= diskonnya;
+            this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]);
+
+            this.total();
+        },
+
+        hitungTotal(event, index){
+            var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
+            var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
+
+            // this.state.diskon_rupiah[index]= diskonnya;
+            this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]);
+
+            this.total();
+        },
+
+        hitungTotalRupiah(event, index){
             var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
             var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
@@ -656,43 +679,49 @@ export default {
                 return false;
             }
 
+            if(this.state.sales==""){
+                alert('Sales harus diisi');
+
+                return false;
+            }
+
             this.loading = true;
 
             axios.post('/data/order', this.state)
                 .then(response => {
                     if(response.data.success==true){
-                        this.stete.kd_picking='';
-                        this.stete.kode='';
-                        this.stete.nama= '';
-                        this.stete.customer='';
-                        this.stete.tanggal=new Date();
-                        this.stete.tanggaljt=new Date();
-                        this.stete.perusahaan='';
-                        this.stete.keterangan='';
-                        this.stete.sales='';
-                        this.stete.lokkasiname='';
-                        this.stete.lokasiid='';
-                        this.stete.customertop='';
-                        this.stete.total=0;
-                        this.stete.kd_trans='Tunai';
-                        this.stete.listBarang=[];
-                        this.stete.kodes=[];
-                        this.stete.kodehit=[];
-                        this.stete.jual=[];
-                        this.stete.jumlah=[];
-                        this.stete.diskon_persen=[];
-                        this.stete.diskon_rupiah=[];
-                        this.stete.subtotal=[];
-                        this.stete.dos=[];
-                        this.stete.pcs=[];
-                        this.stete.saless=[];
-                        this.stete.lokasi=[];
-                        this.stete.rak=[];
-                        this.stete.stokid=[];
-                        this.stete.doshit=[];
-                        this.stete.pcshit=[];
-                        this.stete.jualhit=[];
-                        this.stete.jumlahhit=[]
+                        this.state.kd_picking='';
+                        this.state.kode='';
+                        this.state.nama= '';
+                        this.state.customer='';
+                        this.state.tanggal=new Date();
+                        this.state.tanggaljt=new Date();
+                        this.state.perusahaan='';
+                        this.state.keterangan='';
+                        this.state.sales='';
+                        this.state.lokkasiname='';
+                        this.state.lokasiid='';
+                        this.state.customertop='';
+                        this.state.total=0;
+                        this.state.kd_trans='Tunai';
+                        this.state.listBarang=[];
+                        this.state.kodes=[];
+                        this.state.kodehit=[];
+                        this.state.jual=[];
+                        this.state.jumlah=[];
+                        this.state.diskon_persen=[];
+                        this.state.diskon_rupiah=[];
+                        this.state.subtotal=[];
+                        this.state.dos=[];
+                        this.state.pcs=[];
+                        this.state.saless=[];
+                        this.state.lokasi=[];
+                        this.state.rak=[];
+                        this.state.stokid=[];
+                        this.state.doshit=[];
+                        this.state.pcshit=[];
+                        this.state.jualhit=[];
+                        this.state.jumlahhit=[]
 
                         this.tampilDetail=false;
 

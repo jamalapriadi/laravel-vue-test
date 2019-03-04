@@ -52,7 +52,8 @@ class Picking extends Model
                     'pdos',
                     'ppcs',
                     'dos',
-                    'pcs'
+                    'pcs',
+                    'stok_id'
                 ]
             )->leftJoin('rak','rak.kd','=','rpicking.kd_rak');
     }

@@ -104,13 +104,16 @@ class PickingController extends Controller
                                 $kurang=request('kurang');
             
                                 foreach($kurang as $key=>$val){
+                                    $cekB=\App\Models\Barang::find($val['kd_brg']);
+
                                     \DB::table('rpo')
                                         ->insert(
                                             [
                                                 'no_po'=>$cus->no_po,
-                                                'kd_brg'=>$val['kd'],
+                                                'kd_brg'=>$val['kd_brg'],
                                                 'dos'=>$val['dos'],
-                                                'pcs'=>$val['kurang_nya']
+                                                'pcs'=>$val['kurangnya'],
+                                                'total_pcs'=>($cekB->pcs * $val['dos']) + $val['kurangnya']
                                             ]
                                         );
                                 }
@@ -132,7 +135,8 @@ class PickingController extends Controller
                                     'pdos'=>$request->input('pdos')[$key],
                                     'ppcs'=>$request->input('ppcs')[$key],
                                     'dos'=>$request->input('dos')[$key],
-                                    'pcs'=>$request->input('pcs')[$key]
+                                    'pcs'=>$request->input('pcs')[$key],
+                                    'stok_id'=>$request->input('idstok')[$key]
                                 ]
                             );
                     }

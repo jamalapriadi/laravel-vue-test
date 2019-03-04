@@ -147,7 +147,7 @@
 
                     <div class="alert alert-info" v-show="state.kurang.length>0">
                         <ol>
-                            <li v-for="(l,index) in state.kurang" v-bind:key="index">Barang <strong>{{l.nm}}</strong> masih kurang <strong>{{l.kurang_nya}}</strong> Pcs</li>
+                            <li v-for="(l,index) in state.kurang" v-bind:key="index">Barang <strong>{{l.nm}}</strong> masih kurang <strong>{{l.kurangnya}}</strong> Pcs</li>
                         </ol>
                     </div>
 
@@ -216,6 +216,7 @@ export default {
                 rak:[],
                 dos:[],
                 pcs:[],
+                idstok:[],
                 kurang:[],
                 status_kurang:'Y',
                 tampil:[]
@@ -402,6 +403,7 @@ export default {
                     this.state.kodes=[];
                     this.state.pdos=[];
                     this.state.ppc=[];
+                    this.state.idstok=[];
                     this.state.customer=response.data.po.customer.nm;
                     this.state.lokasi=response.data.po.lokasi_id;
                     this.changeLokasi();
@@ -417,6 +419,7 @@ export default {
                     }
 
                     for (var i = 0; i < this.barang.length; i++) {
+                        this.state.idstok.push(this.barang[i].idstok);
                         this.state.kodes.push(this.barang[i].kd);
                         this.state.pdos.push(this.barang[i].dos);
                         this.state.ppcs.push(this.barang[i].pcs);
@@ -427,7 +430,7 @@ export default {
                         // }
                         this.state.pcs[i]=this.barang[i].realisasi_pcsnya;
                         this.state.dos[i]=this.barang[i].realisasi_dosnya;
-                        this.state.rak[i]=this.barang[i].rak;
+                        this.state.rak[i]=this.barang[i].rak_id;
                     }
 
                     
@@ -707,7 +710,10 @@ export default {
                         this.state.rak=[];
                         this.state.dos=[];
                         this.state.pcs=[];
+                        this.state.idstok=[];
                         this.barang=[];
+                        this.state.kurang=[];
+                        this.state.status_kurang='N';
 
                         this.getCode();
                         this.getNoPo();

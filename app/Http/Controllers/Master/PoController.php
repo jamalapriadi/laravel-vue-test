@@ -146,173 +146,103 @@ class PoController extends Controller
                 'lokasi'
             ]
         )->find($id);
-
+        
         $list=array();
-        $jumlah=0;
-        $rak=array();
+        $kurangnya=array();
+
         foreach($po->detail as $row){
-            $pcs=$row->pivot->total_pcs;
-            $jumlah=0;
-            $sisa=$row->pivot->total_pcs;
-            $diambil=0;
-            
-            $rowspan=1;
-            if(count($row->stok)>0){
-                $rowspan=count($row->stok);
+            //cek semua stok barang di tabel stok
+            $cekStok=\DB::select("SELECT SUM(a.pcs) AS jumlah_stok FROM stok a
+                WHERE a.kd_brg='$row->kd'
+                AND a.pcs>0
+                GROUP BY a.kd_brg");
 
-                for($a=0; $a< count($row->stok); $a++){
-                    if($sisa > $row->stok[$a]->pcs){
-                        $diambil=$sisa;
-                        $sisa=$sisa - $row->stok[$a]->pcs ;
-                        $h=0;
-                        if($sisa>0){
-                            $h=$sisa;
+            if(count($cekStok) > 0){
+                $jumlah_stok=$cekStok[0]->jumlah_stok;
+                $jumlah_yang_diminta=$row->pivot->total_pcs;
+                $default_jumlah_yg_diminta=$row->pivot->total_pcs;
+
+                //ambil di stok berdasarkan barang yang diminta, di order berdasarkan tanggal
+                $ambilStok=\DB::select("select a.* from stok a where a.kd_brg='$row->kd' order by a.tgl");
+
+                foreach($ambilStok as $row2){
+                    if($jumlah_yang_diminta > 0){
+                        if($row2->pcs > $jumlah_yang_diminta){
+                            $jumlah_yang_diminta=0;
+                            $status='terpenuhi';
+                            $dos=$row->pivot->dos;
+                            $pcs=$row->pivot->pcs;
+                        }else{
+                            $status='kurang';
+                            $jumlah_yang_diminta=$jumlah_yang_diminta - $row2->pcs;
+                            $dos=FLOOR($row2->pcs/$row->pcs);
+                            $pcs=FLOOR($row2->pcs % $row->pcs);
                         }
-
-                        $ekspetasi_dosnya=floor($row->pivot->total_pcs / $row->pcs);
-                        $ekspetasi_pcsnya=$row->pivot->total_pcs % $row->pcs;
-                        $realisasi_dosnya=0;
-                        $realisasi_pcsnya=0;
-
-                        if($row->stok[$a]->pcs > 0){
-                            // if($row->stok[$a]->pcs > $row->pcs){
-                            //     if($row->stok[$a]->pcs - $row->pivot->total_pcs > 0){
-                            //         $realisasi_pcsnya=$row->stok[$a]->pcs - $row->pivot->total_pcs;
-                            //     }else{
-                            //         $realisasi_pcsnya=0;
-                            //     }
-                            // }else{
-                            //     $realisasi_pcsnya=0;
-                            // }
-                            
-                            $realisasi_dosnya=floor($row->stok[$a]->pcs/$row->pcs);
-                            $realisasi_pcsnya=$row->stok[$a]->pcs%$row->pcs;
-                        }
-
-                        $rak[]=array(
-                            'idstok'=>$row->stok[$a]->id,
+    
+                        $list[]=array(
+                            'idstok'=>$row2->id,
                             'kd'=>$row->kd,
                             'nm'=>$row->nm,
                             'jual'=>$row->jual,
                             'dos'=>$row->pivot->dos,
-                            'ekspetasi_dosnya'=>$ekspetasi_dosnya,
-                            'ekspetasi_pcsnya'=>$ekspetasi_pcsnya,
-                            'realisasi_dosnya'=>$realisasi_dosnya,
-                            'realisasi_pcsnya'=>$realisasi_pcsnya,
                             'pcs'=>$row->pivot->pcs,
-                            'total_pcs'=>$row->pivot->total_pcs,
-                            'pcsnya'=>$diambil - $h,
-                            'stok'=>$row->stok[$a]->pcs,
-                            'diambil'=>$diambil,
-                            'kurang'=>$h,
-                            'rak'=>$row->stok[$a]->rak_id
+                            'pcs_per_dos'=>$row->pcs,
+                            'lokasi_id'=>$row2->lokasi_id,
+                            'rak_id'=>$row2->rak_id,
+                            'jumlah_stok'=>$row2->pcs,
+                            'status'=>$status,
+                            'realisasi_dosnya'=>$dos,
+                            'realisasi_pcsnya'=>$pcs,
+                            'default_jml_yg_diminta'=>$default_jumlah_yg_diminta,
+                            'jumlah_yg_diminta'=>$jumlah_yang_diminta
                         );
-
-
-                    }else{
-                        $diambil=$sisa;
-                        $sisa=$diambil - $row->stok[$a]->pcs;
-                        $h=0;
-                        if($sisa>0){
-                            $h=$sisa;
-                        }
-
-                        $ekspetasi_dosnya=floor($row->pivot->total_pcs / $row->pcs);
-                        $ekspetasi_pcsnya=$row->pivot->total_pcs % $row->pcs;
-                        $realisasi_dosnya=0;
-                        $realisasi_pcsnya=0;
-
-                        if($row->stok[$a]->pcs > 0){
-                            // if($row->stok[$a]->pcs > $row->pcs){
-                            //     if($row->stok[$a]->pcs - $row->pivot->total_pcs > 0){
-                            //         $realisasi_pcsnya=$row->stok[$a]->pcs - $row->pivot->total_pcs;
-                            //     }else{
-                            //         $realisasi_pcsnya=0;
-                            //     }
-                            // }else{
-                            //     $realisasi_pcsnya=0;
-                            // }
-                            $realisasi_dosnya=floor($row->stok[$a]->pcs/$row->pcs);
-                            $realisasi_pcsnya=$row->stok[$a]->pcs%$row->pcs;
-                        }
-
-                        $rak[]=array(
-                            'idstok'=>$row->stok[$a]->id,
-                            'kd'=>$row->kd,
-                            'nm'=>$row->nm,
-                            'jual'=>$row->jual,
-                            'dos'=>$row->pivot->dos,
-                            'ekspetasi_dosnya'=>$ekspetasi_dosnya,
-                            'ekspetasi_pcsnya'=>$ekspetasi_pcsnya,
-                            'realisasi_dosnya'=>$realisasi_dosnya,
-                            'realisasi_pcsnya'=>$realisasi_pcsnya,
-                            'pcs'=>$row->pivot->pcs,
-                            'total_pcs'=>$row->pivot->total_pcs,
-                            'pcsnya'=>$diambil - $h,
-                            'stok'=>$row->stok[$a]->pcs,
-                            'diambil'=>$diambil,
-                            'kurang'=>$h,
-                            'rak'=>$row->stok[$a]->rak_id
-                        );
-
-                        break;
                     }
                 }
             }else{
-                $rak[]=array(
+                $list[]=array(
                     'idstok'=>'',
                     'kd'=>$row->kd,
                     'nm'=>$row->nm,
                     'jual'=>$row->jual,
                     'dos'=>$row->pivot->dos,
-                    'ekspetasi_dosnya'=>floor($row->pivot->total_pcs / $row->pcs),
-                    'ekspetasi_pcsnya'=>$row->pivot->total_pcs % $row->pcs,
+                    'pcs'=>$row->pivot->pcs,
+                    'pcs_per_dos'=>$row->pcs,
+                    'lokasi_id'=>$po->lokasi_id,
+                    'rak_id'=>'',
+                    'jumlah_stok'=>0,
+                    'status'=>'stok tidak ada',
                     'realisasi_dosnya'=>0,
                     'realisasi_pcsnya'=>0,
-                    'pcs'=>$row->pivot->pcs,
-                    'total_pcs'=>$row->pivot->total_pcs,
-                    'pcsnya'=>0,
-                    'stok'=>0,
-                    'diambil'=>0,
-                    'kurang'=>0,
-                    'rak'=>''
+                    'default_jml_yg_diminta'=>0,
+                    'jumlah_yg_diminta'=>0
                 );
             }
         }
 
-        /*cari barang terakhir dan cek apakah kurangnya masih ada yang lebih dari 0 */
-        $listbarang=$rak;
-        usort($listbarang, function($a, $b) {
-            return $a['kurang'] <=> $b['kurang'];
-        });
+        $barang_sisa=\DB::select("SELECT semua.id, semua.kd_brg, semua.nm,semua.pcs_per_dos,
+                semua.jumlah_stok, semua.yang_diminta, 
+                semua.sisa,
+                (semua.yang_diminta - semua.jumlah_stok) AS kurangnya,
+                FLOOR((semua.yang_diminta - semua.jumlah_stok) / semua.pcs_per_dos) AS dos,
+                FLOOR((semua.yang_diminta - semua.jumlah_stok) % semua.pcs_per_dos) AS pcs
+                FROM 
+                (
+                    SELECT a.id, a.kd_brg, b.nm,b.pcs AS pcs_per_dos,
+                    SUM(a.pcs) AS jumlah_stok,
+                    (SELECT SUM(aa.total_pcs) FROM rpo aa WHERE aa.no_po='$id' AND aa.kd_brg=a.kd_brg GROUP BY a.kd_brg) AS yang_diminta,
+                    SUM(a.pcs) - (SELECT SUM(aa.total_pcs) FROM rpo aa WHERE aa.no_po='$id' AND aa.kd_brg=a.kd_brg GROUP BY a.kd_brg ) AS sisa
+                    FROM stok a
+                    LEFT JOIN brg b ON b.kd=a.kd_brg
+                    WHERE a.kd_brg IN (SELECT a.kd_brg FROM rpo a WHERE a.no_po='$id')
+                    GROUP BY a.kd_brg
+                ) AS semua
+                WHERE semua.sisa < 0");
 
-        $tempArr = array_unique(array_column($listbarang, 'kd'));
-        $hasil=array_intersect_key($listbarang, $tempArr);
-
-        $listKurang=array();
-        foreach($hasil as $key=>$val){
-            if($val['kurang'] > 0){
-                array_push($listKurang,[
-                    'kd'=>$val['kd'],
-                    'nm'=>$val['nm'],
-                    'jual'=>$val['jual'],
-                    'dos'=>$val['dos'],
-                    'pcs'=>$val['pcs'],
-                    'total_pcs'=>$val['total_pcs'],
-                    'kurang_nya'=>$val['kurang'],
-                    'pcsnya'=>0,
-                    'stok'=>0,
-                    'diambil'=>0,
-                    'kurang'=>0,
-                    'rak'=>''
-                ]);
-            }
-        }
-
+        
         return array(
             'po'=>$po,
-            'list'=>$rak,
-            'kurang'=>$listKurang
+            'list'=>$list,
+            'kurang'=>$barang_sisa
         );
     }
 

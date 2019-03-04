@@ -84,12 +84,12 @@
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">Dos</label>
-                        <input type="text" class="form-control" v-model="barang.dos" @keyup.enter="changeDos">
+                        <input type="text" class="form-control" v-model="barang.dos" @keyup.enter="changeDos" @input="hitungTotal($event)">
                     </div>
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">PCS</label>
-                        <input type="text" class="form-control" v-model="barang.pcs" @keyup.enter="changePcs(barang.pcs)">
+                        <input type="text" class="form-control" v-model="barang.pcs" @keyup.enter="changePcs(barang.pcs)" @input="hitungTotalPcs($event)">
                         <p>
                             <small>
                                 {{hasilpcs}} jumlah per 1 dos
@@ -457,8 +457,8 @@ export default {
                 }
             }
 
-            this.barang.nama=item;
             this.barang.kode=nama;
+            this.barang.nama=item;
             this.barang.pcs=pcs;
             this.barang.dos=0;
             this.barang.pcs=0;
@@ -500,6 +500,28 @@ export default {
 
             this.barang.total_pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs) + parseInt(this.barang.pcs);
         },
+
+        hitungTotal(event){
+            if(this.barang.kode==""){
+                alert('Barang harus diisi');
+
+                return false;
+            }
+
+
+            this.barang.total_pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs) + parseInt(this.barang.pcs);
+       },
+
+       hitungTotalPcs(event){
+           if(this.barang.kode==""){
+                alert('Barang harus diisi');
+
+                return false;
+            }
+
+
+            this.barang.total_pcs=parseInt(this.barang.dos)*parseInt(this.hasilpcs) + parseInt(this.barang.pcs);
+       },
 
         changePcs(nya){
             if(this.barang.kode==""){
@@ -674,6 +696,11 @@ export default {
             console.log(brg);
             this.barang.kode=brg.kd;
             this.barang.nama=brg.nm;
+            this.hasilpcs=brg.pcs;
+            this.barang.pcs=brg.pcs;
+            this.barang.dos=0;
+            this.barang.pcs=0;
+            this.barang.total_pcs=0;
             this.$refs.kodebarang.inputValue = brg.kd;
             this.$refs.namabarang.inputValue = brg.nm;
 
