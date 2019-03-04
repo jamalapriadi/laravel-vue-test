@@ -178,6 +178,101 @@
                 </ul>
             </li>
 
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-action-undo"></i> Retur Barang
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <router-link to="/add-new-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Add New Retur
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> List Retur
+                        </router-link>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-book-open"></i> Piutang
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <router-link to="/add-new-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Add New Piutang
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> List Piutang
+                        </router-link>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-title">Laporan</li>
+            <li class="nav-item nav-dropdown">
+                <a class="nav-link nav-dropdown-toggle" href="#">
+                    <i class="nav-icon icon-direction"></i> Laporan
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <router-link to="/add-new-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Lap. Penerimaan
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Lap. Retur Terima
+                        </router-link>
+                    </li>
+                    <li class="nav-title"></li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Lap. Nota
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Lap. Penjualan Sales
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Lap. Penjualan Per Merk / Kel Brg
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Lap. Penjualan Per Merk / Kel Brg / Tahun
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Lap. Penjualan Per Barang Per Customer
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Lap. Retur Nota
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Create File Pajak
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Lap. Nota
+                        </router-link>
+                    </li>
+                </ul>
+            </li>
 
             <li class="nav-title">Settings</li>
             <li class="nav-item">
