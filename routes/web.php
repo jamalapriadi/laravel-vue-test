@@ -86,4 +86,12 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('list-picking-not-in-order','Master\PickingController@list_picking_not_in_order');
     Route::get('stok-dirak','Master\StoringController@stok_di_rak');
     Route::get('po-by-id/{id}','Master\PoController@po_by_id');
+
+    Route::resource('piutang','Master\PiutangController');
+    Route::get('piutang-by-order/{id}','Master\PiutangController@piutang_by_order');
+    Route::get('autonumber-piutang','Master\PiutangController@autonumber_piutang');
+    Route::get('order-belum-lunas','Master\PiutangController@order_belum_lunas');
+    Route::get('pilih-order-di-new-po/{id}','Master\PiutangController@pilih_order_di_new_po');
+
+    Route::get('autonumber-retur','Master\ReturController@autonumber_retur');
 });

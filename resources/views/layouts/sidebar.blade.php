@@ -72,193 +72,183 @@
 
             <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-paypal"></i> Program
+                    <i class="nav-icon icon-layers"></i> Transaksi
                 </a>
                 <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <router-link to="/add-new-program" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Add New Program
-                        </router-link>
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon icon-paypal"></i> Program
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <router-link to="/add-new-program" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Add New Program
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/program" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> List Program
+                                </router-link>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <router-link to="/program" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> List Program
-                        </router-link>
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon icon-tag"></i> Storing
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <router-link to="/add-new-storing" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Add New Storing
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/storing" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> List Storing
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
+        
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon icon-list"></i> PO
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <router-link to="/add-new-po" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Add New PO
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/po" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> List PO
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
+        
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon icon-social-dropbox"></i> Picking
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <router-link to="/add-new-picking" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Add New Picking
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/list-picking" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> List Picking
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
+        
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon icon-basket-loaded"></i> Order
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <router-link to="/add-new-order" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Add New Order
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/list-order" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> List Order
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
+        
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon icon-direction"></i> Mutasi
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <router-link to="/add-new-mutasi" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Add New Mutasi
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> List Mutasi
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
+        
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon icon-action-undo"></i> Retur Barang
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <router-link to="/add-new-retur" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Add New Retur
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/list-retur" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> List Retur
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
+        
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon icon-book-open"></i> Piutang
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <router-link to="/add-new-piutang" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Add New Piutang
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/list-piutang" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> List Piutang
+                                </router-link>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </li>
 
             <li class="nav-item nav-dropdown">
                 <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-tag"></i> Storing
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <router-link to="/add-new-storing" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Add New Storing
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/storing" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> List Storing
-                        </router-link>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-list"></i> PO
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <router-link to="/add-new-po" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Add New PO
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/po" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> List PO
-                        </router-link>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-social-dropbox"></i> Picking
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <router-link to="/add-new-picking" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Add New Picking
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/list-picking" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> List Picking
-                        </router-link>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-basket-loaded"></i> Order
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <router-link to="/add-new-order" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Add New Order
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/list-order" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> List Order
-                        </router-link>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-direction"></i> Mutasi
+                    <i class="nav-icon icon-chart"></i> Laporan
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
                         <router-link to="/add-new-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Add New Mutasi
+                            <i class="nav-icon icon-bank"></i>Penerimaan
                         </router-link>
                     </li>
                     <li class="nav-item">
                         <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> List Mutasi
-                        </router-link>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-action-undo"></i> Retur Barang
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <router-link to="/add-new-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Add New Retur
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> List Retur
-                        </router-link>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-book-open"></i> Piutang
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <router-link to="/add-new-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Add New Piutang
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> List Piutang
-                        </router-link>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="nav-title">Laporan</li>
-            <li class="nav-item nav-dropdown">
-                <a class="nav-link nav-dropdown-toggle" href="#">
-                    <i class="nav-icon icon-direction"></i> Laporan
-                </a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <router-link to="/add-new-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Lap. Penerimaan
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Lap. Retur Terima
+                            <i class="nav-icon icon-bank"></i>Retur Terima
                         </router-link>
                     </li>
                     <li class="nav-title"></li>
                     <li class="nav-item">
                         <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Lap. Nota
+                            <i class="nav-icon icon-bank"></i>Nota
                         </router-link>
                     </li>
                     <li class="nav-item">
                         <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Lap. Penjualan Sales
+                            <i class="nav-icon icon-bank"></i>Penjualan
                         </router-link>
                     </li>
                     <li class="nav-item">
                         <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Lap. Penjualan Per Merk / Kel Brg
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Lap. Penjualan Per Merk / Kel Brg / Tahun
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Lap. Penjualan Per Barang Per Customer
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Lap. Retur Nota
+                            <i class="nav-icon icon-bank"></i>Retur Nota
                         </router-link>
                     </li>
                     <li class="nav-item">
@@ -268,7 +258,7 @@
                     </li>
                     <li class="nav-item">
                         <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i> Lap. Nota
+                            <i class="nav-icon icon-bank"></i>Nota
                         </router-link>
                     </li>
                 </ul>

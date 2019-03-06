@@ -54,7 +54,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         $rules=[
             'stokid'=>'required',
             'kode'=>'required',
@@ -62,7 +61,8 @@ class OrderController extends Controller
             'kd_trans'=>'required',
             'kd_picking'=>'required',
             'lokasiid'=>'required',
-            'kodehit'=>'required'
+            'kodehit'=>'required',
+            'tanggaljt'=>'required'
         ];
 
         $validasi=\Validator::make($request->all(),$rules);

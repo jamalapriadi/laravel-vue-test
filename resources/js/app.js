@@ -148,6 +148,13 @@ const routes = [
     { path: '/list-mutasi', name: 'listMutasi', component: require('./components/mutasi/Index.vue').default },
     { path: '/add-new-mutasi', name: 'mutasiCreate', component: require('./components/mutasi/Create.vue').default },
     { path: '/mutasi-detail/:id', name: 'mutasiDetail', component: require('./components/mutasi/Detail.vue').default},
+
+    { path: '/list-piutang', name: 'listPiutang', component: require('./components/piutang/list.vue').default },
+    { path: '/add-new-piutang', name: 'piutangCreate', component: require('./components/piutang/create.vue').default },
+    { path: '/piutang-detail/:id', name: 'piutangDetail', component: require('./components/piutang/detail.vue').default},
+
+    { path: '/list-retur', name: 'listRetur', component: require('./components/retur/list.vue').default },
+    { path: '/add-new-retur', name: 'returCreate', component: require('./components/retur/create.vue').default },
 ]
 
 const router = new VueRouter({ routes });

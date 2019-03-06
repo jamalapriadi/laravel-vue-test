@@ -1,7 +1,7 @@
 <template>
     <div class="card card-accent-primary">
         <div class="card-header">
-            Data PO
+            Data Order
 
             <div class="card-header-actions">
                 <router-link to="/add-new-order" class="btn btn-primary">

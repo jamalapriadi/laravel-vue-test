@@ -295,7 +295,7 @@ export default {
 
             if(kode=="Kredit"){
                 date.setDate(date.getDate() + this.state.customertop);
-                this.state.tanggaljt=date;
+                this.state.tanggaljt=new Date(date);
             }
         },
 

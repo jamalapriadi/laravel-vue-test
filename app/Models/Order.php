@@ -55,4 +55,8 @@ class Order extends Model
         return $this->belongsTo('App\Models\Picking','kd_picking','kd_picking');
     }
 
+    public function piutang(){
+        return $this->hasMany('App\Models\Piutang','no_order');
+    }
+
 }
