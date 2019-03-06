@@ -12,6 +12,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping structure for table db_penjualan.bank
+DROP TABLE IF EXISTS `bank`;
 CREATE TABLE IF NOT EXISTS `bank` (
   `kd_bank` int(11) NOT NULL AUTO_INCREMENT,
   `nm` varchar(50) NOT NULL,
@@ -33,6 +34,7 @@ INSERT INTO `bank` (`kd_bank`, `nm`, `status`, `created_at`, `updated_at`, `dele
 /*!40000 ALTER TABLE `bank` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.brg
+DROP TABLE IF EXISTS `brg`;
 CREATE TABLE IF NOT EXISTS `brg` (
   `kd` varchar(20) NOT NULL,
   `nm` varchar(50) NOT NULL,
@@ -97,6 +99,7 @@ INSERT INTO `brg` (`kd`, `nm`, `kelompok_id`, `merk_id`, `status`, `satuan`, `pc
 /*!40000 ALTER TABLE `brg` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.customer
+DROP TABLE IF EXISTS `customer`;
 CREATE TABLE IF NOT EXISTS `customer` (
   `kd` varchar(50) NOT NULL,
   `nm` varchar(50) DEFAULT NULL,
@@ -132,6 +135,7 @@ INSERT INTO `customer` (`kd`, `nm`, `nm_toko`, `alamat`, `alias`, `kota_id`, `tl
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.ket
+DROP TABLE IF EXISTS `ket`;
 CREATE TABLE IF NOT EXISTS `ket` (
   `no_hp` varchar(13) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -151,6 +155,7 @@ INSERT INTO `ket` (`no_hp`, `email`, `pin`, `npwp`, `created_at`, `updated_at`, 
 /*!40000 ALTER TABLE `ket` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.klmpk
+DROP TABLE IF EXISTS `klmpk`;
 CREATE TABLE IF NOT EXISTS `klmpk` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nm` varchar(50) NOT NULL,
@@ -169,6 +174,7 @@ INSERT INTO `klmpk` (`id`, `nm`, `created_at`, `updated_at`, `deleted_at`) VALUE
 /*!40000 ALTER TABLE `klmpk` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.kota
+DROP TABLE IF EXISTS `kota`;
 CREATE TABLE IF NOT EXISTS `kota` (
   `kd_kota` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `nm` varchar(25) NOT NULL,
@@ -191,6 +197,7 @@ INSERT INTO `kota` (`kd_kota`, `nm`, `jenis`, `created_at`, `updated_at`, `delet
 /*!40000 ALTER TABLE `kota` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.lokasi
+DROP TABLE IF EXISTS `lokasi`;
 CREATE TABLE IF NOT EXISTS `lokasi` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `lokasi` varchar(25) DEFAULT NULL,
@@ -210,6 +217,7 @@ INSERT INTO `lokasi` (`id`, `lokasi`, `nm`, `created_at`, `updated_at`, `deleted
 /*!40000 ALTER TABLE `lokasi` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.merk
+DROP TABLE IF EXISTS `merk`;
 CREATE TABLE IF NOT EXISTS `merk` (
   `id` int(3) NOT NULL AUTO_INCREMENT,
   `nm` varchar(50) NOT NULL,
@@ -229,6 +237,7 @@ INSERT INTO `merk` (`id`, `nm`, `persen`, `created_at`, `updated_at`, `deleted_a
 /*!40000 ALTER TABLE `merk` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.mutasi
+DROP TABLE IF EXISTS `mutasi`;
 CREATE TABLE IF NOT EXISTS `mutasi` (
   `no_mutasi` varchar(20) NOT NULL,
   `lokasil` varchar(15) NOT NULL,
@@ -252,6 +261,7 @@ INSERT INTO `mutasi` (`no_mutasi`, `lokasil`, `lokasib`, `ket`, `tgl`, `perusaha
 /*!40000 ALTER TABLE `mutasi` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.orders
+DROP TABLE IF EXISTS `orders`;
 CREATE TABLE IF NOT EXISTS `orders` (
   `no_order` varchar(20) NOT NULL,
   `kd_picking` varchar(50) DEFAULT NULL,
@@ -273,9 +283,12 @@ CREATE TABLE IF NOT EXISTS `orders` (
 -- Dumping data for table db_penjualan.orders: 0 rows
 DELETE FROM `orders`;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` (`no_order`, `kd_picking`, `kd_trans`, `tgl`, `tgljt`, `ket`, `sales_id`, `perusahaan_id`, `total`, `insert_user`, `update_user`, `created_at`, `updated_at`, `deleted_at`) VALUES
+	('19-000001', 'PCK-TLG-19-000001', 'Kredit', '2019-02-24', '1970-01-01', NULL, 1, '1', 1406720, 'jamal.apriadi', 'jamal.apriadi', '2019-03-05 14:50:20', '2019-03-05 14:50:20', NULL);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.perusahaan
+DROP TABLE IF EXISTS `perusahaan`;
 CREATE TABLE IF NOT EXISTS `perusahaan` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nama` varchar(50) NOT NULL,
@@ -294,6 +307,7 @@ INSERT INTO `perusahaan` (`id`, `nama`, `created_at`, `updated_at`, `deleted_at`
 /*!40000 ALTER TABLE `perusahaan` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.picking
+DROP TABLE IF EXISTS `picking`;
 CREATE TABLE IF NOT EXISTS `picking` (
   `kd_picking` varchar(20) NOT NULL,
   `no_po` varchar(50) DEFAULT NULL,
@@ -316,7 +330,31 @@ INSERT INTO `picking` (`kd_picking`, `no_po`, `ket`, `tgl`, `status_terpenuhi`, 
 	('PCK-TLG-19-000001', 'PO-TLG-19-000008', NULL, '2019-02-24', 'Y', 1, 'jamal.apriadi', 'jamal.apriadi', '2019-02-24 17:20:01', '2019-02-24 17:20:01', NULL);
 /*!40000 ALTER TABLE `picking` ENABLE KEYS */;
 
+-- Dumping structure for table db_penjualan.piutang
+DROP TABLE IF EXISTS `piutang`;
+CREATE TABLE IF NOT EXISTS `piutang` (
+  `no_piutang` varchar(50) NOT NULL,
+  `tgl_pembayaran` date DEFAULT NULL,
+  `no_order` varchar(50) DEFAULT NULL,
+  `total_bayar` int(11) DEFAULT NULL,
+  `insert_user` varchar(50) DEFAULT NULL,
+  `update_user` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`no_piutang`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table db_penjualan.piutang: ~3 rows (approximately)
+DELETE FROM `piutang`;
+/*!40000 ALTER TABLE `piutang` DISABLE KEYS */;
+INSERT INTO `piutang` (`no_piutang`, `tgl_pembayaran`, `no_order`, `total_bayar`, `insert_user`, `update_user`, `created_at`, `updated_at`) VALUES
+	('19-000001', '2019-03-05', '19-000001', 6000, 'jamal.apriadi', 'jamal.apriadi', '2019-03-05 16:55:16', '2019-03-05 16:55:16'),
+	('19-000002', '2019-03-05', '19-000001', 718, 'jamal.apriadi', 'jamal.apriadi', '2019-03-05 16:59:35', '2019-03-05 16:59:35'),
+	('19-000003', '2019-03-05', '19-000001', 5000, 'jamal.apriadi', 'jamal.apriadi', '2019-03-05 17:02:13', '2019-03-05 17:02:13');
+/*!40000 ALTER TABLE `piutang` ENABLE KEYS */;
+
 -- Dumping structure for table db_penjualan.po
+DROP TABLE IF EXISTS `po`;
 CREATE TABLE IF NOT EXISTS `po` (
   `no_po` varchar(20) NOT NULL,
   `no_ref_po` varchar(20) DEFAULT NULL,
@@ -355,6 +393,7 @@ INSERT INTO `po` (`no_po`, `no_ref_po`, `customer_id`, `ket`, `tgl`, `lokasi_id`
 /*!40000 ALTER TABLE `po` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.prgrm
+DROP TABLE IF EXISTS `prgrm`;
 CREATE TABLE IF NOT EXISTS `prgrm` (
   `nmr` varchar(20) NOT NULL,
   `nm` varchar(50) DEFAULT NULL,
@@ -378,6 +417,7 @@ INSERT INTO `prgrm` (`nmr`, `nm`, `awprriod`, `akpriod`, `insert_user`, `update_
 /*!40000 ALTER TABLE `prgrm` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rak
+DROP TABLE IF EXISTS `rak`;
 CREATE TABLE IF NOT EXISTS `rak` (
   `kd` int(11) NOT NULL AUTO_INCREMENT,
   `nm` varchar(50) NOT NULL,
@@ -402,7 +442,30 @@ INSERT INTO `rak` (`kd`, `nm`, `lokasi_id`, `created_at`, `updated_at`, `deleted
 	(8, 'test lagi', 1, '2019-02-15 12:22:25', '2019-02-15 12:22:25', NULL);
 /*!40000 ALTER TABLE `rak` ENABLE KEYS */;
 
+-- Dumping structure for table db_penjualan.retur
+DROP TABLE IF EXISTS `retur`;
+CREATE TABLE IF NOT EXISTS `retur` (
+  `no_retur` varchar(50) NOT NULL,
+  `tgl_retur` date DEFAULT NULL,
+  `full_nota` enum('Y','N') DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `no_order` varchar(50) DEFAULT NULL,
+  `kd_trans` enum('Tunai','Kredit') DEFAULT 'Tunai',
+  `lokasi_id` int(11) DEFAULT NULL,
+  `insert_user` varchar(50) DEFAULT NULL,
+  `update_user` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`no_retur`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table db_penjualan.retur: ~0 rows (approximately)
+DELETE FROM `retur`;
+/*!40000 ALTER TABLE `retur` DISABLE KEYS */;
+/*!40000 ALTER TABLE `retur` ENABLE KEYS */;
+
 -- Dumping structure for table db_penjualan.rmutasi
+DROP TABLE IF EXISTS `rmutasi`;
 CREATE TABLE IF NOT EXISTS `rmutasi` (
   `no_mutasi` varchar(20) NOT NULL,
   `kd_brg` varchar(11) NOT NULL,
@@ -421,6 +484,7 @@ INSERT INTO `rmutasi` (`no_mutasi`, `kd_brg`, `rakl`, `rakb`, `dos`, `pcs`) VALU
 /*!40000 ALTER TABLE `rmutasi` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rorder
+DROP TABLE IF EXISTS `rorder`;
 CREATE TABLE IF NOT EXISTS `rorder` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `no_order` varchar(20) DEFAULT NULL,
@@ -432,14 +496,18 @@ CREATE TABLE IF NOT EXISTS `rorder` (
   `diskon_persen` int(7) DEFAULT NULL,
   `diskon_rupiah` int(7) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table db_penjualan.rorder: 0 rows
 DELETE FROM `rorder`;
 /*!40000 ALTER TABLE `rorder` DISABLE KEYS */;
+INSERT INTO `rorder` (`id`, `no_order`, `kd_brg`, `dos`, `pcs`, `hrg`, `jumlah`, `diskon_persen`, `diskon_rupiah`) VALUES
+	(1, '19-000001', 'BRG001', 1, 3, 1000, 126, 0, 0),
+	(2, '19-000001', 'BRG005', 1, 505, 999, 1282, 0, 0);
 /*!40000 ALTER TABLE `rorder` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rpicking
+DROP TABLE IF EXISTS `rpicking`;
 CREATE TABLE IF NOT EXISTS `rpicking` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `kd_picking` varchar(20) DEFAULT NULL,
@@ -463,6 +531,7 @@ INSERT INTO `rpicking` (`id`, `kd_picking`, `kd_brg`, `stok_id`, `kd_rak`, `pdos
 /*!40000 ALTER TABLE `rpicking` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rpo
+DROP TABLE IF EXISTS `rpo`;
 CREATE TABLE IF NOT EXISTS `rpo` (
   `no_po` varchar(20) NOT NULL,
   `kd_brg` varchar(11) NOT NULL,
@@ -498,6 +567,7 @@ INSERT INTO `rpo` (`no_po`, `kd_brg`, `dos`, `pcs`, `total_pcs`) VALUES
 /*!40000 ALTER TABLE `rpo` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rprogram
+DROP TABLE IF EXISTS `rprogram`;
 CREATE TABLE IF NOT EXISTS `rprogram` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nmr_program` varchar(20) DEFAULT NULL,
@@ -517,7 +587,25 @@ INSERT INTO `rprogram` (`id`, `nmr_program`, `kd_brg`, `qty`, `point`) VALUES
 	(6, 'PRG-TLG-19-000003', 'BRG001', 1, 4);
 /*!40000 ALTER TABLE `rprogram` ENABLE KEYS */;
 
+-- Dumping structure for table db_penjualan.rretur
+DROP TABLE IF EXISTS `rretur`;
+CREATE TABLE IF NOT EXISTS `rretur` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `no_retur` varchar(50) DEFAULT NULL,
+  `kd_brg` varchar(50) DEFAULT NULL,
+  `dos` int(11) DEFAULT NULL,
+  `pcs` int(11) DEFAULT NULL,
+  `total_pcs` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table db_penjualan.rretur: ~0 rows (approximately)
+DELETE FROM `rretur`;
+/*!40000 ALTER TABLE `rretur` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rretur` ENABLE KEYS */;
+
 -- Dumping structure for table db_penjualan.rstoring
+DROP TABLE IF EXISTS `rstoring`;
 CREATE TABLE IF NOT EXISTS `rstoring` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `no_storing` varchar(20) DEFAULT NULL,
@@ -550,6 +638,7 @@ INSERT INTO `rstoring` (`id`, `no_storing`, `kd_brg`, `rak_id`, `dos`, `pcs`) VA
 /*!40000 ALTER TABLE `rstoring` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.rterima
+DROP TABLE IF EXISTS `rterima`;
 CREATE TABLE IF NOT EXISTS `rterima` (
   `no_terima` varchar(20) NOT NULL,
   `kd_brg` varchar(15) NOT NULL,
@@ -564,6 +653,7 @@ DELETE FROM `rterima`;
 /*!40000 ALTER TABLE `rterima` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.sales
+DROP TABLE IF EXISTS `sales`;
 CREATE TABLE IF NOT EXISTS `sales` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nm` varchar(100) DEFAULT NULL,
@@ -583,6 +673,7 @@ INSERT INTO `sales` (`id`, `nm`, `status`, `created_at`, `updated_at`, `deleted_
 /*!40000 ALTER TABLE `sales` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.stok
+DROP TABLE IF EXISTS `stok`;
 CREATE TABLE IF NOT EXISTS `stok` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `kd_brg` varchar(20) NOT NULL,
@@ -602,14 +693,15 @@ DELETE FROM `stok`;
 INSERT INTO `stok` (`id`, `kd_brg`, `lokasi_id`, `rak_id`, `tgl`, `pcs`, `created_at`, `updated_at`, `deleted_at`) VALUES
 	(1, 'BRG001', 1, 1, '2019-02-20', 500, '2019-02-19 04:21:35', '2019-02-20 01:25:01', NULL),
 	(2, 'BRG002', 1, 2, '0000-00-00', 500, '2019-02-19 04:21:38', '2019-02-19 04:21:45', NULL),
-	(3, 'BRG001', 1, 4, '2019-02-15', 500, '2019-02-19 04:21:39', '2019-02-19 04:21:49', NULL),
+	(3, 'BRG001', 1, 4, '2019-02-15', 122, '2019-02-19 04:21:39', '2019-02-19 04:21:49', NULL),
 	(4, 'BRG003', 1, 4, '0000-00-00', 500, '2019-02-19 04:21:41', '2019-02-19 04:21:46', NULL),
 	(5, 'BRG001', 1, 3, '2019-02-20', 500, '2019-02-18 20:12:30', '2019-02-20 01:24:24', NULL),
-	(6, 'BRG005', 1, 5, '2019-02-05', 500, '2019-02-18 20:12:30', '2019-02-18 20:12:30', NULL),
-	(7, 'BRG005', 1, 3, '2019-02-07', 500, NULL, NULL, NULL);
+	(6, 'BRG005', 1, 5, '2019-02-05', -1000, '2019-02-18 20:12:30', '2019-02-18 20:12:30', NULL),
+	(7, 'BRG005', 1, 3, '2019-02-07', -1846, NULL, NULL, NULL);
 /*!40000 ALTER TABLE `stok` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.storing
+DROP TABLE IF EXISTS `storing`;
 CREATE TABLE IF NOT EXISTS `storing` (
   `no_storing` varchar(20) NOT NULL,
   `no_ref` varchar(15) NOT NULL,
@@ -641,6 +733,7 @@ INSERT INTO `storing` (`no_storing`, `no_ref`, `tgl`, `lokasi_id`, `created_at`,
 /*!40000 ALTER TABLE `storing` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.suplier
+DROP TABLE IF EXISTS `suplier`;
 CREATE TABLE IF NOT EXISTS `suplier` (
   `kd` int(11) NOT NULL AUTO_INCREMENT,
   `nm` varchar(50) NOT NULL,
@@ -662,6 +755,7 @@ DELETE FROM `suplier`;
 /*!40000 ALTER TABLE `suplier` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.terima
+DROP TABLE IF EXISTS `terima`;
 CREATE TABLE IF NOT EXISTS `terima` (
   `no_trima` varchar(20) NOT NULL,
   `sup` varchar(50) NOT NULL,
@@ -677,6 +771,7 @@ DELETE FROM `terima`;
 /*!40000 ALTER TABLE `terima` ENABLE KEYS */;
 
 -- Dumping structure for table db_penjualan.user
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(150) DEFAULT NULL,
