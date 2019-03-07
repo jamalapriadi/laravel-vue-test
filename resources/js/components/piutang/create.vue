@@ -85,19 +85,19 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-2">
-                            <div class="form-grou">
+                        <div class="col-lg-2" v-if="detail.jns_pembayaran=='Transfer'">
+                            <div class="form-group">
                                 <label for="" class="control-label">Bank</label>
-                                <select name="bank" id="bank" class="form-control" v-model="detail.bank">
+                                <select name="bank" id="bank" class="form-control" v-model="detail.bank" :readonly="detail.jns_pembayaran=='Transfer' ? false : true">
                                     <option disabled selected>--Pilih Bank--</option>
                                     <option v-for="(l,index) in banks" v-bind:key="index" v-bind:value="l.nm">{{l.nm}}</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2" v-if="detail.jns_pembayaran!='Transfer'">
                             <div class="form-grou">
                                 <label for="" class="control-label">No. Cek / BG</label>
-                                <input type="text" class="form-control" v-model="detail.no_cek_bg">
+                                <input type="text" class="form-control" v-model="detail.no_cek_bg" :readonly="detail.jns_pembayaran!='Transfer' ? false : true">
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2" v-if="detail.jns_pembayaran=='Transfer'">
                             <label for="" class="control-label">Tgl. JT / Transfer</label>
                             <date-picker v-model="detail.tgl_jt" :config="options"></date-picker>
                         </div>
