@@ -170,4 +170,10 @@ class BankController extends Controller
 
         return $data;
     }
+
+    public function list_bank(){
+        $bank=Bank::select('kd_bank','nm','status')->get();
+
+        return $bank;
+    }
 }

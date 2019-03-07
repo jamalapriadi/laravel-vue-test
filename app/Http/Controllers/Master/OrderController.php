@@ -253,4 +253,10 @@ class OrderController extends Controller
 
         return $newId;
     }
+
+    public function order_by_id(Request $request,$id){
+        $order=Order::find($id);
+
+        return $order;
+    }
 }

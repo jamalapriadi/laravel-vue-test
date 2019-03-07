@@ -6,7 +6,30 @@
                 <div class="card-header">Detail Piutang</div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-7">
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">No. Pembayaran</label>
+                                <div class="col-lg-9">
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="form-group row">
+                                                <label for="" class="col-lg-3 control-label">Jenis</label>
+                                                <div class="col-lg-9">
+                                                    <select name="jenis" id="jenis" class="form-control" v-model="state.jenis">
+                                                        <option value="Bayar">Bayar</option>
+                                                        <option value="Koreksi">Koreksi</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Customer</label>
                                 <div class="col-lg-9">
@@ -21,30 +44,20 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="form-group row">
-                                <label for="" class="control-label col-lg-3">Nomor Order</label>
-                                <div class="col-lg-9">
-                                    <select name="po" id="po" class="form-control" v-model="state.no_order" @change="changeOrder">
-                                        <option value="" disabled selected>--Pilih Order--</option>
-                                        <option v-for="(l,index) in pos" v-bind:key="index" v-bind:value="l.no_order">{{l.no_order}}</option>
-                                    </select>
-                                </div>
-                            </div>
                         </div>
 
-                        <div class="col-lg-6">
-                            <div class="form-group row">
-                                <label for="" class="control-label col-lg-3">No. Pembayaran</label>
-                                <div class="col-lg-9">
-                                    <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
-                                </div>
-                            </div>
-
+                        <div class="col-lg-5">
                             <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Tanggal</label>
                                 <div class="col-lg-9">
                                     <date-picker v-model="state.tanggal" :config="options"></date-picker>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Total Piutang</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" v-model="state.total_piutang" readonly>
                                 </div>
                             </div>
                         </div>
@@ -62,22 +75,66 @@
                 <div class="card-header">Detail Pembayaran</div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-3">
-                            <label for="" class="control-label">Jumlah Pembayaran</label>
-                            <input type="text" class="form-control" v-model="state.jumlah_pembayaran" @input="ubahJumlahPembayaran">
+                        <div class="col-lg-2">
+                            <div class="form-grou">
+                                <label for="" class="control-label">Jenis Pembayaran</label>
+                                <select name="jnspembayaran" id="jnspembayaran" class="form-control" v-model="detail.jns_pembayaran">
+                                    <option value="Tunai">Tunai</option>
+                                    <option value="Cek">Cek</option>
+                                    <option value="Transfer">Transfer</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-lg-3">
-                            <button class="btn btn-primary" v-on:click="saveProgram" style="margin-top:30px;">
-                                <i class="fa fa-save"></i>
-                                Save
-                            </button>
+                        <div class="col-lg-2">
+                            <div class="form-grou">
+                                <label for="" class="control-label">Bank</label>
+                                <select name="bank" id="bank" class="form-control" v-model="detail.bank">
+                                    <option disabled selected>--Pilih Bank--</option>
+                                    <option v-for="(l,index) in banks" v-bind:key="index" v-bind:value="l.nm">{{l.nm}}</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div style="float:right">
-                                <h1 class="pull-right">
-                                    <span style="font-size:18px;"><small>Sisa Hutang</small></span>
-                                    {{state.sisa_hutang}}
-                                </h1>
+                        <div class="col-lg-2">
+                            <div class="form-grou">
+                                <label for="" class="control-label">No. Cek / BG</label>
+                                <input type="text" class="form-control" v-model="detail.no_cek_bg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="" class="control-label">Nomor Order</label>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <select name="po" id="po" class="form-control" v-model="detail.no_order" @change="changeOrder">
+                                            <option value="" disabled selected>--Pilih Order--</option>
+                                            <option v-for="(l,index) in pos" v-bind:key="index" v-bind:value="l.no_order">{{l.no_order}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" v-model="detail.total" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <label for="" class="control-label">Tgl. JT / Transfer</label>
+                            <date-picker v-model="detail.tgl_jt" :config="options"></date-picker>
+                        </div>
+                        <div class="col-lg-2">
+                            <label for="" class="control-label">Nominal</label>
+                            <input type="text" class="form-control" v-model="detail.nominal">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <div class="btn-group">
+                                <button v-on:click="saveBarang()" class="btn btn-primary" style="margin-top:25px;">
+                                    <i class="fa fa-plus"></i>
+                                    Add
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -88,18 +145,22 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>No. Pembayaran</th>
-                                <th>Tgl. Pembayaran</th>
-                                <th>Jumlah Bayar</th>
+                                <th>No. Order</th>
+                                <th>Bayar</th>
+                                <th>Bank</th>
+                                <th>No. CEK / BG</th>
+                                <th>Tgl. JT / Transfer</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(l,index) in barang" v-bind:key="index">
+                            <tr v-for="(l,index) in state.detail" v-bind:key="index">
                                 <td>{{ index + 1 }}</td>
-                                <td>{{l.no_piutang}}</td>
-                                <td>{{l.tgl_pembayaran}}</td>
-                                <td>{{l.total_bayar}}</td>
+                                <td>{{l.no_order}}</td>
+                                <td>{{l.nominal}}</td>
+                                <td>{{l.bank}}</td>
+                                <td>{{l.no_cek_bg}}</td>
+                                <td>{{l.tgl_jt}}</td>
                                 <td>
 
                                 </td>
@@ -112,9 +173,14 @@
                     <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
 
                     <div class="form-group">
-                        <router-link to="/list-piutang" class="btn btn-default">
+                        <router-link to="/list-picking" class="btn btn-default">
                             <i class="fa fa-backward"></i> Back
                         </router-link>
+
+                        <button class="btn btn-primary" v-on:click="saveProgram">
+                            <i class="fa fa-save"></i>
+                            Save
+                        </button>
                     </div>
                 </div>
             </div>
@@ -149,36 +215,35 @@ export default {
         return {
             state: {
                 kode:'',
-                no_order:'',
+                jenis:'',
                 customer:'',
-                sisa_hutang:0,
+                total_piutang:0,
                 tanggal:new Date(),
-                jumlah_pembayaran:0
+                detail:[]
             },
-            date: new Date(),
             options: {
                 format: 'DD/MM/YYYY',
                 useCurrent: false,
-            }, 
+            },
+            banks:[],
             message:'',
             loading:false,
             errors: [],
-            value: null,
-            selectedBarangs: '',
-            barangs: [],
-            barang:[],
-            listBarang:[],
-            list:[],
-            listData:{},
             pos:[],
-            pencarian:'',
-            isLoading: false,
-            customers:[],
+            detail:{
+                jns_pembayaran:'',
+                bank:'',
+                no_cek_bg:'',
+                no_order:'',
+                total:0,
+                tgl_jt:new Date(),
+                nominal:0
+            },
             carinamacustomer:'',
             caritokocustomer:'',
             listcaricustomer:[],
             listtokocustomer:[],
-            
+            barang:[]
             
         }
     },
@@ -201,18 +266,31 @@ export default {
     },
     mounted() {
         this.getCode();
-        // this.getCustomer();
-        // this.getPerusahaan();
-        // this.getNoPo("true");
-        // this.getSales();
+        this.getBank();
     },
     methods: {
-        getNoPo(status){
+        getOrderBelumLunasCostomer(){
             axios.get('/data/order-belum-lunas?customer='+this.state.customer)
                 .then(response => {
                     if(response.data.success==true){
                         this.pos= response.data.data
                     }
+                })
+        },
+        getTotalHutangCustomer(){
+            axios.get('/data/tampil-hutang-customer?customer='+this.state.customer)
+                .then(response => {
+                    if(response.data.success==true){
+                        if(response.data.data.length > 0){
+                            this.state.total_piutang=response.data.data[0].total_hutang;
+                        }
+                    }
+                })
+        },
+        getBank(){
+            axios.get('/data/list-bank')
+                .then(response => {
+                    this.banks=response.data;
                 })
         },
         getCode(){
@@ -274,7 +352,8 @@ export default {
 
             this.$refs.tokocustomer.inputValue = toko
             this.state.customer=nama;
-            this.getNoPo(this.state.po_pending);
+            this.getOrderBelumLunasCostomer();
+            this.getTotalHutangCustomer();
         },
 
         getTokoCustomer(item){
@@ -291,33 +370,41 @@ export default {
             
             this.$refs.namacustomer.inputValue = nama
             this.state.customer=kode;
-            this.getNoPo(this.state.po_pending);
+            this.getOrderBelumLunasCostomer();
+            this.getTotalHutangCustomer();
         },
 
         changeOrder(){
-            axios.get('/data/pilih-order-di-new-po/'+this.state.no_order)
+            axios.get('/data/order-by-id/'+this.detail.no_order)
                 .then(response => {
-                    this.barang=response.data.order.piutang;
-
-                    if(response.data.piutang.length>0){
-                        this.state.sisa_hutang=response.data.piutang[0].sisa_hutang;
-                    }else{
-                        this.state.sisa_hutang=response.data.order.total;
-                    }
+                    this.detail.total=response.data.total;
+                    console.log(response.data.total);
                 })
         },
 
-        getCustomer(){
-            axios.get('/data/list-customer')
-                .then(response => {
-                    this.customers = response.data;
-                })
+        kosong(){
+            this.detail.jns_pembayaran=''
+            this.detail.bank=''
+            this.detail.no_cek_bg=''
+            this.detail.no_order=''
+            this.detail.total=0
+            this.detail.tgl_jt=new Date()
+            this.detail.nominal=0
         },
 
-        ubahJumlahPembayaran(){
-            // var hasil=this.state.sisa_hutang - this.state.jumlah_pembayaran;
-
-            // this.state.sisa_hutang=hasil;
+        saveBarang(){
+            this.state.detail.push(
+                {
+                    jns_pembayaran:this.detail.jns_pembayaran,
+                    bank:this.detail.bank,
+                    no_cek_bg:this.detail.no_cek_bg,
+                    no_order:this.detail.no_order,
+                    total:this.detail.total,
+                    tgl_jt:this.detail.tgl_jt,
+                    nominal:this.detail.nominal,
+                }
+            )
+            kosong()
         },
 
         saveProgram(){
@@ -327,11 +414,11 @@ export default {
                 return false;
             }
 
-            if(this.state.no_order==""){
-                alert('No Order harus diisi');
+            // if(this.state.no_order==""){
+            //     alert('No Order harus diisi');
 
-                return false;
-            }
+            //     return false;
+            // }
 
             this.loading = true;
 

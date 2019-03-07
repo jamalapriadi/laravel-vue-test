@@ -21,6 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('bank','Master\BankController');
+    Route::get('list-bank','Master\BankController@list_bank');
     Route::resource('barang','Master\BarangController');
     Route::get('sample-barang','Master\BarangController@sample_barang');
     Route::post('import-new-barang','Master\BarangController@import_new_barang');
@@ -94,4 +95,6 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('pilih-order-di-new-po/{id}','Master\PiutangController@pilih_order_di_new_po');
 
     Route::get('autonumber-retur','Master\ReturController@autonumber_retur');
+    Route::get('tampil-hutang-customer','Master\PiutangController@tampil_hutang_customer');
+    Route::get('order-by-id/{id}','Master\OrderController@order_by_id');
 });

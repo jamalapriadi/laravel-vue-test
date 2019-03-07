@@ -269,13 +269,13 @@ class PiutangController extends Controller
                 a.total AS total_hutang,
                 IFNULL((
                     SELECT SUM(aa.total_bayar) FROM piutang aa
-                    WHERE aa.no_order=a.no_order
-                    GROUP BY aa.no_order
+                    WHERE aa.customer_id=c.customer_id
+                    GROUP BY aa.customer_id
                 ),0) AS sudah_dibayar,
                 a.total - IFNULL((
                     SELECT SUM(aa.total_bayar) FROM piutang aa
-                    WHERE aa.no_order=a.no_order
-                    GROUP BY aa.no_order
+                    WHERE aa.customer_id=c.customer_id
+                    GROUP BY aa.customer_id
                 ),0) AS sisa_hutang
                 FROM orders a
                 LEFT JOIN picking b ON b.kd_picking=a.kd_picking
@@ -285,9 +285,74 @@ class PiutangController extends Controller
                 AND c.customer_id='$cus'
                 AND a.total > IFNULL((
                     SELECT SUM(aa.total_bayar) FROM piutang aa
-                    WHERE aa.no_order=a.no_order
-                    GROUP BY aa.no_order
+                    WHERE aa.customer_id=c.customer_id
+                    GROUP BY aa.customer_id
                 ),0)");
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>"data berhasil diload",
+                'errors'=>array(),
+                'data'=>$lis
+            );
+        }
+
+        return $data;
+    }
+
+    public function tampil_hutang_customer(Request $request){
+        $rules=[
+            'customer'=>'required'
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'validasi errors',
+                'errors'=>$validasi->errors()->all(),
+                'data'=>array()
+            );
+        }else{
+            $cus=request('customer');
+
+            $lis=\DB::select("SELECT SUM(semua.sisa_hutang) AS total_hutang
+            FROM 
+            (
+                SELECT c.customer_id,d.nm, d.nm_toko,
+                 a.no_order,
+                 a.kd_picking,
+                 a.kd_trans,
+                 a.tgl,
+                 a.tgljt,
+                 a.ket,
+                 a.sales_id,
+                 a.perusahaan_id,
+                 a.total AS total_hutang,
+                 IFNULL((
+                     SELECT SUM(aa.total_bayar) FROM piutang aa
+                     WHERE aa.customer_id=c.customer_id
+                     GROUP BY aa.customer_id
+                 ),0) AS sudah_dibayar,
+                 a.total - IFNULL((
+                     SELECT SUM(aa.total_bayar) FROM piutang aa
+                     WHERE aa.customer_id=c.customer_id
+                     GROUP BY aa.customer_id
+                 ),0) AS sisa_hutang
+                 FROM orders a
+                 LEFT JOIN picking b ON b.kd_picking=a.kd_picking
+                 LEFT JOIN po c ON c.no_po=b.no_po
+                 LEFT JOIN customer d ON d.kd=c.customer_id
+                 WHERE a.kd_trans='Kredit'
+                 AND c.customer_id='$cus'
+                 AND a.total > IFNULL((
+                     SELECT SUM(aa.total_bayar) FROM piutang aa
+                     WHERE aa.customer_id=c.customer_id
+                     GROUP BY aa.customer_id
+                 ),0)
+            )AS semua
+            GROUP BY semua.customer_id");
 
             $data=array(
                 'success'=>true,
