@@ -42,8 +42,9 @@ class PiutangController extends Controller
         $rules=[
             'kode'=>'required',
             'customer'=>'required',
-            'jenis'=>'required',
-            'tanggal'=>'required'
+            // 'jenis'=>'required',
+            'tanggal'=>'required',
+            'total_piutang'=>'required'
         ];
 
         $validasi=\Validator::make($request->all(),$rules);
@@ -59,12 +60,14 @@ class PiutangController extends Controller
             $p->no_piutang=request('kode');
             $p->tgl_pembayaran=date('Y-m-d',strtotime(request('tanggal')));
             $p->customer_id=request('customer');
-            $p->jenis=request('jenis');
+            // $p->jenis=request('jenis');
             // $p->total_pembayaran=request('jumlah_pembayaran');
             $p->insert_user=auth()->user()->username;
             $p->update_user=auth()->user()->username;
 
             $simpan=$p->save();
+
+            $total_piutang=request('total_piutang');
 
             if($simpan){
                 if($request->has('detail')){
@@ -93,6 +96,12 @@ class PiutangController extends Controller
                     $newp=Piutang::find(request('kode'));
                     $newp->total_bayar=$total;
                     $newp->Save();
+
+                    if($total > $total_piutang){
+                        $cus=\App\Models\Customer::find(request('customer'));
+                        $cus->saldo=$total - $total_piutang;
+                        $cus->save();
+                    }
                 }
                 $data=array(
                     'success'=>true,

@@ -17,12 +17,9 @@
 
                                         <div class="col-lg-6">
                                             <div class="form-group row">
-                                                <label for="" class="col-lg-3 control-label">Jenis</label>
+                                                <label for="" class="col-lg-3 control-label">Tanggal</label>
                                                 <div class="col-lg-9">
-                                                    <select name="jenis" id="jenis" class="form-control" v-model="state.jenis">
-                                                        <option value="Bayar">Bayar</option>
-                                                        <option value="Koreksi">Koreksi</option>
-                                                    </select>
+                                                    <date-picker v-model="state.tanggal" :config="options"></date-picker>
                                                 </div>
                                             </div>
                                         </div>
@@ -48,9 +45,9 @@
 
                         <div class="col-lg-5">
                             <div class="form-group row">
-                                <label for="" class="control-label col-lg-3">Tanggal</label>
+                                <label for="" class="control-label col-lg-3">Saldo</label>
                                 <div class="col-lg-9">
-                                    <date-picker v-model="state.tanggal" :config="options"></date-picker>
+                                    <input type="text" class="form-control" v-model="state.saldo" readonly>
                                 </div>
                             </div>
 
@@ -226,7 +223,7 @@ export default {
         return {
             state: {
                 kode:'',
-                jenis:'',
+                saldo:0,
                 customer:'',
                 total_piutang:0,
                 tanggal:new Date(),
@@ -323,7 +320,8 @@ export default {
                             {
                                 kd:response.data[i].kd,
                                 nm:response.data[i].nm,
-                                nm_toko:response.data[i].nm_toko
+                                nm_toko:response.data[i].nm_toko,
+                                saldo:response.data[i].saldo
                             }
                         );
                     }
@@ -342,7 +340,8 @@ export default {
                             {
                                 kd:response.data[i].kd,
                                 nm:response.data[i].nm,
-                                nm_toko:response.data[i].nm_toko
+                                nm_toko:response.data[i].nm_toko,
+                                saldo:response.data[i].saldo
                             }
                         );
                     }
@@ -353,16 +352,19 @@ export default {
             let uniqueCus = [...new Set(this.listCCustomer)]; 
             var nama="";
             var toko="";
+            var saldo=0;
             
             for(var i=0; i< uniqueCus.length; i++){
                 if(uniqueCus[i].nm == item){
                     nama=uniqueCus[i].kd;
                     toko=uniqueCus[i].nm_toko;
+                    saldo=uniqueCus[i].saldo;
                 }
             };
 
             this.$refs.tokocustomer.inputValue = toko
             this.state.customer=nama;
+            this.state.saldo=saldo;
             this.getOrderBelumLunasCostomer();
             this.getTotalHutangCustomer();
         },
@@ -376,11 +378,13 @@ export default {
                 if(uniqueCus[i].nm_toko == item){
                     nama=uniqueCus[i].nm;
                     kode=uniqueCus[i].kd;
+                    saldo=uniqueCus[i].saldo;
                 }
             };
             
             this.$refs.namacustomer.inputValue = nama
             this.state.customer=kode;
+            this.state.saldo=saldo;
             this.getOrderBelumLunasCostomer();
             this.getTotalHutangCustomer();
         },
@@ -441,7 +445,7 @@ export default {
                 .then(response => {
                     if(response.data.success==true){
                         this.state.kode='';
-                        this.state.jenis='';
+                        this.state.saldo=0;
                         this.state.customer='';
                         this.state.total_piutang=0;
                         this.state.tanggal=new Date();
