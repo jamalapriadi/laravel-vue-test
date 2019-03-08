@@ -85,10 +85,10 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-2" v-if="detail.jns_pembayaran=='Transfer'">
+                        <div class="col-lg-2" v-if="detail.jns_pembayaran=='Transfer' || detail.jns_pembayaran=='Cek'">
                             <div class="form-group">
                                 <label for="" class="control-label">Bank</label>
-                                <select name="bank" id="bank" class="form-control" v-model="detail.bank" :readonly="detail.jns_pembayaran=='Transfer' ? false : true">
+                                <select name="bank" id="bank" class="form-control" v-model="detail.bank">
                                     <option disabled selected>--Pilih Bank--</option>
                                     <option v-for="(l,index) in banks" v-bind:key="index" v-bind:value="l.nm">{{l.nm}}</option>
                                 </select>
@@ -146,10 +146,11 @@
                             <tr>
                                 <th>No.</th>
                                 <th>No. Order</th>
-                                <th>Bayar</th>
+                                <th>Jenis Pembayaran</th>
                                 <th>Bank</th>
                                 <th>No. CEK / BG</th>
                                 <th>Tgl. JT / Transfer</th>
+                                <th>Bayar</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -157,15 +158,25 @@
                             <tr v-for="(l,index) in state.detail" v-bind:key="index">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{l.no_order}}</td>
-                                <td>{{l.nominal}}</td>
+                                <td>{{l.jns_pembayaran}}</td>
                                 <td>{{l.bank}}</td>
                                 <td>{{l.no_cek_bg}}</td>
                                 <td>{{l.tgl_jt}}</td>
+                                <td>{{l.nominal}}</td>
                                 <td>
-
+                                    <a @click="deleteBarang(index)" class="btn btn-danger text-white">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
                         </tbody>
+                        <!-- <tfoot>
+                            <tr>
+                                <th colspan='6'>Total</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot> -->
                     </table>
 
                     <br>
@@ -404,7 +415,11 @@ export default {
                     nominal:this.detail.nominal,
                 }
             )
-            kosong()
+            this.kosong()
+        },
+
+        deleteBarang: function(index) {
+            this.state.detail.splice(index, 1);
         },
 
         saveProgram(){
@@ -426,14 +441,14 @@ export default {
                 .then(response => {
                     if(response.data.success==true){
                         this.state.kode='';
-                        // this.state.no_order='';
-                        // this.state.customer='';
-                        this.state.sisa_hutang=0;
+                        this.state.jenis='';
+                        this.state.customer='';
+                        this.state.total_piutang=0;
                         this.state.tanggal=new Date();
-                        this.state.jumlah_pembayaran=0
+                        this.state.detail=[]
 
                         this.getCode();
-                        this.changeOrder();
+                        this.getBank();
                         this.message = 'Data has been saved.';
                         this.loading = false;
                     }else{

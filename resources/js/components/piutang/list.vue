@@ -38,8 +38,8 @@
                         <th>Sales</th>
                         <th>Total Hutang</th>
                         <th>Total Bayar</th>
-                        <th>Sisa</th>
-                        <th></th>
+                        <!-- <th>Sisa</th>
+                        <th></th> -->
                         <th width="17%"></th>
                     </tr>
                 </thead>
@@ -53,11 +53,11 @@
                         <td>{{l.sales_id}}</td>
                         <td>{{l.total_hutang}}</td>
                         <td>{{l.total_dibayar}}</td>
-                        <td>{{l.sisa_bayar}}</td>
+                        <!-- <td>{{l.sisa_bayar}}</td>
                         <td>
                             <div v-if="l.sisa_bayar > 0">Belum Lunas</div>
                             <div v-if="l.sisa_bayar == 0">Lunas</div>
-                        </td>
+                        </td> -->
                         <td>
                             <div class="btn-group">
                                 <router-link :to="{ name: 'piutangDetail', params: {id: l.no_order}}" class="btn btn-info">
