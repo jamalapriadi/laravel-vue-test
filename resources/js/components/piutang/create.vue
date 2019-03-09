@@ -452,11 +452,11 @@ export default {
             var newpos=[];
             for(var a=0; a<this.state.detail.length; a++){
                 total+=this.state.detail[a].total;
-                for(var b=0; b<this.pos.length; b++){
-                    if(this.pos[b].no_order != this.state.detail[b].no_order){
-                        newpos=this.pos[b];
-                    }
-                }
+                // for(var b=0; b<this.pos.length; b++){
+                //     if(this.pos[b].no_order != this.state.detail[b].no_order){
+                //         newpos=this.pos[b];
+                //     }
+                // }
             }
 
             this.pos=newpos;
