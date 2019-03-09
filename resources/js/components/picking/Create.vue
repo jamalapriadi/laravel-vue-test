@@ -122,7 +122,7 @@
                                 <td>{{l.kd}} / {{l.nm}}</td>
                                 <td>{{l.dos}} Dos / {{l.pcs}} Pcs</td>
                                 <td>
-                                    <select name="rak" id="rak" class="form-control" v-model="state.rak[index]" v-on:change="changeRak(index,state.rak[index], l.kd, state.lokasi,l.pivot.pcs)">
+                                    <select name="rak" id="rak" class="form-control" v-model="state.rak[index]">
                                         <option value="" disabled selected>--Pilih Rak--</option>
                                         <option v-for="k in raks" v-bind:key="k.kd" v-bind:value="k.kd">{{k.kd}} [ {{k.nm}} ]</option>
                                     </select>

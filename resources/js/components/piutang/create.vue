@@ -57,6 +57,13 @@
                                     <input type="text" class="form-control" v-model="state.total_piutang" readonly>
                                 </div>
                             </div>
+
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Nominal</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" v-model="detail.nominal">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -91,7 +98,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-2" v-if="detail.jns_pembayaran!='Transfer'">
+                        <div class="col-lg-2" v-if="detail.jns_pembayaran=='Cek'">
                             <div class="form-grou">
                                 <label for="" class="control-label">No. Cek / BG</label>
                                 <input type="text" class="form-control" v-model="detail.no_cek_bg" :readonly="detail.jns_pembayaran!='Transfer' ? false : true">
@@ -121,10 +128,6 @@
                         <div class="col-lg-2" v-if="detail.jns_pembayaran=='Transfer'">
                             <label for="" class="control-label">Tgl. JT / Transfer</label>
                             <date-picker v-model="detail.tgl_jt" :config="options"></date-picker>
-                        </div>
-                        <div class="col-lg-2">
-                            <label for="" class="control-label">Nominal</label>
-                            <input type="text" class="form-control" v-model="detail.nominal">
                         </div>
                         <div class="form-group col-md-1">
                             <div class="btn-group">
