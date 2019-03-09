@@ -57,13 +57,6 @@
                                     <input type="text" class="form-control" v-model="state.total_piutang" readonly>
                                 </div>
                             </div>
-
-                            <div class="form-group row">
-                                <label for="" class="control-label col-lg-3">Nominal</label>
-                                <div class="col-lg-9">
-                                    <input type="text" class="form-control" v-model="detail.nominal">
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -89,8 +82,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-2" v-if="detail.jns_pembayaran=='Transfer' || detail.jns_pembayaran=='Cek'">
-                            <div class="form-group">
+                        <div class="col-lg-2">
+                            <div class="form-group" v-if="detail.jns_pembayaran=='Transfer' || detail.jns_pembayaran=='Cek'">
                                 <label for="" class="control-label">Bank</label>
                                 <select name="bank" id="bank" class="form-control" v-model="detail.bank">
                                     <option disabled selected>--Pilih Bank--</option>
@@ -98,10 +91,19 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-2" v-if="detail.jns_pembayaran=='Cek'">
-                            <div class="form-grou">
+                        <div class="col-lg-2">
+                            <div class="form-group" v-if="detail.jns_pembayaran=='Cek'">
                                 <label for="" class="control-label">No. Cek / BG</label>
                                 <input type="text" class="form-control" v-model="detail.no_cek_bg" :readonly="detail.jns_pembayaran!='Transfer' ? false : true">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group row">
+                                <label for="" class="control-label">Nominal</label>
+                                <input type="text" class="form-control" v-model="state.nominal">
                             </div>
                         </div>
                     </div>
@@ -161,7 +163,7 @@
                                 <td>{{l.jns_pembayaran}}</td>
                                 <td>{{l.bank}}</td>
                                 <td>{{l.no_cek_bg}}</td>
-                                <td>{{l.tgl_jt}}</td>
+                                <td>{{format_date(l.tgl_jt)}}</td>
                                 <td>{{l.nominal}}</td>
                                 <td>
                                     <a @click="deleteBarang(index)" class="btn btn-danger text-white">
@@ -170,13 +172,13 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <!-- <tfoot>
+                        <tfoot>
                             <tr>
                                 <th colspan='6'>Total</th>
-                                <th></th>
+                                <th>{{state.total}}</th>
                                 <th></th>
                             </tr>
-                        </tfoot> -->
+                        </tfoot>
                     </table>
 
                     <br>
@@ -204,6 +206,7 @@
 import { VueLoading } from 'vue-loading-template'
 // Import required dependencies 
 import 'bootstrap/dist/css/bootstrap.css';
+import moment from 'moment'
 
 // Import this component
 import datePicker from 'vue-bootstrap-datetimepicker';
@@ -229,6 +232,8 @@ export default {
                 saldo:0,
                 customer:'',
                 total_piutang:0,
+                total:0,
+                nominal:0,
                 tanggal:new Date(),
                 detail:[]
             },
@@ -287,6 +292,11 @@ export default {
                         this.pos= response.data.data
                     }
                 })
+        },
+        format_date(value){
+            if (value) {
+                return moment(String(value)).format('DD-MM-YYYY')
+            }
         },
         getTotalHutangCustomer(){
             axios.get('/data/tampil-hutang-customer?customer='+this.state.customer)
@@ -411,6 +421,16 @@ export default {
         },
 
         saveBarang(){
+            if(this.state.nominal==0){
+                alert('Nominal harus lebih dari 0');
+                return false;
+            }
+
+            if(this.detail.total > this.state.nominal){
+                alert('Jumlah melebihi data yang dibayar')
+                return false;
+            }
+
             this.state.detail.push(
                 {
                     jns_pembayaran:this.detail.jns_pembayaran,
@@ -419,14 +439,58 @@ export default {
                     no_order:this.detail.no_order,
                     total:this.detail.total,
                     tgl_jt:this.detail.tgl_jt,
-                    nominal:this.detail.nominal,
+                    nominal:this.detail.total,
                 }
             )
+
+            var total=0;
+            var newpos=[];
+            for(var a=0; a<this.state.detail.length; a++){
+                total+=this.state.detail[a].total;
+                for(var b=0; b<this.pos.length; b++){
+                    if(this.pos[b].no_order != this.state.detail[a].no_order){
+                        newpos=this.pos[a];
+                    }
+                }
+            }
+
+            this.pos=newpos;
+
+            if(total > this.state.nominal){
+                this.state.detail.splice(this.detail, 1);
+                alert('Total melebihi data yang dibayar')
+                return false;
+            }
+
+            this.hitungTotal()
             this.kosong()
+        },
+
+        hitungTotal(){
+            var total=0;
+            for(var a=0; a<this.state.detail.length; a++){
+                total+=this.state.detail[a].total;
+            }
+            this.state.total=total;
         },
 
         deleteBarang: function(index) {
             this.state.detail.splice(index, 1);
+            this.getOrderBelumLunasCostomer();
+
+            var newpos=[];
+            for(var a=0; a<this.state.detail.length; a++){
+                total+=this.state.detail[a].total;
+                for(var b=0; b<this.pos.length; b++){
+                    if(this.pos[b].no_order != this.state.detail[a].no_order){
+                        newpos=this.pos[a];
+                    }
+                }
+            }
+
+            this.pos=newpos;
+
+            this.hitungTotal()
         },
 
         saveProgram(){
@@ -451,6 +515,8 @@ export default {
                         this.state.saldo=0;
                         this.state.customer='';
                         this.state.total_piutang=0;
+                        this.state.nominal=0;
+                        this.state.total=0;
                         this.state.tanggal=new Date();
                         this.state.detail=[]
 

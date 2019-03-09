@@ -39,12 +39,14 @@ class PiutangController extends Controller
 
     public function store(Request $request)
     {
+        // return $request->all();
         $rules=[
             'kode'=>'required',
             'customer'=>'required',
             // 'jenis'=>'required',
             'tanggal'=>'required',
-            'total_piutang'=>'required'
+            'total_piutang'=>'required',
+            'nominal'=>'required'
         ];
 
         $validasi=\Validator::make($request->all(),$rules);
@@ -61,13 +63,15 @@ class PiutangController extends Controller
             $p->tgl_pembayaran=date('Y-m-d',strtotime(request('tanggal')));
             $p->customer_id=request('customer');
             // $p->jenis=request('jenis');
-            // $p->total_pembayaran=request('jumlah_pembayaran');
+            $p->total_bayar=request('nominal');
             $p->insert_user=auth()->user()->username;
             $p->update_user=auth()->user()->username;
 
             $simpan=$p->save();
 
             $total_piutang=request('total_piutang');
+            $nominal=request('nominal'); //nominal ada jumlah nominal yang dibayar
+            $total=request('total'); //total adalah jumlah total dari detail yang dibayar
 
             if($simpan){
                 if($request->has('detail')){
@@ -93,13 +97,9 @@ class PiutangController extends Controller
                         $total+=$val['nominal'];
                     }
 
-                    $newp=Piutang::find(request('kode'));
-                    $newp->total_bayar=$total;
-                    $newp->Save();
-
-                    if($total > $total_piutang){
+                    if($nominal > $total){
                         $cus=\App\Models\Customer::find(request('customer'));
-                        $cus->saldo=$total - $total_piutang;
+                        $cus->saldo=(int)$cus->saldo + $nominal - $total;
                         $cus->save();
                     }
                 }
