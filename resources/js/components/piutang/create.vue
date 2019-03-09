@@ -431,10 +431,10 @@ export default {
                 return false;
             }
 
-            if(this.detail.no_order==""){
-                alert('No Order harus diisi');
-                return false;
-            }
+            // if(this.detail.no_order==""){
+            //     alert('No Order harus diisi');
+            //     return false;
+            // }
 
             this.state.detail.push(
                 {
