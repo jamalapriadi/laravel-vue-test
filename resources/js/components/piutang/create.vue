@@ -459,7 +459,7 @@ export default {
                 // }
             }
 
-            this.pos=newpos;
+            // this.pos=newpos;
 
             // if(total > this.state.nominal){
             //     this.state.detail.splice(this.detail, 1);
