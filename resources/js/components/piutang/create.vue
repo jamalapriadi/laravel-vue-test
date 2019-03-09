@@ -461,11 +461,11 @@ export default {
 
             this.pos=newpos;
 
-            if(total > this.state.nominal){
-                this.state.detail.splice(this.detail, 1);
-                alert('Total melebihi data yang dibayar')
-                return false;
-            }
+            // if(total > this.state.nominal){
+            //     this.state.detail.splice(this.detail, 1);
+            //     alert('Total melebihi data yang dibayar')
+            //     return false;
+            // }
 
             this.hitungTotal()
             this.kosong()
