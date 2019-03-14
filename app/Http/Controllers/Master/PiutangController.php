@@ -95,6 +95,17 @@ class PiutangController extends Controller
                             );
                             
                         $total+=$val['nominal'];
+
+                        $order=\App\Models\Order::find($val['no_order']);
+                        if($val['tagihan'] > $val['nominal']){
+                            $order->status_pembayaran='Belum Lunas';
+                            $order->sisa_pembayaran= $val['tagihan'] - $val['nominal'];
+                        }else{
+                            $order->status_pembayaran='Lunas';
+                            $order->sisa_pembayaran = $val['tagihan'] - $val['nominal'];
+                        }
+                        $order->save();
+
                     }
 
                     if($nominal > $total){

@@ -152,6 +152,7 @@
                                 <th>Bank</th>
                                 <th>No. CEK / BG</th>
                                 <th>Tgl. JT / Transfer</th>
+                                <th>Jumlah Tagihan</th>
                                 <th>Bayar</th>
                                 <th></th>
                             </tr>
@@ -164,6 +165,7 @@
                                 <td>{{l.bank}}</td>
                                 <td>{{l.no_cek_bg}}</td>
                                 <td>{{format_date(l.tgl_jt)}}</td>
+                                <td>{{l.tagihan}}</td>
                                 <td>{{l.nominal}}</td>
                                 <td>
                                     <a @click="deleteBarang(index)" class="btn btn-danger text-white">
@@ -174,8 +176,18 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan='6'>Total</th>
+                                <th colspan='7'>Total</th>
                                 <th>{{state.total}}</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th colspan='7'>Jumlah Bayar</th>
+                                <th>{{state.nominal}}</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th colspan='7'>Kembali</th>
+                                <th>{{state.nominal - state.total}}</th>
                                 <th></th>
                             </tr>
                         </tfoot>
@@ -426,15 +438,32 @@ export default {
                 return false;
             }
 
-            if(this.detail.total > this.state.nominal){
-                alert('Jumlah melebihi data yang dibayar')
-                return false;
-            }
+            // if(this.detail.total > this.state.nominal){
+            //     alert('Jumlah melebihi data yang dibayar')
+            //     return false;
+            // }
 
             // if(this.detail.no_order==""){
             //     alert('No Order harus diisi');
             //     return false;
             // }
+            var jumlahbayar=this.state.nominal;
+            var bayar=this.detail.total;
+
+            var sisa=this.detail.total;
+            if(this.state.detail.length>0){
+                for(var a=0; a<this.state.detail.length; a++){
+                    sisa+=this.state.detail[a].total;
+                }
+            }
+            
+            alert(sisa)
+            
+            if(jumlahbayar >  sisa){
+                bayar=this.detail.total;
+            }else{
+                bayar=this.state.nominal - this.state.total;
+            }
 
             this.state.detail.push(
                 {
@@ -444,7 +473,8 @@ export default {
                     no_order:this.detail.no_order,
                     total:this.detail.total,
                     tgl_jt:this.detail.tgl_jt,
-                    nominal:this.detail.total,
+                    tagihan:this.detail.total,
+                    nominal:bayar,
                 }
             )
 
@@ -461,11 +491,11 @@ export default {
 
             // this.pos=newpos;
 
-            if(total > this.state.nominal){
-                this.state.detail.splice(this.detail, 1);
-                alert('Total melebihi data yang dibayar')
-                return false;
-            }
+            // if(total > this.state.nominal){
+            //     this.state.detail.splice(this.detail, 1);
+            //     alert('Total melebihi data yang dibayar')
+            //     return false;
+            // }
 
             this.hitungTotal()
             this.kosong()
