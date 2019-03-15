@@ -264,7 +264,7 @@ class OrderController extends Controller
     }
 
     public function order_by_id(Request $request,$id){
-        $order=Order::select('*',\DB::raw("IFNULL(sisa_pembayaran,total) as total_hutang"))->find($id);
+        $order=Order::select('*',\DB::raw("IF(sisa_pembayaran>0,sisa_pembayaran,total) as total_hutang"))->find($id);
 
         return $order;
     }
