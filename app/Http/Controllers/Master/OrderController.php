@@ -92,6 +92,7 @@ class OrderController extends Controller
                 $cus->sisa_pembayaran=request('total');
             }else{
                 $cus->status_pembayaran='Lunas';
+                $cus->sisa_pembayaran=0;
             }
 
             $simpan=$cus->save();
