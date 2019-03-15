@@ -86,6 +86,14 @@ class OrderController extends Controller
             $cus->perusahaan_id=auth()->user()->perusahaan_id;
             $cus->insert_user=auth()->user()->username;
             $cus->update_user=auth()->user()->username;
+
+            if(request('kd_trans')=="Kredit"){
+                $cus->status_pembayaran='Belum Lunas';
+                $cus->sisa_pembayaran=request('total');
+            }else{
+                $cus->status_pembayaran='Lunas';
+            }
+
             $simpan=$cus->save();
 
             if($simpan){
@@ -255,7 +263,7 @@ class OrderController extends Controller
     }
 
     public function order_by_id(Request $request,$id){
-        $order=Order::find($id);
+        $order=Order::select('*',\DB::raw("IFNULL(sisa_pembayaran,total) as total_hutang"))->find($id);
 
         return $order;
     }

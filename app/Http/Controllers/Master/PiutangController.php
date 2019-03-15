@@ -305,37 +305,58 @@ class PiutangController extends Controller
         }else{
             $cus=request('customer');
 
+            // $lis=\DB::select("SELECT c.customer_id,d.nm, d.nm_toko,
+            //     a.no_order,
+            //     a.kd_picking,
+            //     a.kd_trans,
+            //     a.tgl,
+            //     a.tgljt,
+            //     a.ket,
+            //     a.sales_id,
+            //     a.perusahaan_id,
+            //     a.total AS total_hutang,
+            //     IFNULL((
+            //         SELECT SUM(aa.total_bayar) FROM piutang aa
+            //         WHERE aa.customer_id=c.customer_id
+            //         GROUP BY aa.customer_id
+            //     ),0) AS sudah_dibayar,
+            //     a.total - IFNULL((
+            //         SELECT SUM(aa.total_bayar) FROM piutang aa
+            //         WHERE aa.customer_id=c.customer_id
+            //         GROUP BY aa.customer_id
+            //     ),0) AS sisa_hutang
+            //     FROM orders a
+            //     LEFT JOIN picking b ON b.kd_picking=a.kd_picking
+            //     LEFT JOIN po c ON c.no_po=b.no_po
+            //     LEFT JOIN customer d ON d.kd=c.customer_id
+            //     WHERE a.kd_trans='Kredit'
+            //     AND c.customer_id='$cus'
+            //     AND a.total > IFNULL((
+            //         SELECT SUM(aa.total_bayar) FROM piutang aa
+            //         WHERE aa.customer_id=c.customer_id
+            //         GROUP BY aa.customer_id
+            //     ),0)");
+
             $lis=\DB::select("SELECT c.customer_id,d.nm, d.nm_toko,
-                a.no_order,
-                a.kd_picking,
-                a.kd_trans,
-                a.tgl,
-                a.tgljt,
-                a.ket,
-                a.sales_id,
-                a.perusahaan_id,
-                a.total AS total_hutang,
-                IFNULL((
-                    SELECT SUM(aa.total_bayar) FROM piutang aa
-                    WHERE aa.customer_id=c.customer_id
-                    GROUP BY aa.customer_id
-                ),0) AS sudah_dibayar,
-                a.total - IFNULL((
-                    SELECT SUM(aa.total_bayar) FROM piutang aa
-                    WHERE aa.customer_id=c.customer_id
-                    GROUP BY aa.customer_id
-                ),0) AS sisa_hutang
-                FROM orders a
-                LEFT JOIN picking b ON b.kd_picking=a.kd_picking
-                LEFT JOIN po c ON c.no_po=b.no_po
-                LEFT JOIN customer d ON d.kd=c.customer_id
-                WHERE a.kd_trans='Kredit'
-                AND c.customer_id='$cus'
-                AND a.total > IFNULL((
-                    SELECT SUM(aa.total_bayar) FROM piutang aa
-                    WHERE aa.customer_id=c.customer_id
-                    GROUP BY aa.customer_id
-                ),0)");
+                        a.no_order,
+                        a.kd_picking,
+                        a.kd_trans,
+                        a.tgl,
+                        a.tgljt,
+                        a.ket,
+                        a.sales_id,
+                        a.perusahaan_id,
+                        a.total,
+                        a.status_pembayaran,
+                        a.total - IFNULL(a.sisa_pembayaran,0) as sudah_dibayar,
+                        IFNULL(a.sisa_pembayaran,a.total) AS total_hutang
+                        FROM orders a
+                        LEFT JOIN picking b ON b.kd_picking=a.kd_picking
+                        LEFT JOIN po c ON c.no_po=b.no_po
+                        LEFT JOIN customer d ON d.kd=c.customer_id
+                        WHERE a.kd_trans='Kredit'
+                        AND a.status_pembayaran='Belum Lunas'
+                        AND c.customer_id='$cus'");
 
             $data=array(
                 'success'=>true,

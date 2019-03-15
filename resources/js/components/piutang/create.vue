@@ -417,8 +417,8 @@ export default {
         changeOrder(){
             axios.get('/data/order-by-id/'+this.detail.no_order)
                 .then(response => {
-                    this.detail.total=response.data.total;
-                    console.log(response.data.total);
+                    this.detail.total=response.data.total_hutang;
+                    console.log(response.data.total_hutang);
                 })
         },
 
@@ -457,7 +457,7 @@ export default {
                 }
             }
             
-            alert(sisa)
+            // alert(sisa)
             
             if(jumlahbayar >  sisa){
                 bayar=this.detail.total;
