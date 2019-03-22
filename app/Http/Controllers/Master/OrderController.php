@@ -268,4 +268,72 @@ class OrderController extends Controller
 
         return $order;
     }
+
+    public function info_barang_by_order(Request $request)
+    {
+        $rules=[
+            'noorder'=>'required',
+            'kode'=>'required'
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi error',
+                'data'=>array()
+            );
+        }else{
+            $noorder=$request->input('noorder');
+            $kode=$request->input('kode');
+
+            $lis=\DB::select("SELECT a.no_order, b.kd_brg, b.dos, 
+                b.pcs,c.nm, b.hrg, b.jumlah, b.diskon_persen, b.diskon_rupiah 
+                FROM orders a
+                LEFT JOIN rorder b ON b.no_order=a.no_order
+                LEFT JOIN brg c ON c.kd=b.kd_brg
+                WHERE a.no_order='$noorder'
+                AND b.kd_brg='$kode'");
+
+                $data=array(
+                    'success'=>true,
+                    'pesan'=>'Data berhasil di load',
+                    'data'=>$lis
+                );
+        }
+
+        return $data;
+        
+    }
+
+    public function list_order_client(Request $request)
+    {
+        $cus=$request->input('customer');
+
+        $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id FROM orders a
+            LEFT JOIN picking b ON b.kd_picking=a.kd_picking
+            LEFT JOIN po c ON c.no_po=b.no_po
+            WHERE c.customer_id='$cus'");
+
+        return $lis;
+    }
+
+    public function detail_order_by_id($id)
+    {
+        $order=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id, e.nm, c.lokasi_id, d.nm FROM orders a
+            LEFT JOIN picking b ON b.kd_picking=a.kd_picking
+            LEFT JOIN po c ON c.no_po=b.no_po
+            LEFT JOIN lokasi d ON d.id=c.lokasi_id
+            LEFT JOIN customer e ON e.kd=c.customer_id
+            WHERE a.no_order='$id'");
+
+        $detail=\DB::select("SELECT a.* FROM rorder a
+            WHERE a.no_order='$id'");
+
+        return array(
+            'order'=>$order,
+            'detail'=>$detail
+        );
+    }
 }

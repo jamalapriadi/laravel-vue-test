@@ -13,7 +13,23 @@ class ReturController extends Controller
     }
 
     public function store(Request $request){
+        $rules=[
+            'kode'=>'required',
+            'customer'=>'required',
+            'tanggal'=>'required',
+            'barang'=>'required'
+        ];
 
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi error'
+            );
+        }else{
+            
+        }
     }
 
     public function show(Request $request,$id){

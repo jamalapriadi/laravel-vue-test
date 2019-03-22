@@ -52,9 +52,9 @@
                             <div class="form-group row" v-show="state.tampil_order==true">
                                 <label for="" class="control-label col-lg-3">Nomor Order</label>
                                 <div class="col-lg-9">
-                                    <select name="po" id="po" class="form-control" v-model="state.no_po" @change="changePo">
+                                    <select name="po" id="po" class="form-control" v-model="state.no_order" @change="changeOrder">
                                         <option value="" disabled selected>--Pilih PO--</option>
-                                        <option v-for="(l,index) in pos" v-bind:key="index" v-bind:value="l.no_po">{{l.no_po}}</option>
+                                        <option v-for="(l,index) in pos" v-bind:key="index" v-bind:value="l.no_order">{{l.no_order}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -93,48 +93,79 @@
             <div class="card card-default">
                 <div class="card-header">Detail Barang</div>
                 <div class="card-body">
-                    
-                    <div class="row" v-show="state.tampil_order==false">
-                        <div class="form-group col-md-4">
-                            <label for="" class="control-label">Kode / Nama Barang</label>
+                    <!-- <div v-show="state.tampil_order==false"> -->
+                    <div>
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="" class="control-label">Kode Barang</label>
+                                    <select name="kode" id="kode" class="form-control" v-model="form.kd" @change="ubahBarang(form.kd,state.no_order)">
+                                        <option value="">--Pilih Barang--</option>
+                                        <option v-for="(p,index) in barang" v-bind:key="index" v-bind:value="p.kd_brg">{{p.kd_brg}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="" class="control">Nama Barang</label>
+                                    <input type="text" class="form-control" v-model="form.nama" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="" class="control-label">Dos</label>
+                                    <input type="text" class="form-control" name="dos" v-model="form.dos" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label for="" class="control-label">Pcs</label>
+                                    <input type="text" class="form-control" name="pcs" v-model="form.pcs" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-grou">
+                                    <label for="harga" class="control-label">Harga</label>
+                                    <input type="text" class="form-control" v-model="form.harga" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-grou">
+                                    <label for="" class="control-label">Diskon ( % )</label>
+                                    <input type="text" class="form-control" v-model="form.diskon_persen" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-group">
+                                    <label for="" class="control-label">Diskon ( Rp. )</label>
+                                    <input type="text" class="form-control" v-model="form.diskon_rupiah" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <fieldset>
+                            <legend>Info Retur</legend>
                             <div class="row">
-                                <div class="col-lg-6">
-                                    <vue-bootstrap-typeahead v-model="carikodebarang" :data="listkodebarang" placeholder="Cari Kode Barang..." @hit="getKodeBarang($event)" ref="kodebarang"/>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="" class="control-label">Jumlah Dos</label>
+                                        <input type="text" class="form-control" v-model="form.return_dos">
+                                    </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Cari Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <label for="pcs" class="control-label">Jumlah Pcs</label>
+                                        <input type="text" class="form-control" v-model="form.return_pcs">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <button class="btn btn-primary" style="margin-top:25px;"  v-on:click="saveBarang()">
+                                        <i class="fa fa-plus"></i>
+                                        Add
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="form-group col-md-2">
-                            <label for="" class="control-label">Dos</label>
-                            <input type="text" class="form-control" v-model="barang.dos" @keyup.enter="changeDos" @input="hitungTotal($event)">
-                        </div>
-
-                        <div class="form-group col-md-2">
-                            <label for="" class="control-label">PCS</label>
-                            <input type="text" class="form-control" v-model="barang.pcs" @keyup.enter="changePcs(barang.pcs)" @input="hitungTotalPcs($event)">
-                        </div>
-
-                        <div class="form-group col-md-2">
-                            <label for="" class="control-label">Total Pcs</label>
-                            <input type="text" class="form-control" v-model="barang.total_pcs" readonly>
-                        </div>
-
-
-                        <div class="form-group col-md-1">
-                            <div class="btn-group">
-                                <button v-on:click="saveBarang()" class="btn btn-primary" style="margin-top:25px;">
-                                    <i class="fa fa-plus"></i>
-                                    Add
-                                </button>
-
-                                <a @click="showModal" class="btn btn-info text-white" style="margin-top:25px;">
-                                    <i class="fa fa-list"></i> List Barang
-                                </a>
-                            </div>
-                        </div>
+                        </fieldset>
                     </div>
 
 
@@ -142,37 +173,28 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
+                                <th>No. Order</th>
                                 <th>Kode / Nama Barang</th>
-                                <th>Dos / PCS  PO</th>
-                                <th>Rak</th>
-                                <th>Dos</th>
-                                <th>PCS</th>
+                                <th>Dos / PCS</th>
+                                <th>Harga</th>
+                                <th>Diskon (%)</th>
+                                <th>Diskon (Rp.)</th>
+                                <th>Return Dos</th>
+                                <th>Return PCS</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(l,index) in barang" v-bind:key="index">
-                                <!-- <input type="hidden" v-model="state.kodes[index]" :value="l.kd">
-                                <input type="hidden" v-model="state.pdoss[index]" :value="l.pivot.dos">
-                                <input type="hidden" v-model="state.ppcss[index]" :value="l.pivot.pcs"> -->
+                            <tr v-for="(l,index) in state.barang" v-bind:key="index">
                                 <td>{{ index + 1 }}</td>
-                                <td>{{l.kd}} / {{l.nm}}</td>
+                                <td>{{l.no_order}}</td>
+                                <td>{{l.kd_barang}} - {{l.nm_barang}}</td>
                                 <td>{{l.dos}} Dos / {{l.pcs}} Pcs</td>
-                                <td>
-                                    <select name="rak" id="rak" class="form-control" v-model="state.rak[index]" v-on:change="changeRak(index,state.rak[index], l.kd, state.lokasi,l.pivot.pcs)">
-                                        <option value="" disabled selected>--Pilih Rak--</option>
-                                        <option v-for="k in raks" v-bind:key="k.kd" v-bind:value="k.kd">{{k.kd}} [ {{k.nm}} ]</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control" id="dos" placeholder="Dos" v-model.number="state.dos[index]" readonly>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]" readonly>
-                                    <small>
-                                        {{ stok[index] }}
-                                    </small>
-                                </td>
+                                <td>{{l.harga}}</td>
+                                <td>{{l.diskon_persen}}</td>
+                                <td>{{l.diskon_rupiah}}</td>
+                                <td>{{l.return_dos}}</td>
+                                <td>{{l.return_pcs}}</td>
                                 <td>
                                     <!-- <div v-if="tampilTambah[index]==true">
                                         <a class="btn btn-info text-white" v-on:click="tambahBarang(l)">Pilih Dari Rak Lain</a>
@@ -181,13 +203,6 @@
                             </tr>
                         </tbody>
                     </table>
-
-                    <div class="alert alert-info" v-show="state.kurang.length>0">
-                        <ol>
-                            <li v-for="(l,index) in state.kurang" v-bind:key="index">Barang <strong>{{l.nm}}</strong> masih kurang <strong>{{l.kurangnya}}</strong> Pcs</li>
-                        </ol>
-                    </div>
-
                     <hr>
             
                     <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
@@ -235,69 +250,48 @@ export default {
         return {
             state: {
                 full_nota:'',
+                no_order:'',
                 tampil_order:true,
                 kode:'',
-                no_po:'',
-                customer:'',
                 tanggal:new Date(),
-                tanggaljt:new Date(),
-                perusahaan:'',
-                keterangan:'',
+                customer:'',
                 lokasi:'',
-                sales:'',
                 kd_trans:'Tunai',
-                listBarang:[{rak:[]}],
-                rak:[],
-                kodes:[],
-                pdos:[],
-                ppcs:[],
-                rak:[],
-                dos:[],
-                pcs:[],
-                idstok:[],
-                kurang:[],
-                status_kurang:'Y',
-                tampil:[],
+                barang:[]
             },
             date: new Date(),
             options: {
                 format: 'DD/MM/YYYY',
                 useCurrent: false,
             }, 
+            form:{
+                no_order:'',
+                kd:'',
+                nama:'',
+                harga:'',
+                dos:'',
+                pcs:'',
+                diskon_persen:'',
+                diskon_rupiah:'',
+                return_dos:0,
+                return_pcs:0,
+            },
+            pos:[],
+            barang:[],
             message:'',
             loading:false,
             errors: [],
             value: null,
             tanggal: ['list', 'of', 'options'],
             kodetrans: ['Tunai','Kredit'],
-            selectedBarangs: '',
-            barangs: [],
-            barang:[],
-            listBarang:[],
-            list:[],
-            listData:{},
             pencarian:'',
             isLoading: false,
             customers:[],
-            perusahaans:[],
-            saless:[],
-            kodes:[],
             lokasis:[],
-            pos:[],
-            raks:[],
-            stok:[],
-            tampilTambah:[],
-            pcs:[],
-            dos:[],
-            hasilpcs:[],
             carinamacustomer:'',
             caritokocustomer:'',
             listcaricustomer:[],
-            listtokocustomer:[],
-            carinamabarang:'',
-            carikodebarang:'',
-            listkodebarang:[],
-            listcaribarang:[],
+            listtokocustomer:[]
             
             
         }
@@ -329,15 +323,11 @@ export default {
     },
     mounted() {
         this.getCode();
-        // this.getCustomer();
-        // this.getPerusahaan();
-        // this.getNoPo("true");
-        // this.getSales();
         this.getLokasi();
     },
     methods: {
-        getNoPo(status){
-            axios.get('/data/list-po-not-in-picking?status='+status+"&customer="+this.state.customer)
+        getNoOrder(){
+            axios.get('/data/list-order-client?customer='+this.state.customer)
                 .then(response => {
                     this.pos= response.data
                 })
@@ -387,45 +377,6 @@ export default {
                 })
         },
 
-        async cariBarangByNama(query){
-            this.listcaribarang=[];
-            this.listCBarang=[];
-            let result=[];
-            axios.get('/data/cari-barang-by-nama?q='+query)
-                .then(response => {
-                    for(var i=0; i< response.data.length; i++){
-                        this.listcaribarang.push(response.data[i].nm);
-
-                        this.listCBarang.push(
-                            {
-                                kd:response.data[i].kd,
-                                nm:response.data[i].nm,
-                                pcs:response.data[i].pcs
-                            }
-                        );
-                    }
-                })
-        },
-
-        async cariBarangByKode(q){
-            this.listkodebarang=[];
-            this.listCBarang=[];
-            axios.get('/data/cari-barang-by-nama?q='+q)
-                .then(response => {
-                    for(var i=0; i< response.data.length; i++){
-                        this.listkodebarang.push(response.data[i].kd);
-
-                        this.listCBarang.push(
-                            {
-                                kd:response.data[i].kd,
-                                nm:response.data[i].nm,
-                                pcs:response.data[i].pcs
-                            }
-                        );
-                    }
-                })
-        },
-
         getNamaCustomer(item){
             let uniqueCus = [...new Set(this.listCCustomer)]; 
             var nama="";
@@ -440,7 +391,7 @@ export default {
 
             this.$refs.tokocustomer.inputValue = toko
             this.state.customer=nama;
-            this.getNoPo(this.state.po_pending);
+            this.getNoOrder();
         },
 
         getTokoCustomer(item){
@@ -460,92 +411,35 @@ export default {
             this.getNoPo(this.state.po_pending);
         },
 
-        getNamaBarang(item){
-            let unique = [...new Set(this.listCBarang)]; 
-            var nama="";
-            var pcs=0;
-            
-            for(var i=0; i< unique.length; i++){
-                if(unique[i].nm == item){
-                    nama=unique[i].kd;
-                    pcs=unique[i].pcs;
-                }
-            }
-
-            this.barang.kode=nama;
-            this.barang.nama=item;
-            this.barang.pcs=pcs;
-            this.barang.dos=0;
-            this.barang.pcs=0;
-            this.barang.total_pcs=0;
-            this.hasilpcs=pcs;
-            // this.carinamabarang=nama;
-            this.$refs.kodebarang.inputValue = nama
-        },
-
-        getKodeBarang(item){
-            let unique = [...new Set(this.listCBarang)]; 
-            var nama="";
-            var pcs=0;
-            
-            for(var i=0; i< unique.length; i++){
-                if(unique[i].kd == item){
-                    nama=unique[i].nm;
-                    pcs=unique[i].pcs;
-                }
-            }
-
-            this.barang.kode=item;
-            this.barang.nama=nama;
-            this.barang.pcs=pcs;
-            this.barang.dos=0;
-            this.barang.pcs=0;
-            this.barang.total_pcs=0;
-            this.hasilpcs=pcs;
-            this.$refs.namabarang.inputValue = nama;
-        },
-
         ubahPoPending(ppending){
             this.state.tampil_order=ppending;
         },
 
-        changePo(){
-            axios.get('/data/po-by-id/'+this.state.no_po)
+        ubahBarang(kd,no){
+            axios.get('/data/info-barang-by-order?noorder='+no+"&kode="+kd)
                 .then(response => {
-                    this.state.kodes=[];
-                    this.state.pdos=[];
-                    this.state.ppc=[];
-                    this.state.idstok=[];
-                    this.state.customer=response.data.po.customer.nm;
-                    this.state.lokasi=response.data.po.lokasi_id;
+                    if(response.data.data.length>0){
+                        this.form.no_order=no;
+                        this.form.kd=kd;
+                        this.form.nama= response.data.data[0].nm;
+                        this.form.dos=response.data.data[0].dos
+                        this.form.pcs=response.data.data[0].pcs;
+                        this.form.diskon_persen=response.data.data[0].diskon_persen;
+                        this.form.diskon_rupiah=response.data.data[0].diskon_rupiah;
+                        this.form.harga=response.data.data[0].hrg;
+                        this.form.return_dos=0;
+                        this.form.return_pcs=0;
+                    }
+                })
+        },
+
+        changeOrder(){
+            axios.get('/data/detail-order-by-id/'+this.state.no_order)
+                .then(response => {
+                    this.state.customer=response.data.order[0].nm;
+                    this.state.lokasi=response.data.order[0].lokasi_id;
+                    this.barang=response.data.detail;
                     this.changeLokasi();
-                    // this.state.listBarang=response.data.list;
-
-                    this.barang=response.data.list;
-                    this.state.kurang=response.data.kurang;
-
-                    if(this.state.kurang.length>0){
-                        this.state.status_kurang='N';
-                    }else{
-                        this.state.status_kurang='Y';
-                    }
-
-                    for (var i = 0; i < this.barang.length; i++) {
-                        this.state.idstok.push(this.barang[i].idstok);
-                        this.state.kodes.push(this.barang[i].kd);
-                        this.state.pdos.push(this.barang[i].dos);
-                        this.state.ppcs.push(this.barang[i].pcs);
-                        // if(this.barang[i].realisasi_pcsnya > 0 && this.barang[i].realisasi_dosnya > 0){
-                        //     this.state.tampil[i]=true;
-                        // }else{
-                        //     this.state.tampil[i]=false;
-                        // }
-                        this.state.pcs[i]=this.barang[i].realisasi_pcsnya;
-                        this.state.dos[i]=this.barang[i].realisasi_dosnya;
-                        this.state.rak[i]=this.barang[i].rak_id;
-                    }
-
-                    
                 })
         },
 
@@ -586,27 +480,6 @@ export default {
             return `and ${count} other countries`
         },
 
-        getCustomer(){
-            axios.get('/data/list-customer')
-                .then(response => {
-                    this.customers = response.data;
-                })
-        },
-
-        getPerusahaan(){
-            axios.get('/data/list-perusahaan')
-                .then(response => {
-                    this.perusahaans = response.data;
-                })
-        },
-
-        getSales(){
-            axios.get('/data/list-sales')
-                .then(response => {
-                    this.saless = response.data;
-                })
-        },
-
         getLokasi(){
             axios.get('/data/list-lokasi')
                 .then(response => {
@@ -614,82 +487,26 @@ export default {
                 })
         },
 
-        changeRak(i, r , b, l,p){
-            console.log(p);
-            var hasilpcs=0;
-            
-            axios.get('/data/stok-dirak?rak='+r+"&barang="+b+"&lokasi="+l)
-                .then(response => {
-                    this.hasilpcs[i]=response.data.pcs;
-                    hasilpcs=response.data.pcs;
-                    // console.log(response.data.pcs);
-                })
-
-            // console.log(parseInt(this.hasilpcs[i]));
-            console.log(hasilpcs)
-            if(this.hasilpcs[i] > parseInt(p)){
-                this.stok[i]="Stok Cukup di rak ada : "+this.hasilpcs[i]+" PCs";
-                this.state.dos[i]=0;
-                this.state.pcs[i]=p;
-                this.tampilTambah[i]=false;
-                // this.$refs.nm.inputValue =pcs;
-            }else{
-                // alert('stok di rak ini tidak mencukupi');
-                this.state.dos[i]=0;
-                this.stok[i]="Stok Kurang, di rak ada : "+this.hasilpcs[i]+" PCs";
-                this.tampilTambah[i]=true;
-                this.state.pcs[i]=0;
-            }
-        },
-
         saveBarang(){
-            if(this.barang.kode==""){
+            if(this.form.kode==""){
                 alert('Barang harus diisi');
 
                 return false;
             }
 
-            if(this.barang.nama==""){
-                alert('Nama Barang harus diisi');
 
-                return false;
-            }
-
-            if(this.barang.harga==""){
-                alert('Harga barang harus diisi');
-
-                return false;
-            }
-
-            if(this.barang.dos==""){
-                alert('Dos harus diisi');
-
-                return false;
-            }
-
-            if(this.barang.pcs==""){
-                alert('PCS harus diisi');
-
-                return false;
-            }
-
-            if(this.barang.jumlah==""){
-                alert('Jumlah harus diisi');
-
-                return false;
-            }
-
-
-            this.state.listBarang.push(
+            this.state.barang.push(
                 {
-                    // kd_barang:this.barang.kode.kd,
-                    kd_barang:this.barang.kode,
-                    nm_barang:this.barang.nama,
-                    harga:this.barang.harga,
-                    dos:this.barang.dos,
-                    pcs:this.barang.pcs,
-                    diskon:this.barang.diskon,
-                    jumlah:this.barang.jumlah
+                    no_order:this.form.no_order,
+                    kd_barang:this.form.kd,
+                    nm_barang:this.form.nama,
+                    harga:this.form.harga,
+                    dos:this.form.dos,
+                    pcs:this.form.pcs,
+                    diskon_persen:this.form.diskon_persen,
+                    diskon_rupiah:this.form.diskon_rupiah,
+                    return_dos:this.form.return_dos,
+                    return_pcs:this.form.return_pcs
                 }
             );
 
@@ -697,84 +514,20 @@ export default {
         },
 
         kosongBarang(){
-            this.barang.kode='';
-            this.barang.nama='';
-            this.barang.harga='';
-            this.barang.pcs='';
-            this.barang.dos='';
-            this.barang.diskon='';
-            this.barang.jumlah='';
+            this.form.no_order='';
+            this.form.kd='';
+            this.form.nama='';
+            this.form.harga=0;
+            this.form.pcs=0;
+            this.form.dos=0;
+            this.form.diskon_persen=0;
+            this.form.diskon_rupiah=0;
+            this.form.return_dos=0;
+            this.form.return_pcs=0;
         },
 
         deleteBarang: function(index) {
             this.state.listBarang.splice(index, 1);
-        },
-
-        showModal () {
-            this.$refs.myModalRef.show()
-            this.showData();
-        },
-
-        hideModal () {
-            this.$refs.myModalRef.hide()
-        },
-
-        paginate(url){
-            axios.get(url)
-                .then(response => {
-                    this.list = response.data;
-                })
-        },
-
-        showData(page){
-            if(typeof page === 'undefined'){
-                page = 1;
-            }
-
-            axios.get('data/barang?page='+page)
-                .then(response => {
-                    this.loading=false;
-                    this.list = response.data;
-                    this.listData = response.data;
-                })
-        },
-
-        cariData(page){
-            if(typeof page === 'undefined'){
-                page = 1;
-            }
-
-            axios.get('/data/barang?q='+this.pencarian)
-                .then(response => {
-                    this.list = response.data;
-                })
-                .catch( errors => {
-                    alert('pencarian tidak ditemukan');
-                })
-        },
-
-        pilihBarang(brg){
-            console.log(brg);
-            this.barang.kode=brg.kd;
-            this.barang.nama=brg.nm;
-            this.barang.harga=brg.jual;
-
-            this.$refs.myModalRef.hide()
-        },
-
-        cariBarang(){
-            axios.get('/data/cari-barang-by-kode/'+this.barang.kode)
-                .then(response => {
-                    if(response.data.success==true){
-                        this.barang.kode = response.data.barang.kd;
-                        this.barang.nama = response.data.barang.nm;
-                        this.barang.harga = response.data.barang.jual;
-                    }else{
-                        alert('Barang tidak ditemukan');
-                        this.barang.kode='';
-                        this.barang.nama='';
-                    }
-                })
         },
 
         tambahBarang(br){
@@ -802,7 +555,7 @@ export default {
 
             this.loading = true;
 
-            axios.post('/data/picking', this.state)
+            axios.post('/data/retur', this.state)
                 .then(response => {
                     if(response.data.success==true){
                         this.state.kode='';

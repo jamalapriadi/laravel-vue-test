@@ -97,4 +97,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('autonumber-retur','Master\ReturController@autonumber_retur');
     Route::get('tampil-hutang-customer','Master\PiutangController@tampil_hutang_customer');
     Route::get('order-by-id/{id}','Master\OrderController@order_by_id');
+    Route::get('info-barang-by-order','Master\OrderController@info_barang_by_order');
+    Route::get('list-order-client','Master\OrderController@list_order_client');
+    Route::get('detail-order-by-id/{id}','Master\OrderController@detail_order_by_id');
 });
