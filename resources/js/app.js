@@ -155,6 +155,7 @@ const routes = [
 
     { path: '/list-retur', name: 'listRetur', component: require('./components/retur/list.vue').default },
     { path: '/add-new-retur', name: 'returCreate', component: require('./components/retur/create.vue').default },
+    { path: '/retur-detail/:id', name: 'returDetail', component: require('./components/retur/detail.vue').default},
 ]
 
 const router = new VueRouter({ routes });

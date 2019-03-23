@@ -49,7 +49,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row" v-show="state.tampil_order==true">
+                            <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Nomor Order</label>
                                 <div class="col-lg-9">
                                     <select name="po" id="po" class="form-control" v-model="state.no_order" @change="changeOrder">
@@ -94,7 +94,7 @@
                 <div class="card-header">Detail Barang</div>
                 <div class="card-body">
                     <!-- <div v-show="state.tampil_order==false"> -->
-                    <div>
+                    <div v-show="state.full_nota==false">
                         <div class="row">
                             <div class="col-lg-2">
                                 <div class="form-group">
@@ -168,7 +168,7 @@
                         </fieldset>
                     </div>
 
-
+                    
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -206,6 +206,10 @@
                     <hr>
             
                     <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
+
+                    <div v-if="message" class="alert alert-success">
+                        {{ message }}
+                    </div>
 
                     <div class="form-group">
                         <router-link to="/list-picking" class="btn btn-default">
@@ -249,9 +253,9 @@ export default {
     data() {
         return {
             state: {
-                full_nota:'',
+                full_nota:true,
                 no_order:'',
-                tampil_order:true,
+                tampil_order:false,
                 kode:'',
                 tanggal:new Date(),
                 customer:'',
@@ -412,7 +416,11 @@ export default {
         },
 
         ubahPoPending(ppending){
-            this.state.tampil_order=ppending;
+            this.state.barang=[];
+            this.kosongBarang();
+            this.state.full_nota=ppending;
+
+            this.changeOrder();
         },
 
         ubahBarang(kd,no){
@@ -434,13 +442,43 @@ export default {
         },
 
         changeOrder(){
-            axios.get('/data/detail-order-by-id/'+this.state.no_order)
-                .then(response => {
-                    this.state.customer=response.data.order[0].nm;
-                    this.state.lokasi=response.data.order[0].lokasi_id;
-                    this.barang=response.data.detail;
-                    this.changeLokasi();
-                })
+            this.state.barang=[];
+
+            if(this.state.full_nota==false){
+                axios.get('/data/detail-order-by-id/'+this.state.no_order)
+                    .then(response => {
+                        // this.state.customer=response.data.order[0].nm;
+                        this.state.lokasi=response.data.order[0].lokasi_id;
+                        this.barang=response.data.detail;
+                        this.changeLokasi();
+                    })
+            }else{
+                axios.get('/data/detail-order-by-id/'+this.state.no_order)
+                    .then(response => {
+                        // this.state.customer=response.data.order[0].nm;
+                        this.state.lokasi=response.data.order[0].lokasi_id;
+                        this.barang=response.data.detail;
+                        this.changeLokasi();
+
+                        for(var a=0; a<this.barang.length; a++){
+                            this.state.barang.push(
+                                {
+                                    no_order:this.state.no_order,
+                                    kd_barang:this.barang[0].kd_brg,
+                                    nm_barang:this.barang[0].nm,
+                                    harga:this.barang[0].hrg,
+                                    dos:this.barang[0].dos,
+                                    pcs:this.barang[0].pcs,
+                                    diskon_persen:this.barang[0].diskon_persen,
+                                    diskon_rupiah:this.barang[0].diskon_rupiah,
+                                    return_dos:this.barang[0].dos,
+                                    return_pcs:this.barang[0].pcs
+                                }
+                            );   
+                        }
+                    })
+            }
+            
         },
 
         changeLokasi(){
@@ -524,6 +562,8 @@ export default {
             this.form.diskon_rupiah=0;
             this.form.return_dos=0;
             this.form.return_pcs=0;
+            this.$refs.tokocustomer.inputValue = '';
+            this.$refs.namacustomer.inputValue = '';
         },
 
         deleteBarang: function(index) {
@@ -558,30 +598,19 @@ export default {
             axios.post('/data/retur', this.state)
                 .then(response => {
                     if(response.data.success==true){
+                        this.state.full_nota=true;
+                        this.state.no_order='';
+                        this.state.tampil_order=false;
                         this.state.kode='';
-                        this.state.no_po='';
-                        this.state.customer='';
                         this.state.tanggal=new Date();
-                        this.state.tanggaljt=new Date();
-                        this.state.perusahaan='';
-                        this.state.keterangan='';
+                        this.state.customer='';
                         this.state.lokasi='';
-                        this.state.sales='';
                         this.state.kd_trans='Tunai';
-                        this.state.rak=[];
-                        this.state.kodes=[];
-                        this.state.pdos=[];
-                        this.state.ppcs=[];
-                        this.state.rak=[];
-                        this.state.dos=[];
-                        this.state.pcs=[];
-                        this.state.idstok=[];
-                        this.barang=[];
-                        this.state.kurang=[];
-                        this.state.status_kurang='N';
+                        this.state.barang=[]
 
                         this.getCode();
-                        this.getNoPo();
+                        this.getLokasi();
+                        this.kosongBarang()
 
                         this.message = 'Data has been saved.';
                         this.loading = false;

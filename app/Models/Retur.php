@@ -9,6 +9,7 @@ class Retur extends Model
 {
     protected $table="retur";
     protected $primaryKey="no_retur";
+    public $incrementing=false;
 
     public function customer(){
         return $this->belongsTo('App\Models\Customer','customer_id','kd');

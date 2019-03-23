@@ -48,6 +48,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('suplier','Master\SuplierController');
     Route::resource('terima','Master\TerimaController');
     Route::resource('storing','Master\StoringController');
+    Route::resource('retur','Master\ReturController');
 
     /* user */
     Route::resource('users','User\UserController');

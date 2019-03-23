@@ -328,7 +328,8 @@ class OrderController extends Controller
             LEFT JOIN customer e ON e.kd=c.customer_id
             WHERE a.no_order='$id'");
 
-        $detail=\DB::select("SELECT a.* FROM rorder a
+        $detail=\DB::select("SELECT a.*, b.nm FROM rorder a
+            LEFT JOIN brg b ON b.kd=a.kd_brg
             WHERE a.no_order='$id'");
 
         return array(

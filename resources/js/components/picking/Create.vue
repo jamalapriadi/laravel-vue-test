@@ -6,6 +6,10 @@
                     Picking
                 </div>
                 <div class="card-body">
+                    <div v-if="message" class="alert alert-success">
+                        {{ message }}
+                    </div>
+
                     <div class="form-group">
                         <label for="" class="control-label">Kode Picking</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
