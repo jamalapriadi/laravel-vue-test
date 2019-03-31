@@ -62,6 +62,8 @@ class StoringreturController extends Controller
                     $rak=request('rak');
 
                     foreach($detail as $key=>$val){
+                        $cekB=\App\Models\Barang::find($val['kd']);
+
                         \DB::table('rstoring_retur')
                             ->insert(
                                 [
@@ -72,6 +74,12 @@ class StoringreturController extends Controller
                                     'pcs'=>$val['pcs']
                                 ]
                             );
+
+                        //update stok
+                        $jumlah = ($cekB->pcs * $val['dos']) + $val['pcs'];
+                        
+                        \DB::statement("UPDATE stok SET pcs = pcs+".$jumlah." 
+                        where kd_brg='".$val['kd']."' and rak_id='".$rak[$key]."' and lokasi_id='".request('lokasi')."'");
                     }
                 }
 

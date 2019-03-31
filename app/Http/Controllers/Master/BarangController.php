@@ -29,7 +29,8 @@ class BarangController extends Controller
         );
 
         if($request->has('q') && $request->input('q')!=""){
-            $barang=$barang->where('nm','like','%'.request('q').'%');
+            $barang=$barang->where('nm','like','%'.request('q').'%')
+                ->orWhere('kd','like','%'.request('q').'%');
         }
 
         if($request->has('merk') && $request->input('merk')!=""){
