@@ -67,9 +67,9 @@
                                     <i class="fa fa-list text-white"></i>
                                 </router-link>
 
-                                <!-- <a class="btn btn-danger" v-on:click="hapus(l.no_order, index, l.nm)" v-bind:id="'delete'+l.no_order">
+                                <a class="btn btn-danger" v-on:click="hapus(l.no_order, index, l.nm)" v-bind:id="'delete'+l.no_order">
                                     <i class="fa fa-trash text-white"></i>
-                                </a> -->
+                                </a>
                             </div>
                         </td>
                     </tr>

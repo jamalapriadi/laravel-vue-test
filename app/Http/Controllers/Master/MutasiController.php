@@ -199,7 +199,30 @@ class MutasiController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $sql=Mutasi::find($id);
+
+        $hapus=$sql->delete();
+
+        if($hapus){
+            \DB::table('rmutasi')
+                ->where('no_mutasi',$id)
+                ->delete();
+
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil dihapus',
+                'errors'=>array()
+            );
+        }else{
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Data gagal dihapus',
+                'errors'=>array()
+            );
+        }
+
+        return $data;
     }
 
     public function autonumber_mutasi(Request $request)

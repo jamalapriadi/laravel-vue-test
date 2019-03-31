@@ -56,7 +56,7 @@ class Order extends Model
     }
 
     public function piutang(){
-        return $this->hasMany('App\Models\Piutang','no_order');
+        return $this->belongsToMany('App\Models\Piutang','rpiutang','no_piutang','no_order');
     }
 
 }

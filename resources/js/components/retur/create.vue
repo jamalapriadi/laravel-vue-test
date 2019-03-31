@@ -212,7 +212,7 @@
                     </div>
 
                     <div class="form-group">
-                        <router-link to="/list-picking" class="btn btn-default">
+                        <router-link to="/list-retur" class="btn btn-default">
                             <i class="fa fa-backward"></i> Back
                         </router-link>
 
