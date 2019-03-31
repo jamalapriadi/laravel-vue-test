@@ -217,6 +217,24 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon icon-tag"></i> Storing Retur
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <router-link to="/add-new-storing-retur" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Add New Storing
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link to="/storing-retur" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> List Storing
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
 
@@ -262,6 +280,12 @@
                         </router-link>
                     </li>
                 </ul>
+            </li>
+
+            <li class="nav-item">
+                <router-link to="/het" class="nav-link active">
+                    <i class="nav-icon icon-magnifier"></i> Het
+                </router-link>
             </li>
 
             <li class="nav-title">Settings</li>

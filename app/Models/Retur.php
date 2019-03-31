@@ -22,4 +22,17 @@ class Retur extends Model
     public function lokasi(){
         return $this->belongsTo('App\Models\Lokasi','lokasi_id');
     }
+
+    public function detail(){
+        return $this->belongsToMany('App\Models\Barang','rretur','no_retur','kd_brg','no_retur','kd')
+            ->withPivot(
+                [
+                    'no_retur',
+                    'kd_brg',
+                    'dos',
+                    'pcs',
+                    'total_pcs'
+                ]
+            );
+    }
 }

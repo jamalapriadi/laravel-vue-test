@@ -28,8 +28,18 @@ class BarangController extends Controller
             ]
         );
 
-        if($request->has('q')){
+        if($request->has('q') && $request->input('q')!=""){
             $barang=$barang->where('nm','like','%'.request('q').'%');
+        }
+
+        if($request->has('merk') && $request->input('merk')!=""){
+            $merk=request('merk');
+            $barang=$barang->where('merk_id',$merk);
+        }
+
+        if($request->has('kelompok') && $request->input('kelompok')!=""){
+            $kel=request('kelompok');
+            $barang=$barang->where('kelompok_id',$kel);
         }
 
         $barang=$barang->paginate(25);

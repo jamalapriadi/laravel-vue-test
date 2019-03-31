@@ -156,6 +156,12 @@ const routes = [
     { path: '/list-retur', name: 'listRetur', component: require('./components/retur/list.vue').default },
     { path: '/add-new-retur', name: 'returCreate', component: require('./components/retur/create.vue').default },
     { path: '/retur-detail/:id', name: 'returDetail', component: require('./components/retur/detail.vue').default},
+
+    { path: '/het', name:'hetForm', component: require('./components/het.vue').default},
+
+    { path: '/storing-retur', name:'storeReturIndex', component: require('./components/storingretur/list.vue').default},
+    { path: '/add-new-storing-retur', name: 'storingReturCreate', component: require('./components/storingretur/create.vue').default },
+    { path: '/storing-detail-retur/:id', name: 'storingReturDetail', component: require('./components/storingretur/detail.vue').default},
 ]
 
 const router = new VueRouter({ routes });

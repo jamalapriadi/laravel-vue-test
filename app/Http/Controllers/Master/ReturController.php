@@ -93,7 +93,15 @@ class ReturController extends Controller
     }
 
     public function show(Request $request,$id){
+        $retur=Retur::with(
+                [
+                    'customer',
+                    'lokasi',
+                    'detail'
+                ]
+            )->find($id);
 
+        return $retur;
     }
 
     public function update(Request $request,$id){
@@ -137,5 +145,25 @@ class ReturController extends Controller
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;
+    }
+
+    public function cari_no_retur_by_id(Request $request)
+    {
+        $retur=Retur::select('no_retur','tgl_retur','full_nota','customer_id')
+            ->with(
+                [
+                    'customer'=>function($q){
+                        $q->select('kd','nm','alamat','alias');
+                    }
+                ]
+            );
+
+        if($request->has('q')){
+            $retur=$retur->where('no_retur','like','%'.request('no_retur').'%');
+        }
+
+        $retur=$retur->get();
+
+        return $retur;
     }
 }

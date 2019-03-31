@@ -49,9 +49,9 @@
                         <td>{{l.lokasi.nm}}</td>
                         <td>
                             <div class="btn-group">
-                                <!-- <router-link :to="{ name: 'returDetail', params: {id: l.no_retur}}" class="btn btn-info">
+                                <router-link :to="{ name: 'returDetail', params: {id: l.no_retur}}" class="btn btn-info">
                                     <i class="fa fa-list text-white"></i>
-                                </router-link> -->
+                                </router-link>
 
                                 <a class="btn btn-danger" v-on:click="hapus(l.no_retur, index, l.nm)" v-bind:id="'delete'+l.no_retur">
                                     <i class="fa fa-trash text-white"></i>

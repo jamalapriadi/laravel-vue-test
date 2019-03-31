@@ -210,4 +210,12 @@ class RakController extends Controller
 
         return $data;
     }
+
+    public function rak_by_lokasi($id)
+    {
+        $rak=\App\Models\Rak::where('lokasi_id',$id)
+            ->get();
+
+        return $rak;
+    }
 }

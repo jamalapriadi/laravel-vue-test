@@ -48,6 +48,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('suplier','Master\SuplierController');
     Route::resource('terima','Master\TerimaController');
     Route::resource('storing','Master\StoringController');
+    Route::resource('storingretur','Master\StoringreturController');
     Route::resource('retur','Master\ReturController');
 
     /* user */
@@ -101,4 +102,9 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('info-barang-by-order','Master\OrderController@info_barang_by_order');
     Route::get('list-order-client','Master\OrderController@list_order_client');
     Route::get('detail-order-by-id/{id}','Master\OrderController@detail_order_by_id');
+    Route::get('cari-no-retur-by-id','Master\ReturController@cari_no_retur_by_id');
+    Route::get('autonumber-storing-retur','Master\StoringreturController@autonumber_storing_retur');
+    Route::get('list-retur-not-in-storing','Master\StoringreturController@list_retur_not_in_storing');
+    Route::get('no-retur-by-id/{id}','Master\StoringreturController@no_retur_by_id');
+    Route::get('rak-by-lokasi/{id}','Master\RakController@rak_by_lokasi');
 });
