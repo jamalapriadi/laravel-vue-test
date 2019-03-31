@@ -78,8 +78,21 @@ class StoringreturController extends Controller
                         //update stok
                         $jumlah = ($cekB->pcs * $val['dos']) + $val['pcs'];
                         
-                        \DB::statement("UPDATE stok SET pcs = pcs+".$jumlah." 
-                        where kd_brg='".$val['kd']."' and rak_id='".$rak[$key]."' and lokasi_id='".request('lokasi')."'");
+                        // \DB::statement("UPDATE stok SET pcs = pcs+".$jumlah." 
+                        // where kd_brg='".$val['kd']."' and rak_id='".$rak[$key]."' and lokasi_id='".request('lokasi')."'");
+
+                        \DB::table('stok')
+                            ->insert(
+                                [
+                                    'kd_brg'=>$val['kd'],
+                                    'rak_id'=>$rak[$key],
+                                    'lokasi_id'=>request('lokasi'),
+                                    'tgl'=>date('Y-m-d'),
+                                    'pcs'=>$jumlah,
+                                    'created_at'=>date('Y-m-d H:i:s'),
+                                    'updated_at'=>date('Y-m-d H:i:s')
+                                ]
+                            );
                     }
                 }
 
