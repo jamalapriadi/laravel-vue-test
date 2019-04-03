@@ -363,7 +363,7 @@ class PoController extends Controller
             $dimana.=" and customer_id='".$customer."'";
         }
 
-        $po=\DB::select("select * from po where no_po not in (select no_po from picking) $dimana");
+        $po=\DB::select("select * from po where status_konfirmasi!='Please Confirm' and no_po not in (select no_po from picking) $dimana");
 
         return $po;
     }
