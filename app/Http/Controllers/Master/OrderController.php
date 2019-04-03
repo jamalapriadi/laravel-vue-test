@@ -79,7 +79,6 @@ class OrderController extends Controller
             $cus->kd_picking=request('kd_picking');
             $cus->kd_trans=request('kd_trans');
             $cus->tgl=date('Y-m-d',strtotime(request('tanggal')));
-            $cus->tgljt=date('Y-m-d',strtotime(request('tanggaljt')));
             $cus->ket=request('keterangan');
             $cus->sales_id=request('sales');
             $cus->total=request('total');
@@ -90,6 +89,12 @@ class OrderController extends Controller
             if(request('kd_trans')=="Kredit"){
                 $cus->status_pembayaran='Belum Lunas';
                 $cus->sisa_pembayaran=request('total');
+
+                $tambahtanggal=$request->input('customertop');
+                $tgl1=date('Y-m-d');
+                $sekarang=date('Y-m-d', strtotime('+'.$tambahtanggal.' days', strtotime($tgl1)));
+
+                $cus->tgljt=$sekarang;
             }else{
                 $cus->status_pembayaran='Lunas';
                 $cus->sisa_pembayaran=0;
@@ -311,10 +316,31 @@ class OrderController extends Controller
     {
         $cus=$request->input('customer');
 
-        $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id FROM orders a
-            LEFT JOIN picking b ON b.kd_picking=a.kd_picking
-            LEFT JOIN po c ON c.no_po=b.no_po
-            WHERE c.customer_id='$cus'");
+        if($request->has('nota')){
+            $nota=$request->input('nota');
+
+            if($nota==true){
+                $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id 
+                    FROM orders a
+                    LEFT JOIN picking b ON b.kd_picking=a.kd_picking
+                    LEFT JOIN po c ON c.no_po=b.no_po
+                    WHERE c.customer_id='$cus'
+                    AND a.no_order not in (select distinct no_order from retur)");
+            }else if($nota==false){
+                $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id 
+                    FROM orders a
+                    LEFT JOIN picking b ON b.kd_picking=a.kd_picking
+                    LEFT JOIN po c ON c.no_po=b.no_po
+                    WHERE c.customer_id='$cus'");
+            }
+        }else{
+            $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id \
+                FROM orders a
+                LEFT JOIN picking b ON b.kd_picking=a.kd_picking
+                LEFT JOIN po c ON c.no_po=b.no_po
+                WHERE c.customer_id='$cus'");
+        }
+        
 
         return $lis;
     }
@@ -336,5 +362,68 @@ class OrderController extends Controller
             'order'=>$order,
             'detail'=>$detail
         );
+    }
+
+    public function order_jatuh_tempo(Request $request)
+    {
+        // $lis=\DB::select("select a.*, d.nm,DATEDIFF(a.tgljt,CURDATE()) as minus_hari
+        //     from orders a
+        //     left join picking b on b.kd_picking=a.kd_picking
+        //     left join po c on c.no_po=b.no_po 
+        //     left join customer d on d.kd=c.customer_id
+        //     where a.kd_trans='Kredit'
+        //     AND CASE
+        //         WHEN DATEDIFF(a.tgljt,CURDATE())>0 THEN 'BELUM'
+        //         ELSE 'TELAT'
+        //     END ='TELAT'");
+
+        $lis=\App\Models\Po::where('status_konfirmasi','Please Confirm')
+            ->with(
+                [
+                    'customer','detail',
+                    'lokasi','perusahaan'
+                ]
+            )
+            ->paginate(25);
+
+        return $lis;
+    }
+
+    public function update_status_order(Request $request,$id)
+    {
+        $rules=[
+            'status'=>'required'
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $po=\App\Models\Po::find($id);
+            
+            $status=$request->input('status');
+
+            if($status=="Accept"){
+                $po->status_konfirmasi=$status;
+                $po->save();
+                $data=array(
+                    'success'=>true,
+                    'pesan'=>'Data Berhasil di accept'
+                );
+            }else if($status=="Refuse"){
+                $hapus=$po->delete();
+                $data=array(
+                    'success'=>true,
+                    'pesan'=>'Data Berhasil di refuse'
+                );
+            }
+        }
+
+        return $data;
     }
 }

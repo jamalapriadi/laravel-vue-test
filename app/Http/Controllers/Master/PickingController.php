@@ -64,95 +64,122 @@ class PickingController extends Controller
             $data=array(
                 'success'=>false,
                 'pesan'=>'Validasi errors',
-                'errors'=>$validasi->errors()->all()
+                'errors'=>$validasi->errors()->all(),
+                'adahutang'=>false
             );
         }else{
-            $p=new Picking;
-            $p->kd_picking=request('kode');
-            $p->no_po=request('no_po');
-            $p->ket=request('keterangan');
-            $p->tgl=date('Y-m-d',strtotime(request('tanggal')));
-            $p->perusahaan_id=auth()->user()->perusahaan_id;
-            $p->insert_user=auth()->user()->username;
-            $p->update_user=auth()->user()->username;
-            $p->status_terpenuhi=request('status_kurang');
+            $po=\App\Models\Po::find($request->input('no_po'));
+            $customer=$po->customer_id;
 
-            $simpan=$p->save();
+            $lis=\DB::select("select a.*, d.nm,DATEDIFF(a.tgljt,CURDATE()) as minus_hari
+                from orders a
+                left join picking b on b.kd_picking=a.kd_picking
+                left join po c on c.no_po=b.no_po 
+                left join customer d on d.kd=c.customer_id
+                where a.kd_trans='Kredit'
+                and c.customer_id='$customer'
+                AND CASE
+                    WHEN DATEDIFF(a.tgljt,CURDATE())>0 THEN 'BELUM'
+                    ELSE 'TELAT'
+                END ='TELAT'");
 
-            if($simpan){
+            if(count($lis)>0){
+                $data=array(
+                    'success'=>false,
+                    'pesan'=>'Customer ini masih memiliki order yang jatuh tempo',
+                    'errors'=>array(),
+                    'adahutang'=>true
+                );
+            }else{
+                $p=new Picking;
+                $p->kd_picking=request('kode');
+                $p->no_po=request('no_po');
+                $p->ket=request('keterangan');
+                $p->tgl=date('Y-m-d',strtotime(request('tanggal')));
+                $p->perusahaan_id=auth()->user()->perusahaan_id;
+                $p->insert_user=auth()->user()->username;
+                $p->update_user=auth()->user()->username;
+                $p->status_terpenuhi=request('status_kurang');
 
-                if($request->has('status_kurang')){
-                    $statuskurang=$request->input('status_kurang');
+                $simpan=$p->save();
 
-                    if($statuskurang=="N"){
-                        $posekarang=Po::find(request('no_po'));
+                if($simpan){
 
-                        $cus=new Po;
-                        $cus->no_po=$this->autonumber_po();
-                        $cus->no_ref_po=request('no_po');
-                        $cus->customer_id=$posekarang->customer_id;
-                        $cus->ket=$posekarang->ket;
-                        $cus->tgl=$posekarang->tgl;
-                        $cus->lokasi_id=$posekarang->lokasi_id;
-                        $cus->perusahaan_id=auth()->user()->perusahaan_id;
-                        $cus->insert_user=auth()->user()->username;
-                        $cus->update_user=auth()->user()->username;
-                        $simpancus=$cus->save();
+                    if($request->has('status_kurang')){
+                        $statuskurang=$request->input('status_kurang');
 
-                        if($simpancus){
-                            if($request->has('kurang')){
-                                $kurang=request('kurang');
-            
-                                foreach($kurang as $key=>$val){
-                                    $cekB=\App\Models\Barang::find($val['kd_brg']);
+                        if($statuskurang=="N"){
+                            $posekarang=Po::find(request('no_po'));
 
-                                    \DB::table('rpo')
-                                        ->insert(
-                                            [
-                                                'no_po'=>$cus->no_po,
-                                                'kd_brg'=>$val['kd_brg'],
-                                                'dos'=>$val['dos'],
-                                                'pcs'=>$val['kurangnya'],
-                                                'total_pcs'=>($cekB->pcs * $val['dos']) + $val['kurangnya']
-                                            ]
-                                        );
+                            $cus=new Po;
+                            $cus->no_po=$this->autonumber_po();
+                            $cus->no_ref_po=request('no_po');
+                            $cus->customer_id=$posekarang->customer_id;
+                            $cus->ket=$posekarang->ket;
+                            $cus->tgl=$posekarang->tgl;
+                            $cus->lokasi_id=$posekarang->lokasi_id;
+                            $cus->perusahaan_id=auth()->user()->perusahaan_id;
+                            $cus->insert_user=auth()->user()->username;
+                            $cus->update_user=auth()->user()->username;
+                            $simpancus=$cus->save();
+
+                            if($simpancus){
+                                if($request->has('kurang')){
+                                    $kurang=request('kurang');
+                
+                                    foreach($kurang as $key=>$val){
+                                        $cekB=\App\Models\Barang::find($val['kd_brg']);
+
+                                        \DB::table('rpo')
+                                            ->insert(
+                                                [
+                                                    'no_po'=>$cus->no_po,
+                                                    'kd_brg'=>$val['kd_brg'],
+                                                    'dos'=>$val['dos'],
+                                                    'pcs'=>$val['kurangnya'],
+                                                    'total_pcs'=>($cekB->pcs * $val['dos']) + $val['kurangnya']
+                                                ]
+                                            );
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                if($request->has('kodes')){
-                    $kodes=request('kodes');
+                    if($request->has('kodes')){
+                        $kodes=request('kodes');
 
-                    foreach($kodes as $key=>$val){
-                        \DB::table('rpicking')
-                            ->insert(
-                                [
-                                    'kd_picking'=>request('kode'),
-                                    'kd_brg'=>$val,
-                                    'kd_rak'=>$request->input('rak')[$key],
-                                    'pdos'=>$request->input('pdos')[$key],
-                                    'ppcs'=>$request->input('ppcs')[$key],
-                                    'dos'=>$request->input('dos')[$key],
-                                    'pcs'=>$request->input('pcs')[$key],
-                                    'stok_id'=>$request->input('idstok')[$key]
-                                ]
-                            );
+                        foreach($kodes as $key=>$val){
+                            \DB::table('rpicking')
+                                ->insert(
+                                    [
+                                        'kd_picking'=>request('kode'),
+                                        'kd_brg'=>$val,
+                                        'kd_rak'=>$request->input('rak')[$key],
+                                        'pdos'=>$request->input('pdos')[$key],
+                                        'ppcs'=>$request->input('ppcs')[$key],
+                                        'dos'=>$request->input('dos')[$key],
+                                        'pcs'=>$request->input('pcs')[$key],
+                                        'stok_id'=>$request->input('idstok')[$key]
+                                    ]
+                                );
+                        }
                     }
-                }
 
-                $data=array(
-                    'success'=>true,
-                    'pesan'=>'Data berhasil disimpan',
-                    'errors'=>''
-                );
-            }else{
-                $data=array(
-                    'success'=>false,
-                    'pesan'=>'Data gagal disimpan',
-                    'errors'=>''
-                );
+                    $data=array(
+                        'success'=>true,
+                        'pesan'=>'Data berhasil disimpan',
+                        'errors'=>'',
+                        'adahutang'=>false
+                    );
+                }else{
+                    $data=array(
+                        'success'=>false,
+                        'pesan'=>'Data gagal disimpan',
+                        'errors'=>'',
+                        'adahutang'=>false
+                    );
+                }
             }
         }
 

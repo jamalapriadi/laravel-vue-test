@@ -9,6 +9,10 @@
                 {{ message }}
             </div>
 
+            <div v-if="adahutang==true" class="alert alert-warning">
+                Customer ini memiliki order yang sudah jatuh tempo
+            </div>
+
             <form @submit.prevent="store" action="/data/program" method="post">
                 <div class="row">
                     <div class="col-lg-6">
@@ -269,6 +273,7 @@ export default {
                 useCurrent: false,
             }, 
             message:'',
+            adahutang:'',
             loading:false,
             errors: [],
             value: null,
@@ -754,6 +759,12 @@ export default {
                         this.$refs.kodecustomer.inputValue = '';
                         this.$refs.namacustomer.inputValue = '';
                         this.state.listBarang=[];
+
+                        if(response.data.adahutang=="Y"){
+                            this.adahutang=true;
+                        }else{
+                            this.adahutang=false;
+                        }   
 
                         this.getCode();
                         this.message = 'Data has been saved.';

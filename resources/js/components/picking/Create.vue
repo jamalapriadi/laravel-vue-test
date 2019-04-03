@@ -6,10 +6,6 @@
                     Picking
                 </div>
                 <div class="card-body">
-                    <div v-if="message" class="alert alert-success">
-                        {{ message }}
-                    </div>
-
                     <div class="form-group">
                         <label for="" class="control-label">Kode Picking</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
@@ -157,7 +153,15 @@
 
                     <hr>
             
-                    <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
+                    <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading> 
+
+                    <div v-if="message" class="alert alert-success">
+                        {{ message }}
+                    </div> 
+
+                    <div v-if="adahutang==true" class="alert alert-danger">
+                        Customer ini memiliki order yang sudah jatuh tempo
+                    </div>  
 
                     <div class="form-group">
                         <router-link to="/list-picking" class="btn btn-default">
@@ -231,6 +235,7 @@ export default {
                 useCurrent: false,
             }, 
             message:'',
+            adahutang:false,
             loading:false,
             errors: [],
             value: null,
@@ -415,6 +420,7 @@ export default {
 
                     this.barang=response.data.list;
                     this.state.kurang=response.data.kurang;
+                    this.adahutang=false;
 
                     if(this.state.kurang.length>0){
                         this.state.status_kurang='N';
@@ -724,8 +730,16 @@ export default {
 
                         this.message = 'Data has been saved.';
                         this.loading = false;
+                        this.adahutang=false;
                     }else{
-                        alert('Internal server error');
+                        if(response.data.adahutang==true){
+                            this.adahutang=true;
+                            this.loading=false;
+                        }else{
+                            this.adahutang=false;
+                            alert('Internal server error');
+                        }
+                        
                     }
                 })
         }

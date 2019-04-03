@@ -107,4 +107,6 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('list-retur-not-in-storing','Master\StoringreturController@list_retur_not_in_storing');
     Route::get('no-retur-by-id/{id}','Master\StoringreturController@no_retur_by_id');
     Route::get('rak-by-lokasi/{id}','Master\RakController@rak_by_lokasi');
+    Route::get('order-jatuh-tempo','Master\OrderController@order_jatuh_tempo');
+    Route::post('update-status-order/{id}','Master\OrderController@update_status_order');
 });

@@ -38,6 +38,7 @@ import Vuelidate from 'vuelidate';
 import Autocomplete from 'v-autocomplete'
 import 'v-autocomplete/dist/v-autocomplete.css'
 import ToggleButton from 'vue-js-toggle-button'
+import Snotify from 'vue-snotify';
 
 
 Vue.use(VueRouter);
@@ -47,6 +48,7 @@ Vue.use(BootstrapVue);
 Vue.use(Vuelidate);
 Vue.use(Autocomplete)
 Vue.use(ToggleButton)
+Vue.use(Snotify)
 
 //define routes for users
 const routes = [
@@ -162,6 +164,9 @@ const routes = [
     { path: '/storing-retur', name:'storeReturIndex', component: require('./components/storingretur/list.vue').default},
     { path: '/add-new-storing-retur', name: 'storingReturCreate', component: require('./components/storingretur/create.vue').default },
     { path: '/storing-detail-retur/:id', name: 'storingReturDetail', component: require('./components/storingretur/detail.vue').default},
+
+    { path: '/order-jatuh-tempo', name:'orderJatuhTempoIndex', component: require('./components/order/orderjatuhtempo.vue').default},
+    { path: '/po-detail-status/:id', name:'poDetailStatus', component: require('./components/master/po/detail-status.vue').default}
 ]
 
 const router = new VueRouter({ routes });

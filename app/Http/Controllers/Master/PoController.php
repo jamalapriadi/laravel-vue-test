@@ -76,6 +76,31 @@ class PoController extends Controller
             $cus->perusahaan_id=auth()->user()->perusahaan_id;
             $cus->insert_user=auth()->user()->username;
             $cus->update_user=auth()->user()->username;
+            
+            
+            //cek apakah dia punya order yang sudah overdate atau belum
+            $customer=request('customer');
+
+            $lis=\DB::select("select a.*, d.nm,DATEDIFF(a.tgljt,CURDATE()) as minus_hari
+                from orders a
+                left join picking b on b.kd_picking=a.kd_picking
+                left join po c on c.no_po=b.no_po 
+                left join customer d on d.kd=c.customer_id
+                where a.kd_trans='Kredit'
+                and c.customer_id='$customer'
+                AND CASE
+                    WHEN DATEDIFF(a.tgljt,CURDATE())>0 THEN 'BELUM'
+                    ELSE 'TELAT'
+                END ='TELAT'");
+
+            if(count($lis)>0){
+                $adahutang="Y";
+                $cus->status_konfirmasi="Please Confirm";
+            }else{
+                $adahutang="N";
+            }
+
+
             $simpan=$cus->save();
 
             if($simpan){
@@ -99,7 +124,8 @@ class PoController extends Controller
                 $data=array(
                     'success'=>true,
                     'pesan'=>'Data berhasil disimpan',
-                    'errors'=>''
+                    'errors'=>'',
+                    'adahutang'=>$adahutang
                 );
             }else{
                 $data=array(

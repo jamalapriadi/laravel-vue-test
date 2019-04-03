@@ -331,7 +331,7 @@ export default {
     },
     methods: {
         getNoOrder(){
-            axios.get('/data/list-order-client?customer='+this.state.customer)
+            axios.get('/data/list-order-client?customer='+this.state.customer+"&nota="+this.state.full_nota)
                 .then(response => {
                     this.pos= response.data
                 })

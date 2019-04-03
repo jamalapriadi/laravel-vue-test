@@ -288,6 +288,12 @@
                 </router-link>
             </li>
 
+            <li class="nav-item">
+                <router-link to="/order-jatuh-tempo" class="nav-link active">
+                    <i class="nav-icon icon-clock"></i> List Konfirmasi PO
+                </router-link>
+            </li>
+
             <li class="nav-title">Settings</li>
             <li class="nav-item">
                 <router-link to="users" class="nav-link" active-class="active">

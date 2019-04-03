@@ -188,6 +188,7 @@ export default {
         return {
             state: {
                 kd_picking:'',
+                kd_customer:'',
                 kode:'',
                 nama: '',
                 customer:'',
@@ -299,6 +300,10 @@ export default {
             }
         },
 
+        backEndDateFormat: function(date) {
+            return moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
+        },
+
         ubahPicking(){
             console.log(this.state.kd_picking);
             this.hitungan=[];
@@ -317,6 +322,7 @@ export default {
                     // this.state.sales=response.data.sales.nm;
                     this.barangs=response.data.detail;
                     this.hitungan = response.data.hitungan;
+                    this.state.kd_customer= response.data.po.customer_id;
 
                     for(var c=0; c < this.hitungan.length; c++){
                         this.state.kodehit.push(this.hitungan[c].kd_brg);
