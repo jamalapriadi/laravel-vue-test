@@ -5,6 +5,13 @@
                 Detail Status PO
             </div>
             <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>
+                        * {{state.info}}
+                    </strong>
+                </div>
+
+                <br>
                 <fieldset>
                     <legend>Pilih Status</legend>
                     <div class="row">
@@ -28,6 +35,7 @@
                         </div>
                     </div>
                 </fieldset>
+                
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -134,6 +142,7 @@ export default {
                     this.state.perusahaan= response.data.perusahaan.nama;
                     this.state.lokasi = response.data.lokasi.nm;
                     this.state.keterangan= response.data.ket;
+                    this.state.info= response.data.info;
                     this.state.listBarang= response.data.detail;
                 })
                 .catch( error => {

@@ -9,8 +9,8 @@
                 {{ message }}
             </div>
 
-            <div v-if="adahutang==true" class="alert alert-warning">
-                Customer ini memiliki order yang sudah jatuh tempo
+            <div v-if="adahutang" class="alert alert-warning">
+                {{ adahutang }}
             </div>
 
             <form @submit.prevent="store" action="/data/program" method="post">
@@ -265,7 +265,12 @@ export default {
                 tanggal:new Date(),
                 // perusahaan:'',
                 keterangan:'',
-                listBarang:[]
+                listBarang:[],
+                sisahutang:0,
+                bolehhutang:'Y',
+                plafon:0,
+                totalharga:0,
+                statuskonfirmasi:'Accept'
             },
             date: new Date(),
             options: {
@@ -287,7 +292,8 @@ export default {
                 point:'',
                 dos:0,
                 pcs:0,
-                total_pcs:0
+                total_pcs:0,
+                harga:0
             },
             listBarang:[],
             list:[],
@@ -388,7 +394,8 @@ export default {
                             {
                                 kd:response.data[i].kd,
                                 nm:response.data[i].nm,
-                                pcs:response.data[i].pcs
+                                pcs:response.data[i].pcs,
+                                jual:response.data[i].jual
                             }
                         );
                     }
@@ -407,7 +414,8 @@ export default {
                             {
                                 kd:response.data[i].kd,
                                 nm:response.data[i].nm,
-                                pcs:response.data[i].pcs
+                                pcs:response.data[i].pcs,
+                                jual:response.data[i].jual
                             }
                         );
                     }
@@ -454,11 +462,13 @@ export default {
             let unique = [...new Set(this.listCBarang)]; 
             var nama="";
             var pcs=0;
+            var jual=0;
             
             for(var i=0; i< unique.length; i++){
                 if(unique[i].nm == item){
                     nama=unique[i].kd;
                     pcs=unique[i].pcs;
+                    jual=unique[i].jual;
                 }
             }
 
@@ -468,6 +478,7 @@ export default {
             this.barang.dos=0;
             this.barang.pcs=0;
             this.barang.total_pcs=0;
+            this.barang.harga=jual;
             this.hasilpcs=pcs;
             // this.carinamabarang=nama;
             this.$refs.kodebarang.inputValue = nama
@@ -477,11 +488,13 @@ export default {
             let unique = [...new Set(this.listCBarang)]; 
             var nama="";
             var pcs=0;
+            var jual=0;
             
             for(var i=0; i< unique.length; i++){
                 if(unique[i].kd == item){
                     nama=unique[i].nm;
                     pcs=unique[i].pcs;
+                    jual=unique[i].jual;
                 }
             }
 
@@ -491,6 +504,7 @@ export default {
             this.barang.dos=0;
             this.barang.pcs=0;
             this.barang.total_pcs=0;
+            this.barang.harga=jual;
             this.hasilpcs=pcs;
             this.$refs.namabarang.inputValue = nama;
         },
@@ -551,6 +565,8 @@ export default {
 
             this.$refs.kodecustomer.inputValue = nama
             this.state.customer=nama;
+
+            this.hutangCustomer(nama);
         },
 
         getKodeCustomer(item){
@@ -565,6 +581,17 @@ export default {
             
             this.$refs.namacustomer.inputValue = nama
             this.state.customer=item;
+
+            this.hutangCustomer(item);
+        },
+
+        hutangCustomer(cst){
+            axios.get('/data/sisa-hutang-customer/'+cst)
+                .then(response => {
+                    this.state.sisahutang=response.data.sisa;
+                    this.state.bolehhutang=response.data.boleh;
+                    this.state.plafon=response.data.plafon;
+                })
         },
 
         limitText (count) {
@@ -598,6 +625,12 @@ export default {
                 return false;
             }
 
+            if(this.state.customer==""){
+                alert('Pilih Customer lebih dahulu')
+
+                return false;
+            }
+
             // if(this.barang.dos==""){
             //     alert('Dos barang harus diisi');
 
@@ -618,9 +651,16 @@ export default {
                     nm_barang:this.barang.nama,
                     dos:parseInt(this.barang.dos),
                     pcs:parseInt(this.barang.pcs),
-                    total_pcs:parseInt(this.barang.total_pcs)
+                    total_pcs:parseInt(this.barang.total_pcs),
+                    harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs)
                 }
             );
+
+            this.state.totalharga=0;
+            for(var a=0; a<this.state.listBarang.length; a++){
+                this.state.totalharga+=this.state.listBarang[a].harga;
+            }
+            this.hitunghutang();
 
             this.kosongBarang();
         },
@@ -652,6 +692,24 @@ export default {
 
         deleteBarang: function(index) {
             this.state.listBarang.splice(index, 1);
+
+            this.state.totalharga=0;
+            for(var a=0; a<this.state.listBarang.length; a++){
+                this.state.totalharga+=this.state.listBarang[a].harga;
+            }
+
+            this.hitunghutang()
+        },
+
+        hitunghutang(){
+            var t=parseInt(this.state.sisahutang) + parseInt(this.state.totalharga);
+            
+            if(t > parseInt(this.state.plafon)){
+                this.message="Plafon ="+this.state.plafon+", Jumlah pembayaran kredit melebihi plafon dari hutang yang tersisa";
+                this.state.statuskonfirmasi='Please Confirm';
+            }
+
+            // this.message="Plafon = "+this.state.plafon+" rencana hutang ="+t;
         },
 
         showModal () {
@@ -761,9 +819,11 @@ export default {
                         this.state.listBarang=[];
 
                         if(response.data.adahutang=="Y"){
-                            this.adahutang=true;
+                            this.adahutang="Customer ini memiliki order yang sudah jatuh tempo";
+                        }else if(response.data.adahutang="X"){
+                            this.adahutang="Jumlah tagihan lebih besar daripada plafonnya";
                         }else{
-                            this.adahutang=false;
+                            this.adahutang="";
                         }   
 
                         this.getCode();

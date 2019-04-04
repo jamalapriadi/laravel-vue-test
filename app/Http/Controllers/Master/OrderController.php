@@ -426,4 +426,39 @@ class OrderController extends Controller
 
         return $data;
     }
+
+    public function sisa_hutang_customer(Request $request,$id)
+    {
+        $lis=\DB::select("select SUM(a.sisa_pembayaran) AS sisa
+            from orders a
+            left join picking b on b.kd_picking=a.kd_picking
+            left join po c on c.no_po=b.no_po 
+            left join customer d on d.kd=c.customer_id
+            where a.kd_trans='Kredit'
+            and c.customer_id='$id'
+            GROUP BY c.customer_id");
+        
+        $sisa=0;
+        $plafon=0;
+
+        $customer=\App\Models\Customer::find($id);
+
+        $plafon=$customer->plafon;
+
+        foreach($lis as $row){
+            $sisa=$row->sisa;
+        }
+
+        if($plafon > $sisa){
+            $boleh="Y";
+        }else{
+            $boleh="N";
+        }
+
+        return array(
+            'sisa'=>$sisa,
+            'plafon'=>$plafon,
+            'boleh'=>$boleh
+        );
+    }
 }

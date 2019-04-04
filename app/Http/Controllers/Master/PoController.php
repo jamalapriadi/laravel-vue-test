@@ -96,8 +96,15 @@ class PoController extends Controller
             if(count($lis)>0){
                 $adahutang="Y";
                 $cus->status_konfirmasi="Please Confirm";
+                $cus->info="Customer ini mempunyai hutang yang sudah melewati batas jatuh tempo";
             }else{
-                $adahutang="N";
+                if($request->has('statuskonfirmasi')){
+                    $adahutang="X";
+                    $cus->status_konfirmasi=$request->input('statuskonfirmasi');
+                    $cus->info="Jumlah plafon melebihi jumlah harga yang di order";
+                }else{
+                    $adahutang="N";
+                }
             }
 
 
