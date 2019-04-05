@@ -449,7 +449,7 @@ class OrderController extends Controller
             $sisa=$row->sisa;
         }
 
-        if($plafon > $sisa){
+        if($sisa>$plafon){
             $boleh="Y";
         }else{
             $boleh="N";
