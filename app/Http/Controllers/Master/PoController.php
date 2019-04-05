@@ -99,9 +99,16 @@ class PoController extends Controller
                 $cus->info="Customer ini mempunyai hutang yang sudah melewati batas jatuh tempo";
             }else{
                 if($request->has('statuskonfirmasi')){
-                    $adahutang="X";
-                    $cus->status_konfirmasi=$request->input('statuskonfirmasi');
-                    $cus->info="Jumlah plafon melebihi jumlah harga yang di order";
+                    $statuskonfirmasi=$request->input('statuskonfirmasi');
+
+                    if($statuskonfirmasi=="Accept"){
+                        $adahutang="N";
+                    }else if($statuskonfirmasi=="Please Confirm"){
+                        $adahutang="X";
+                        $cus->status_konfirmasi=$request->input('statuskonfirmasi');
+                        $cus->info="Jumlah plafon melebihi jumlah harga yang di order";
+                    }
+                    
                 }else{
                     $adahutang="N";
                 }
