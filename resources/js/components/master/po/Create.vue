@@ -820,8 +820,10 @@ export default {
 
                         if(response.data.adahutang=="Y"){
                             this.adahutang="Customer ini memiliki order yang sudah jatuh tempo";
-                        }else if(response.data.adahutang="X"){
+                        }else if(response.data.adahutang=="X"){
                             this.adahutang="Jumlah tagihan lebih besar daripada plafonnya";
+                        }else if(response.data.adahutang=="N"){
+                            this.adahutang="";
                         }else{
                             this.adahutang="";
                         }   
