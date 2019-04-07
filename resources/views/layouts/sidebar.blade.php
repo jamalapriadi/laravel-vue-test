@@ -283,16 +283,22 @@
             </li>
 
             <li class="nav-item">
-                <router-link to="/het" class="nav-link active">
+                <router-link to="/het" class="nav-link" active-class="active">
                     <i class="nav-icon icon-magnifier"></i> Het
                 </router-link>
             </li>
 
             <li class="nav-item">
-                <router-link to="/order-jatuh-tempo" class="nav-link active">
+                <router-link to="/order-jatuh-tempo" class="nav-link" active-class="active">
                     <i class="nav-icon icon-clock"></i> List Konfirmasi PO
                 </router-link>
             </li>
+
+            {{-- <li class="nav-item">
+                <router-link to="/koreksi" class="nav-link" active-class="active">
+                    <i class="nav-icon icon-check"></i> Koreksi
+                </router-link>
+            </li> --}}
 
             <li class="nav-title">Settings</li>
             <li class="nav-item">

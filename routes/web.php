@@ -110,4 +110,6 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('order-jatuh-tempo','Master\OrderController@order_jatuh_tempo');
     Route::post('update-status-order/{id}','Master\OrderController@update_status_order');
     Route::get('sisa-hutang-customer/{id}','Master\OrderController@sisa_hutang_customer');
+
+    Route::get('list-order-lunas','Master\OrderController@list_order_lunas');
 });

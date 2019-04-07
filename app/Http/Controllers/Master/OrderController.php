@@ -334,7 +334,7 @@ class OrderController extends Controller
                     WHERE c.customer_id='$cus'");
             }
         }else{
-            $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id \
+            $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id
                 FROM orders a
                 LEFT JOIN picking b ON b.kd_picking=a.kd_picking
                 LEFT JOIN po c ON c.no_po=b.no_po
@@ -460,5 +460,28 @@ class OrderController extends Controller
             'plafon'=>$plafon,
             'boleh'=>$boleh
         );
+    }
+
+    public function list_order_lunas(Request $request)
+    {
+        $order=Order::with(
+            [
+                'picking',
+                'picking.po.customer',
+                'picking.sales',
+                'picking.lokasi',
+                'detail',
+                'perusahaan',
+                'sales'
+            ]
+        )->where('status_pembayaran','Lunas');
+
+        if($request->has('q')){
+            $order=$order->where('customer_id','like','%'.request('q').'%');
+        }
+
+        $order=$order->paginate(25);
+
+        return $order;
     }
 }

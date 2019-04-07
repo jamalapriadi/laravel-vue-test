@@ -26,7 +26,8 @@ class Order extends Model
                     'hrg',
                     'diskon_rupiah',
                     'diskon_persen',
-                    'jumlah'
+                    'jumlah',
+                    'status_retur'
                 ]
             );
     }

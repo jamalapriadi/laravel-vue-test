@@ -103,6 +103,7 @@ class PoController extends Controller
 
                     if($statuskonfirmasi=="Accept"){
                         $adahutang="N";
+                        $cus->status_konfirmasi=$request->input('statuskonfirmasi');
                     }else if($statuskonfirmasi=="Please Confirm"){
                         $adahutang="X";
                         $cus->status_konfirmasi=$request->input('statuskonfirmasi');

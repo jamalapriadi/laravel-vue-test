@@ -58,6 +58,7 @@
                                     <th>Diskon (Rp.)</th>
                                     <th>Jumlah</th>
                                     <th>Subtotal</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,12 +73,16 @@
                                     <td>Rp. {{l.pivot.diskon_rupiah}}</td>
                                     <td>{{l.pivot.jumlah}}</td>
                                     <td>{{parseInt(l.pivot.hrg) * parseInt(l.pivot.jumlah) - parseInt(l.pivot.diskon_rupiah)}}</td>
+                                    <td>
+                                        <label v-if="l.pivot.status_retur=='Y'" class="label label-warning">Retur</label>
+                                    </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th colspan="9">Total</th>
                                     <th>{{state.total}}</th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                         </table>

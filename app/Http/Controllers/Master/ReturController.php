@@ -59,6 +59,7 @@ class ReturController extends Controller
                 if($request->has('barang')){
                     $barang=request('barang');
 
+                    $total=0;
                     foreach($barang as $key=>$val){
                         $brg=\App\Models\Barang::find($val['kd_barang']);
                         \DB::table('rretur')
@@ -72,7 +73,23 @@ class ReturController extends Controller
                                     'total_pcs'=>($brg->pcs * $val['return_dos']) + $val['return_pcs']
                                 ]
                             );
+
+                        $total+=($brg->pcs * $val['return_dos']) + $val['return_pcs'] * $brg->jual;
+
+                        \DB::table('rorder')
+                            ->where('no_order',$request->input('no_order'))
+                            ->where('kd_brg',$val['kd_barang'])
+                            ->update(
+                                [
+                                    'status_retur'=>'Y'
+                                ]
+                            );
                     }
+
+                    \DB::statement("UPDATE orders SET total = total-".$total." 
+                        where no_order='".$request->input('no_order')."'");
+
+
                 }
 
                 $data=array(
