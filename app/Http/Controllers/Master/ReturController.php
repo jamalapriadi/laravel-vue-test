@@ -103,7 +103,7 @@ class ReturController extends Controller
                                     if($am->kd == $val['kd_barang']){
                                         $cekqtynya=$am->pivot->qty;
 
-                                        $kurangpoint=round($totalpoint / $cekqtynya);
+                                        $kurangpoint=round($totalpoint / $cekqtynya) * $am->pivot->point;
 
                                         \DB::statement("UPDATE customer_point SET point = point-".$kurangpoint." 
                                             where customer_id='".$request->input('customer')."'
