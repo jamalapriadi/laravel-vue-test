@@ -93,7 +93,7 @@ class ReturController extends Controller
                             ->get();
 
                         if(count($cek)>0){
-                            $cekqtynya=$cek[0]->point;
+                            $cekqtynya=$cek[0]->qty;
                             $kurangpoint=round($totalpoint / $cekqtynya);
 
                             \DB::statement("UPDATE customer_point SET point = point-".$kurangpoint." 
