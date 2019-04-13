@@ -100,18 +100,20 @@ class OrderController extends Controller
                 $cus->sisa_pembayaran=0;
             }
 
+            //cek apakah ada program pada tanggal ini atau tidak
+            $program=\App\Models\Program::with('detail')
+                ->whereRaw("CURDATE() BETWEEN awprriod AND akpriod")
+                ->get();
+
             $simpan=$cus->save();
 
             if($simpan){
                 if($request->has('kodehit')){
                     $ro=$request->input('kodehit');
 
-                    //cek apakah ada program pada tanggal ini atau tidak
-                    $program=\App\Models\Program::with('detail')
-                        ->whereRaw("CURDATE() BETWEEN awprriod AND akpriod")
-                        ->get();
-
                     foreach($ro as $key=>$val){
+                        $cekB=\App\Models\Barang::find($val);
+
                         \DB::table('rorder')
                             ->insert(
                                 [
@@ -126,9 +128,13 @@ class OrderController extends Controller
                                 ]
                             );
 
+                        $total=($cekB->pcs * $request->input('doshit')[$key]) + $request->input('pcshit')[$key];
+
                         for($a=0;$a<count($program); $a++){
                             foreach($program[$a]->detail as $key2=>$row2){
-                                if($row2->kd == $val){
+                                if($row2->kd == $val && $total >= $row2->pivot->qty){
+                                    $point=$row2->pivot->point * round($total / $row2->pivot->qty);
+                                    
                                     //simpan ke customer point
                                     \DB::table('customer_point')
                                         ->insert(
@@ -137,7 +143,7 @@ class OrderController extends Controller
                                                 'program_id'=>$program[$a]->nmr,
                                                 'no_order'=>$request->input('kode'),
                                                 'kd_barang'=>$val,
-                                                'point'=>$row2->pivot->point,
+                                                'point'=>$point,
                                                 'created_at'=>date('Y-m-d H:i:s'),
                                                 'updated_at'=>date('Y-m-d H:i:s')
                                             ]
