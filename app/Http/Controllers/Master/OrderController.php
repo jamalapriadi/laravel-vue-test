@@ -106,6 +106,11 @@ class OrderController extends Controller
                 if($request->has('kodehit')){
                     $ro=$request->input('kodehit');
 
+                    //cek apakah ada program pada tanggal ini atau tidak
+                    $program=\App\Models\Program::with('detail')
+                        ->whereRaw("CURDATE() BETWEEN awprriod AND akpriod")
+                        ->get();
+
                     foreach($ro as $key=>$val){
                         \DB::table('rorder')
                             ->insert(
@@ -120,6 +125,26 @@ class OrderController extends Controller
                                     'jumlah'=>$request->input('jumlahhit')[$key]
                                 ]
                             );
+
+                        for($a=0;$a<count($program); $a++){
+                            foreach($program[$a]->detail as $key2=>$row2){
+                                if($row2->kd == $val){
+                                    //simpan ke customer point
+                                    \DB::table('customer_point')
+                                        ->insert(
+                                            [
+                                                'customer_id'=>$request->input('kd_customer'),
+                                                'program_id'=>$program[$a]->nmr,
+                                                'no_order'=>$request->input('kode'),
+                                                'kd_barang'=>$val,
+                                                'point'=>$row2->pivot->point,
+                                                'created_at'=>date('Y-m-d H:i:s'),
+                                                'updated_at'=>date('Y-m-d H:i:s')
+                                            ]
+                                        );
+                                }
+                            }
+                        }
                     }
                 }
                 if($request->has('kodes')){

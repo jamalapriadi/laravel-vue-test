@@ -232,7 +232,7 @@ export default {
             },
             date: new Date(),
             options: {
-                format: 'DD/MM/YYYY',
+                format: 'DD-MM-YYYY',
                 useCurrent: false,
             }, 
             message:'',
@@ -458,6 +458,8 @@ export default {
             this.barang.nama='';
             this.barang.qty='';
             this.barang.point='';
+            this.start=new Date();
+            this.end=new Date();
             this.$refs.kodebarang.inputValue = '';
             this.$refs.namabarang.inputValue = '';
         },

@@ -84,6 +84,24 @@ class ReturController extends Controller
                                     'status_retur'=>'Y'
                                 ]
                             );
+
+                        $cek=\DB::table('customer_point')
+                            ->where('customer_id',$request->input('customer'))
+                            ->where('no_order',$request->input('no_order'))
+                            ->where('kd_barang',$val['kd_barang'])
+                            ->get();
+
+                        if(count($cek)>0){
+                            \DB::table('customer_point')
+                                ->where('customer_id',$request->input('customer'))
+                                ->where('no_order',$request->input('no_order'))
+                                ->where('kd_barang',$val['kd_barang'])
+                                ->update(
+                                    [
+                                        'point'=>0
+                                    ]
+                                );
+                        }
                     }
 
                     \DB::statement("UPDATE orders SET total = total-".$total." 

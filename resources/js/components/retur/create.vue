@@ -532,6 +532,18 @@ export default {
                 return false;
             }
 
+            if(this.form.return_dos > this.form.dos){
+                alert('Jumlah dos tidak boleh melebihi jumlah yang di order');
+
+                return false;
+            }
+
+            if(this.form.return_pcs > this.form.pcs){
+                alert('Jumlah pcs tidak boleh melebihi jumlah yang di order');
+
+                return false;
+            }
+
 
             this.state.barang.push(
                 {
