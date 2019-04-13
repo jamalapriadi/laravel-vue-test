@@ -308,6 +308,19 @@ export default {
             console.log(this.state.kd_picking);
             this.hitungan=[];
             this.barangs=[];
+            this.state.kodehit=[];
+            this.state.doshit=[];
+            this.state.pcshit=[];
+            this.state.stokid=[];
+            this.state.idstok=[];
+            this.state.kodes=[];
+            this.state.jumlah=[];
+            this.state.jumlahhit=[];
+            this.state.jualhit=[];
+            this.state.subtotal=[];
+            this.state.diskon_persen=[];
+            this.state.diskon_rupiah=[];
+
             axios.get('/data/picking/'+this.state.kd_picking)
                 .then(response => {
                     this.tampilDetail=true;

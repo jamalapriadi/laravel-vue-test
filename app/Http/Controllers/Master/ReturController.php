@@ -86,6 +86,7 @@ class ReturController extends Controller
                                 ]
                             );
 
+                        /* dapatkan point dari barang ini $val['kd_barang'] */
                         $cek=\DB::table('customer_point')
                             ->where('customer_id',$request->input('customer'))
                             ->where('no_order',$request->input('no_order'))
@@ -93,14 +94,26 @@ class ReturController extends Controller
                             ->get();
 
                         if(count($cek)>0){
-                            $cekqtynya=$cek[0]->qty;
-                            $kurangpoint=round($totalpoint / $cekqtynya);
+                            //looping cek dan dapatkan customer point dari parameter diatas
+                            foreach($cek as $ck){
+                                //dapatkan program pointnya
+                                $ambilpoint=\App\Models\Program::with('detail')->find($ck->program_id);
 
-                            \DB::statement("UPDATE customer_point SET point = point-".$kurangpoint." 
-                                where customer_id='".$request->input('customer')."'
-                                and no_order='".$request->input('no_order')."'
-                                and kd_barang='".$val['kd_barang']."'
-                                ");
+                                foreach($ambilpoint->detail as $am){
+                                    if($am->kd == $val['kd_barang']){
+                                        $cekqtynya=$am->pivot->qty;
+
+                                        $kurangpoint=round($totalpoint / $cekqtynya);
+
+                                        \DB::statement("UPDATE customer_point SET point = point-".$kurangpoint." 
+                                            where customer_id='".$request->input('customer')."'
+                                            and no_order='".$request->input('no_order')."'
+                                            and program_id='".$ck->program_id."'
+                                            and kd_barang='".$val['kd_barang']."'
+                                            ");
+                                    }
+                                }
+                            }
                         }
                     }
 
