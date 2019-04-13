@@ -75,6 +75,7 @@ class ReturController extends Controller
                             );
 
                         $total+=($brg->pcs * $val['return_dos']) + $val['return_pcs'] * $brg->jual;
+                        $totalpoint=($brg->pcs * $val['return_dos']) + $val['return_pcs'];
 
                         \DB::table('rorder')
                             ->where('no_order',$request->input('no_order'))
@@ -92,15 +93,14 @@ class ReturController extends Controller
                             ->get();
 
                         if(count($cek)>0){
-                            \DB::table('customer_point')
-                                ->where('customer_id',$request->input('customer'))
-                                ->where('no_order',$request->input('no_order'))
-                                ->where('kd_barang',$val['kd_barang'])
-                                ->update(
-                                    [
-                                        'point'=>0
-                                    ]
-                                );
+                            $cekqtynya=$cek[0]->point;
+                            $kurangpoint=round($totalpoint / $cekqtynya);
+
+                            \DB::statement("UPDATE customer_point SET point = point-".$kurangpoint." 
+                                where customer_id='".$request->input('customer')."'
+                                and no_order='".$request->input('no_order')."'
+                                and kd_barang='".$val['kd_barang']."'
+                                ");
                         }
                     }
 
