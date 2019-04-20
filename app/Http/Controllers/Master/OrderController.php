@@ -515,4 +515,45 @@ class OrderController extends Controller
 
         return $order;
     }
+
+    public function list_order_hutang(Request $request)
+    {
+        // SELECT a.no_order, c.customer_id, d.nm, d.nm_toko 
+        // FROM orders a
+        // LEFT JOIN picking b ON b.kd_picking=a.kd_picking
+        // LEFT JOIN po c ON c.no_po=b.no_po
+        // LEFT JOIN customer d ON d.kd=c.customer_id
+
+        $order=\DB::Table('orders as a')
+            ->leftJoin('picking as b','b.kd_picking','=','a.kd_picking')
+            ->leftJoin('po as c','c.no_po','=','b.no_po')
+            ->leftJoin('customer as d','d.kd','=','c.customer_id')
+            ->select('a.no_order','c.customer_id','d.nm','d.nm_toko','d.saldo');
+
+        if($request->has('q')){
+            $order=$order->where('a.no_order','like','%'.$request->input('q').'%')
+                ->orWhere('c.customer_id','like','%'.$request->input('q').'%');
+        }
+
+        $order=$order->get();
+
+        return $order;
+    }
+
+    public function list_order_by_id(Request $request, $id)
+    {
+        $order=Order::with(
+            [
+                'picking',
+                'picking.po.customer',
+                'picking.sales',
+                'picking.lokasi',
+                'detail',
+                'perusahaan',
+                'sales'
+            ]
+        )->find($id);
+
+        return $order;
+    }
 }

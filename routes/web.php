@@ -112,4 +112,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('sisa-hutang-customer/{id}','Master\OrderController@sisa_hutang_customer');
 
     Route::get('list-order-lunas','Master\OrderController@list_order_lunas');
+    Route::get('list-order-hutang','Master\OrderController@list_order_hutang');
+    Route::get('list-order-by-id/{id}','Master\OrderController@list_order_by_id');
+    Route::get('lihat-stok','Master\StokController@lihat_stok');
 });

@@ -140,7 +140,7 @@
                         <tfoot>
                             <tr>
                                 <th colspan="7">TOTAL</th>
-                                <th>{{state.total}}</th>
+                                <th>Rp. {{rupiah(state.total)}}</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -284,6 +284,11 @@ export default {
         // this.getLokasi();
     },
     methods: {
+        rupiah(value) {
+            let val = (value/1).toFixed().replace('.', ',')
+            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        },
+
         getCode(){
             axios.get('/data/autonumber-order')
                 .then(response => {

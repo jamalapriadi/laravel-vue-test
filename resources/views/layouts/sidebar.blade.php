@@ -235,6 +235,19 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon icon-calculator"></i> Stok
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <router-link to="/lihat-stok" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Lihat Stok
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
 

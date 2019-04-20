@@ -166,7 +166,9 @@ const routes = [
     { path: '/storing-detail-retur/:id', name: 'storingReturDetail', component: require('./components/storingretur/detail.vue').default},
 
     { path: '/order-jatuh-tempo', name:'orderJatuhTempoIndex', component: require('./components/order/orderjatuhtempo.vue').default},
-    { path: '/po-detail-status/:id', name:'poDetailStatus', component: require('./components/master/po/detail-status.vue').default}
+    { path: '/po-detail-status/:id', name:'poDetailStatus', component: require('./components/master/po/detail-status.vue').default},
+
+    { path: '/lihat-stok', name:'orderJatuhTempoIndex', component: require('./components/stok/index.vue').default},
 ]
 
 const router = new VueRouter({ routes });

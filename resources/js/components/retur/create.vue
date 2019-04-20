@@ -330,6 +330,11 @@ export default {
         this.getLokasi();
     },
     methods: {
+        rupiah(value) {
+            let val = (value/1).toFixed().replace('.', ',')
+            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        },
+        
         getNoOrder(){
             axios.get('/data/list-order-client?customer='+this.state.customer+"&nota="+this.state.full_nota)
                 .then(response => {

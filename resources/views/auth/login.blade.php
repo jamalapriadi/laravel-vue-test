@@ -39,7 +39,7 @@
                         </span>
                         @endif
                     </div>
-                    <div class="input-group mb-3">
+                    {{-- <div class="input-group mb-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
@@ -47,7 +47,7 @@
                                 {{ __('Remember Me') }}
                             </label>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row">
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary px4">

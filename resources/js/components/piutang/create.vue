@@ -41,6 +41,13 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="form-group row">
+                                <label class="control-label col-lg-3">No. Nota</label>
+                                <div class="col-lg-9">
+                                    <vue-bootstrap-typeahead v-model="carinonota" :data="listnonota" placeholder="Nama Toko" @hit="getNoNota($event)" ref="nonota"/>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-lg-5">
@@ -54,7 +61,7 @@
                             <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Total Piutang</label>
                                 <div class="col-lg-9">
-                                    <input type="text" class="form-control" v-model="state.total_piutang" readonly>
+                                    <input type="text" class="form-control" v-model="state.total_piutang_rupiah" readonly>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +129,7 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-6">
-                                        <input type="text" class="form-control" v-model="detail.total" readonly>
+                                        <input type="text" class="form-control" v-model="detail.total_rupiah" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -165,8 +172,8 @@
                                 <td>{{l.bank}}</td>
                                 <td>{{l.no_cek_bg}}</td>
                                 <td>{{format_date(l.tgl_jt)}}</td>
-                                <td>{{l.tagihan}}</td>
-                                <td>{{l.nominal}}</td>
+                                <td>Rp. {{rupiah(l.tagihan)}}</td>
+                                <td>Rp. {{rupiah(l.nominal)}}</td>
                                 <td>
                                     <a @click="deleteBarang(index)" class="btn btn-danger text-white">
                                         <i class="fa fa-trash"></i>
@@ -177,17 +184,17 @@
                         <tfoot>
                             <tr>
                                 <th colspan='7'>Total</th>
-                                <th>{{state.total}}</th>
+                                <th>Rp. {{rupiah(state.total)}}</th>
                                 <th></th>
                             </tr>
                             <tr>
                                 <th colspan='7'>Jumlah Bayar</th>
-                                <th>{{state.nominal}}</th>
+                                <th>Rp. {{rupiah(state.nominal)}}</th>
                                 <th></th>
                             </tr>
-                            <tr>
+                            <tr v-if="state.nominal - state.total > 0">
                                 <th colspan='7'>Kembali</th>
-                                <th>{{state.nominal - state.total}}</th>
+                                <th>Rp. {{rupiah(state.nominal - state.total)}}</th>
                                 <th></th>
                             </tr>
                         </tfoot>
@@ -244,6 +251,7 @@ export default {
                 saldo:0,
                 customer:'',
                 total_piutang:0,
+                total_piutang_rupiah:0,
                 total:0,
                 nominal:0,
                 tanggal:new Date(),
@@ -264,6 +272,7 @@ export default {
                 no_cek_bg:'',
                 no_order:'',
                 total:0,
+                total_rupiah:0,
                 tgl_jt:new Date(),
                 nominal:0
             },
@@ -271,7 +280,10 @@ export default {
             caritokocustomer:'',
             listcaricustomer:[],
             listtokocustomer:[],
-            barang:[]
+            barang:[],
+            carinonota:'',
+            listnonota:[],
+            listCnonota:[]
             
         }
     },
@@ -291,12 +303,21 @@ export default {
         caritokocustomer: _.debounce(function(q){
             this.cariTokoCustomerById(q);
         },500),
+
+        carinonota: _.debounce(function(q){
+            this.cariNoNota(q);
+        },500),
     },
     mounted() {
         this.getCode();
         this.getBank();
     },
     methods: {
+        rupiah(value) {
+            let val = (value/1).toFixed().replace('.', ',')
+            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        },
+
         getOrderBelumLunasCostomer(){
             axios.get('/data/order-belum-lunas?customer='+this.state.customer)
                 .then(response => {
@@ -316,6 +337,7 @@ export default {
                     if(response.data.success==true){
                         if(response.data.data.length > 0){
                             this.state.total_piutang=response.data.data[0].total_hutang;
+                            this.state.total_piutang_rupiah=this.rupiah(response.data.data[0].total_hutang);
                         }
                     }
                 })
@@ -373,6 +395,27 @@ export default {
                 })
         },
 
+        async cariNoNota(q){
+            this.listnonota=[];
+            this.listCnonota=[];
+            axios.get('/data/list-order-hutang?q='+q)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listnonota.push(response.data[i].no_order);
+
+                        this.listCnonota.push(
+                            {
+                                no_order:response.data[i].no_order,
+                                nm:response.data[i].nm,
+                                nm_toko:response.data[i].nm_toko,
+                                customer_id:response.data[i].customer_id,
+                                saldo:response.data[i].saldo
+                            }
+                        );
+                    }
+                })
+        },
+
         getNamaCustomer(item){
             let uniqueCus = [...new Set(this.listCCustomer)]; 
             var nama="";
@@ -414,11 +457,39 @@ export default {
             this.getTotalHutangCustomer();
         },
 
+        getNoNota(item){
+            let uniqueCus = [...new Set(this.listCnonota)]; 
+            var no_order="";
+            var nm="";
+            var nm_toko="";
+            var customer_id="";
+            var saldo="";
+            
+            for(var i=0; i< uniqueCus.length; i++){
+                if(uniqueCus[i].no_order == item){
+                    no_order=uniqueCus[i].no_order;
+                    nm=uniqueCus[i].nm;
+                    nm_toko=uniqueCus[i].nm_toko;
+                    customer_id=uniqueCus[i].customer_id;
+                    saldo=uniqueCus[i].saldo;
+                }
+            };
+            
+            this.$refs.namacustomer.inputValue = nm
+            this.$refs.tokocustomer.inputValue = nm_toko
+            this.state.customer=customer_id;
+            this.state.saldo=saldo;
+            this.detail.no_order=no_order;
+            this.getOrderBelumLunasCostomer();
+            this.getTotalHutangCustomer();
+            this.changeOrder();
+        },
+
         changeOrder(){
             axios.get('/data/order-by-id/'+this.detail.no_order)
                 .then(response => {
                     this.detail.total=response.data.total_hutang;
-                    console.log(response.data.total_hutang);
+                    this.detail.total_rupiah=this.rupiah(response.data.total_hutang);
                 })
         },
 
@@ -428,6 +499,7 @@ export default {
             this.detail.no_cek_bg=''
             this.detail.no_order=''
             this.detail.total=0
+            this.detail.total_rupiah=0;
             this.detail.tgl_jt=new Date()
             this.detail.nominal=0
         },
@@ -509,6 +581,10 @@ export default {
             this.state.total=total;
         },
 
+        changeNota(no_nota){
+            
+        },
+
         deleteBarang: function(index) {
             this.state.detail.splice(index, 1);
             this.getOrderBelumLunasCostomer();
@@ -550,6 +626,7 @@ export default {
                         this.state.saldo=0;
                         this.state.customer='';
                         this.state.total_piutang=0;
+                        this.state.total_piutang_rupiah=0;
                         this.state.nominal=0;
                         this.state.total=0;
                         this.state.tanggal=new Date();

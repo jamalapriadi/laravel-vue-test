@@ -354,7 +354,7 @@ class PiutangController extends Controller
                         LEFT JOIN picking b ON b.kd_picking=a.kd_picking
                         LEFT JOIN po c ON c.no_po=b.no_po
                         LEFT JOIN customer d ON d.kd=c.customer_id
-                        WHERE a.kd_trans='Kredit'
+                        WHERE a.kd_trans != 'Lunas'
                         AND a.status_pembayaran='Belum Lunas'
                         AND c.customer_id='$cus'");
 
@@ -413,7 +413,7 @@ class PiutangController extends Controller
                  LEFT JOIN picking b ON b.kd_picking=a.kd_picking
                  LEFT JOIN po c ON c.no_po=b.no_po
                  LEFT JOIN customer d ON d.kd=c.customer_id
-                 WHERE a.kd_trans='Kredit'
+                 WHERE a.kd_trans != 'Lunas'
                  AND c.customer_id='$cus'
                  AND a.total > IFNULL((
                      SELECT SUM(aa.total_bayar) FROM piutang aa

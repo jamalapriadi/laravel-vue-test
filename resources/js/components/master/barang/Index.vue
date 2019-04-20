@@ -120,8 +120,6 @@
         },
         mounted() {
             this.showData();
-
-            console.log(this.list);
         },
         watch: {
             pencarian: function(q) {

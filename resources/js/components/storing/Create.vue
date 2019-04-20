@@ -44,6 +44,21 @@
                                 <date-picker v-model="state.tanggal" :config="options"></date-picker>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="control-label col-lg-3">No. Surat Jalan</label>
+                            <div class="col-lg-9">
+                                <input class="form-control" v-model="state.no_surat_jalan">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-lg-3">Merk</label>
+                            <div class="col-lg-9">
+                                <select class="form-control" name="merk" id="merk" v-model="state.merk">
+                                    <option value="">--Pilih Merk--</option>
+                                    <option v-for="(p,index) in merk" v-bind:key="index" v-bind:value="p.id">{{p.nm}}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -240,6 +255,8 @@ export default {
                 lokasi:'',
                 no_ref:'',
                 tanggal:new Date(),
+                no_surat_jalan:'',
+                merk:'',
                 listBarang:[]
             },
             date: new Date(),
@@ -281,7 +298,8 @@ export default {
             carikodecustomer:'',
             hasilpcs:0,
             lokasis:[],
-            raks:[]
+            raks:[],
+            merk: []
         }
     },
     watch: {
@@ -314,6 +332,7 @@ export default {
         this.getCode();
         this.getCustomer();
         this.getLokasi();
+        this.getMerk();
         // this.getPerusahaan();
     },
     methods: {
@@ -354,7 +373,7 @@ export default {
             this.listcaribarang=[];
             this.listCBarang=[];
             let result=[];
-            axios.get('/data/cari-barang-by-nama?q='+query)
+            axios.get('/data/cari-barang-by-nama?q='+query+'&merk='+this.state.merk)
                 .then(response => {
                     for(var i=0; i< response.data.length; i++){
                         this.listcaribarang.push(response.data[i].nm);
@@ -373,7 +392,7 @@ export default {
         async cariBarangByKode(q){
             this.listkodebarang=[];
             this.listCBarang=[];
-            axios.get('/data/cari-barang-by-nama?q='+q)
+            axios.get('/data/cari-barang-by-nama?q='+q+'&merk='+this.state.merk)
                 .then(response => {
                     for(var i=0; i< response.data.length; i++){
                         this.listkodebarang.push(response.data[i].kd);
@@ -652,6 +671,13 @@ export default {
                 })
         },
 
+        getMerk(){
+            axios.get('/data/list-merk')
+                .then(response => {
+                    this.merk = response.data;
+                })
+        },
+
         saveProgram(){
             if(this.state.kode==""){
                 alert('Kode harus diisi');
@@ -673,6 +699,8 @@ export default {
                         this.state.kode='';
                         this.state.no_ref= '';
                         this.state.lokasi='';
+                        this.state.no_surat_jalan=''
+                        this.state.merk=''
                         this.state.tanggal=new Date();
                         // this.$refs.kodecustomer.inputValue = '';
                         // this.$refs.namacustomer.inputValue = '';

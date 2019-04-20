@@ -54,7 +54,8 @@ class StoringController extends Controller
             'kode'=>'required',
             'no_ref'=>'required',
             'tanggal'=>'required',
-            'lokasi'=>'required'
+            'lokasi'=>'required',
+            'no_surat_jalan'=>'required'
         ];
 
         $validasi=\Validator::make($request->all(),$rules);
@@ -70,6 +71,7 @@ class StoringController extends Controller
             $s->no_storing=request('kode');
             $s->no_ref=request('no_ref');
             $s->tgl=date('Y-m-d',strtotime(request('tanggal')));
+            $s->no_surat_jalan=request('no_surat_jalan');
             $s->lokasi_id=request('lokasi');
 
             $simpan=$s->save();

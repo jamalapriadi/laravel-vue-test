@@ -35,6 +35,7 @@
                         <th>No. Ref</th>
                         <th>Tanggal</th>
                         <th>Lokasi</th>
+                        <th>No. Surat Jalan</th>
                         <!-- <th>Total</th> -->
                         <th width="17%"></th>
                     </tr>
@@ -46,6 +47,7 @@
                         <td>{{l.no_ref}}</td>
                         <td>{{l.tgl}}</td>
                         <td>{{l.lokasi.nm}}</td>
+                        <td>{{l.no_surat_jalan}}</td>
                         <!-- <td>{{l.picking.detail.length}}</td> -->
                         <td>
                             <div class="btn-group">

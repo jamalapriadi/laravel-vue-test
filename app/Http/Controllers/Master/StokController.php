@@ -83,4 +83,46 @@ class StokController extends Controller
     {
         //
     }
+
+    public function lihat_stok(Request $request)
+    {
+        $wl="";
+
+        if($request->has('lokasi') && $request->input('lokasi')!=null){
+            $wl.=" AND ax.lokasi_id=".$request->input('lokasi');
+        }
+
+        if($request->has('rak') && $request->input('rak')!=null){
+            $wl.=" AND ax.rak_id=".$request->input('rak');
+        }
+
+        $lis=\App\Models\Barang::with(
+            [
+                'merk',
+                'kelompok'
+            ]
+        )->select(
+            'kd','nm','merk_id','kelompok_id',
+            \DB::raw("IFNULL((
+                SELECT SUM(pcs) AS jumlah_stok FROM stok ax
+                WHERE ax.kd_brg=brg.kd
+                $wl
+                GROUP BY ax.kd_brg
+            ),0) AS jumlah_stok")
+        )->paginate(25);
+
+
+        // $lis=\DB::select("SELECT a.kd, a.nm, b.nm AS merk_name,c.nm AS kelompok_name,
+        //     IFNULL((
+        //         SELECT SUM(pcs) AS jumlah_stok FROM stok ax
+        //         WHERE ax.kd_brg=a.kd
+        //         $wl
+        //         GROUP BY ax.kd_brg
+        //     ),0) AS jumlah_stok
+        //     FROM brg a
+        //     LEFT JOIN merk b ON b.id=a.merk_id
+        //     LEFT JOIN klmpk c ON c.id=a.kelompok_id");
+
+        return $lis;
+    }
 }
