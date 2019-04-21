@@ -336,8 +336,11 @@ class BarangController extends Controller
         $barang=Barang::select('kd','nm','pcs','jual','merk_id');
 
         if($request->has('q')){
-            $barang=$barang->where('nm','like','%'.request('q').'%')
-                ->orWhere('kd','like','%'.request('q').'%');
+            $barang=$barang->where('nm','like','%'.request('q').'%');
+        }
+
+        if($request->has('kode') && $request->input('kode')!=""){
+            $barang=$barang->where('kd','like','%'.request('kode').'%');
         }
 
         if($request->has('merk') && $request->input('merk')!=""){

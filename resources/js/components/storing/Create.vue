@@ -392,7 +392,7 @@ export default {
         async cariBarangByKode(q){
             this.listkodebarang=[];
             this.listCBarang=[];
-            axios.get('/data/cari-barang-by-nama?q='+q+'&merk='+this.state.merk)
+            axios.get('/data/cari-barang-by-nama?kode='+q+'&merk='+this.state.merk)
                 .then(response => {
                     for(var i=0; i< response.data.length; i++){
                         this.listkodebarang.push(response.data[i].kd);
