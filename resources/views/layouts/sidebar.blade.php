@@ -257,39 +257,33 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
-                        <router-link to="/add-new-mutasi" class="nav-link" active-class="active">
+                        <router-link to="/laporan-penerimaan" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i>Penerimaan
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                        <router-link to="/laporan-retur-terima" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i>Retur Terima
                         </router-link>
                     </li>
-                    <li class="nav-title"></li>
                     <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                        <router-link to="/laporan-nota" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i>Nota
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                        <router-link to="/laporan-penjualan" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i>Penjualan
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                        <router-link to="/laporan-retur-nota" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i>Retur Nota
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
+                        <router-link to="/laporan-create-file-pajak" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> Create File Pajak
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link to="/list-mutasi" class="nav-link" active-class="active">
-                            <i class="nav-icon icon-bank"></i>Nota
                         </router-link>
                     </li>
                 </ul>
