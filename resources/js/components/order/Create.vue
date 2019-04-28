@@ -139,6 +139,14 @@
                         </tbody>
                         <tfoot>
                             <tr>
+                                <th colspan="7">SUBTOTAL</th>
+                                <th>Rp. {{rupiah(subtotal)}}</th>
+                            </tr>
+                            <tr>
+                                <th colspan="7">DISKON</th>
+                                <th>Rp. {{rupiah(diskon)}}</th>
+                            </tr>
+                            <tr>
                                 <th colspan="7">TOTAL</th>
                                 <th>Rp. {{rupiah(state.total)}}</th>
                             </tr>
@@ -264,6 +272,8 @@ export default {
             lokasis:[],
             pickings:[],
             tampilDetail:false,
+            subtotal:0,
+            diskon:0
         }
     },
     watch: {
@@ -348,7 +358,7 @@ export default {
                         this.state.pcshit.push(this.hitungan[c].pcs);
                         this.state.jumlahhit[c]=this.hitungan[c].jumlah;
                         this.state.jualhit[c]=this.hitungan[c].harga;
-                        this.state.subtotal[c]=this.hitungan[c].subtotal;
+                        this.state.subtotal[c]=parseInt(this.hitungan[c].subtotal);
                         this.state.diskon_persen[c]=0;
                         this.state.diskon_rupiah[c]=0;
                         // this.ubahJumlah(c);
@@ -375,6 +385,8 @@ export default {
                     console.log(this.state.rak);
 
                     this.total();
+                    this.subtotalnya();
+                    this.diskonnya();
                 })
         },
 
@@ -397,6 +409,8 @@ export default {
             this.state.subtotal[index]=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
 
             this.total();
+            this.subtotalnya();
+            this.diskonnya();
         },
 
         ubahJumlahDiskonPersen(index){
@@ -405,9 +419,28 @@ export default {
             var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
             // this.state.diskon_rupiah[index]= diskonnya;
-            this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]);
+            this.state.subtotal[index]=parseInt(harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]));
 
             this.total();
+            this.subtotalnya();
+            // this.diskonnya();
+
+            var alldiskon=0;
+            var allharganya=0;
+            var s=0;
+            var tmp_total=0;
+            var diskon_rupiah=0;
+            for(var i=0; i<this.state.jualhit.length; i++){
+                // s=parseInt(s)+parseInt(this.state.diskon_rupiah[i]);
+                alldiskon +=parseInt(this.state.jualhit[i]) * parseInt(this.state.jumlahhit[i]) * parseInt(this.state.diskon_persen[i]) / 100;
+                allharganya +=parseInt(this.state.jualhit[i]) * parseInt(this.state.jumlahhit[i]);
+
+                diskon_rupiah += this.state.diskon_rupiah[i]
+            }
+
+            this.diskon=alldiskon
+
+            // this.diskon=s;
         },
 
         hitungTotal(event, index){
@@ -415,9 +448,26 @@ export default {
             var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
             // this.state.diskon_rupiah[index]= diskonnya;
-            this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]);
+            this.state.subtotal[index]=parseInt(harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]));
 
             this.total();
+            this.subtotalnya();
+            // this.diskonnya();
+
+            var alldiskon=0;
+            var allharganya=0;
+            var s=0;
+            var tmp_total=0;
+            var diskon_rupiah=0;
+            for(var i=0; i<this.state.jualhit.length; i++){
+                // s=parseInt(s)+parseInt(this.state.diskon_rupiah[i]);
+                alldiskon +=parseInt(this.state.jualhit[i]) * parseInt(this.state.jumlahhit[i]) * parseInt(this.state.diskon_persen[i]) / 100;
+                allharganya +=parseInt(this.state.jualhit[i]) * parseInt(this.state.jumlahhit[i]);
+
+                diskon_rupiah += this.state.diskon_rupiah[i]
+            }
+
+            this.diskon=alldiskon
         },
 
         hitungTotalRupiah(event, index){
@@ -425,9 +475,11 @@ export default {
             var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
             // this.state.diskon_rupiah[index]= diskonnya;
-            this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]);
+            this.state.subtotal[index]=parseInt(harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]));
 
             this.total();
+            this.subtotalnya();
+            this.diskonnya();
         },
 
         ubahJumlahDiskonRupiah(index){
@@ -437,9 +489,11 @@ export default {
             var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
 
             // this.state.diskon_rupiah[index]= diskonnya;
-            this.state.subtotal[index]=harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]);
+            this.state.subtotal[index]=parseInt(harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]));
 
             this.total();
+            this.subtotalnya();
+            this.diskonnya();
         },
 
         ubahDiskon(index){
@@ -452,6 +506,8 @@ export default {
             // this.state.subtotal[index]=(jual*jumlah)*diskon/100;
 
             this.total();
+            this.subtotalnya();
+            this.diskonnya();
         },
 
         total(){
@@ -460,7 +516,25 @@ export default {
                 s=parseInt(s)+parseInt(this.state.subtotal[i]);
             }
 
-            this.state.total=s;
+            this.state.total=parseInt(s);
+        },
+
+        subtotalnya(){
+            var s=0;
+            for(var i=0; i<this.state.subtotal.length; i++){
+                s=parseInt(s)+parseInt(this.state.subtotal[i]);
+            }
+
+            this.subtotal=parseInt(s);
+        },
+        
+        diskonnya(){
+            var s=0;
+            for(var i=0; i<this.state.subtotal.length; i++){
+                s=parseInt(s)+parseInt(this.state.diskon_rupiah[i]);
+            }
+
+            this.diskon=parseInt(s);
         },
 
 

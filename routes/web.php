@@ -115,4 +115,8 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('list-order-hutang','Master\OrderController@list_order_hutang');
     Route::get('list-order-by-id/{id}','Master\OrderController@list_order_by_id');
     Route::get('lihat-stok','Master\StokController@lihat_stok');
+
+    Route::get('autonumber-stok-opname','Master\StokopnameController@autonumber_stok_opname');
+    Route::resource('stok-opname','Master\StokopnameController');
+    Route::get('stok-opname-by-lokasi/{id}','Master\StokopnameController@stok_opname_by_lokasi');
 });

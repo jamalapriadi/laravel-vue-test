@@ -168,7 +168,10 @@ const routes = [
     { path: '/order-jatuh-tempo', name:'orderJatuhTempoIndex', component: require('./components/order/orderjatuhtempo.vue').default},
     { path: '/po-detail-status/:id', name:'poDetailStatus', component: require('./components/master/po/detail-status.vue').default},
 
-    { path: '/lihat-stok', name:'orderJatuhTempoIndex', component: require('./components/stok/index.vue').default},
+    { path: '/lihat-stok', name:'StokIndex', component: require('./components/stok/index.vue').default},
+    { path: '/stok-opname', name:'StopOpnameIndex', component: require('./components/stok/stok-opname.vue').default},
+    { path: '/add-new-stok-opname', name:'StopOpnameCreate', component: require('./components/stok/create-stok-opname.vue').default},
+    { path: '/stok-opname-detail/:id', name:'stopopnameDetail', component: require('./components/stok/detail-stok-opname.vue').default},
 ]
 
 const router = new VueRouter({ routes });

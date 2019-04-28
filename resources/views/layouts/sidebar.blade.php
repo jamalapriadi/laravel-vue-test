@@ -246,6 +246,11 @@
                                     <i class="nav-icon icon-bank"></i> Lihat Stok
                                 </router-link>
                             </li>
+                            <li class="nav-item">
+                                <router-link to="/stok-opname" class="nav-link" active-class="active">
+                                    <i class="nav-icon icon-bank"></i> Stok Opname
+                                </router-link>
+                            </li>
                         </ul>
                     </li>
                 </ul>
