@@ -117,6 +117,47 @@ class StokopnameController extends Controller
                                         ]
                                     );
                             }
+                        }else if($prog[$key] < $val['qty_sto']){
+                            $kurangnya = $val['qty_sto'] - $prog[$key];
+
+                            $pilihstok=\DB::Table('stok')  
+                                ->where('kd_brg',$val['kd_brg'])
+                                ->where('lokasi_id',request('lokasi'))
+                                ->where('pcs','>',0)
+                                ->get();
+
+                            foreach($pilihstok as $key2=>$as){
+                                //cek dulu kurangnya masih ada atau ngga
+                                if($kurangnya > 0){
+                                    //cek hasil pengurangannya dari database
+                                    //jika dikuranginya masih lebih dari 0, 
+                                    // maka update stok nya jadi 0, jika tidak update stok nya adalah jumlah stok - kurangnya
+                                    $dikuranginya=$kurangnya - $as->pcs;
+                                    if($dikuranginya > 0){
+                                        \DB::table('stok')
+                                            ->where('id',$as->id)
+                                            ->update(
+                                                [
+                                                    'pcs'=>0
+                                                ]
+                                            );
+                                    }else{
+                                        \DB::statement("UPDATE stok SET pcs = pcs-".$kurangnya."
+                                            where id='".$as->id."'");
+                                    }
+                                }
+
+                                $kurangnya=$kurangnya - $as->pcs;
+                            }
+                            // \DB::Table('stok')
+                            //     ->where('kd_brg',$val['kd_brg'])
+                            //     ->where('rak_id',$val['rak_id'])
+                            //     ->where('lokasi_id',request('lokasi'))
+                            //     ->update(
+                            //         [
+                            //             'pcs'=>$prog[$key]
+                            //         ]
+                            //     );
                         }else{
                             \DB::Table('stok')
                                 ->where('kd_brg',$val['kd_brg'])
