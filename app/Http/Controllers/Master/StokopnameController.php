@@ -117,6 +117,12 @@ class StokopnameController extends Controller
                                         ]
                                     );
                             }
+                        }else{
+                            \DB::statement("UPDATE stok SET pcs = ".$prog[$key]." 
+                                    where kd_brg='".$val['kd_brg']."'
+                                    lokasi_id='".request('lokasi')."'
+                                    rak_id='".$val['rak_id']."'
+                                    ");
                         }
 
                         \DB::table('rstok_opname')
