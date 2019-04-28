@@ -118,11 +118,15 @@ class StokopnameController extends Controller
                                     );
                             }
                         }else{
-                            \DB::statement("UPDATE stok SET pcs = ".$prog[$key]." 
-                                    where kd_brg='".$val['kd_brg']."'
-                                    lokasi_id='".request('lokasi')."'
-                                    rak_id='".$val['rak_id']."'
-                                    ");
+                            \DB::Table('stok')
+                                ->where('kd_brg',$val['kd_brg'])
+                                ->where('rak_id',$val['rak_id'])
+                                ->where('lokasi_id',request('lokasi'))
+                                ->update(
+                                    [
+                                        'pcs'=>$prog[$key]
+                                    ]
+                                );
                         }
 
                         \DB::table('rstok_opname')
