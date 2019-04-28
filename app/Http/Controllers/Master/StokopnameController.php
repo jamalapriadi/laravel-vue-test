@@ -66,6 +66,12 @@ class StokopnameController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
+            //hapus dulu stok yang pcs nya 0
+            \DB::Table('stok')  
+                ->where('pcs',0)
+                ->delete();
+
+
             $s=new Stokopname;
             $s->no_so=$request->input('kode');
             $s->tanggal=date('Y-m-d',strtotime($request->input('tanggal')));
@@ -149,6 +155,7 @@ class StokopnameController extends Controller
 
                                 $kurangnya=$kurangnya - $as->pcs;
                             }
+                        }else{
                             // \DB::Table('stok')
                             //     ->where('kd_brg',$val['kd_brg'])
                             //     ->where('rak_id',$val['rak_id'])
@@ -158,16 +165,6 @@ class StokopnameController extends Controller
                             //             'pcs'=>$prog[$key]
                             //         ]
                             //     );
-                        }else{
-                            \DB::Table('stok')
-                                ->where('kd_brg',$val['kd_brg'])
-                                ->where('rak_id',$val['rak_id'])
-                                ->where('lokasi_id',request('lokasi'))
-                                ->update(
-                                    [
-                                        'pcs'=>$prog[$key]
-                                    ]
-                                );
                         }
 
                         \DB::table('rstok_opname')

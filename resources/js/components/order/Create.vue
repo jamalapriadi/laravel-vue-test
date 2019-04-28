@@ -144,7 +144,10 @@
                             </tr>
                             <tr>
                                 <th colspan="7">DISKON</th>
-                                <th>Rp. {{rupiah(diskon)}}</th>
+                                <!-- <th>Rp. {{rupiah(diskon)}}</th> -->
+                                <th>
+                                    <input class="form-control" v-model="state.diskon_tambahan" @input="hitungDiskonTambahan()">
+                                </th>
                             </tr>
                             <tr>
                                 <th colspan="7">TOTAL</th>
@@ -228,7 +231,8 @@ export default {
                 pcshit:[],
                 jualhit:[],
                 jumlahhit:[],
-                idstok:[]
+                idstok:[],
+                diskon_tambahan:0
             },
             date: new Date(),
             options: {
@@ -283,7 +287,7 @@ export default {
             }else{
                 this.showData();
             }
-        }
+        },
     },
     mounted() {
         this.getCode();
@@ -517,6 +521,15 @@ export default {
             }
 
             this.state.total=parseInt(s);
+        },
+
+        hitungDiskonTambahan(){
+            var s=0;
+            for(var i=0; i<this.state.subtotal.length; i++){
+                s=parseInt(s)+parseInt(this.state.subtotal[i]);
+            }
+
+            this.state.total=parseInt(s) - parseInt(this.state.diskon_tambahan);
         },
 
         subtotalnya(){
@@ -820,6 +833,7 @@ export default {
                         this.state.pcshit=[];
                         this.state.jualhit=[];
                         this.state.jumlahhit=[]
+                        this.state.diskon_tambahan=0
 
                         this.tampilDetail=false;
 
