@@ -12,8 +12,18 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
+                        <router-link to="/keterangan" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Keterangan
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
                         <router-link to="/bank" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> Bank
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/jenis-customer" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i> Jenis Customer
                         </router-link>
                     </li>
                     <li class="nav-item">
@@ -302,7 +312,7 @@
 
             <li class="nav-item">
                 <router-link to="/order-jatuh-tempo" class="nav-link" active-class="active">
-                    <i class="nav-icon icon-clock"></i> List Konfirmasi PO
+                    <i class="nav-icon icon-clock"></i> List Approval
                 </router-link>
             </li>
 

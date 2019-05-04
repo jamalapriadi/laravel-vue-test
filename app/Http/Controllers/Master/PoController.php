@@ -382,4 +382,15 @@ class PoController extends Controller
 
         return $po;
     }
+
+    public function po_by_customer(Request $request,$id)
+    {
+        $picking=\App\Models\Picking::select('no_po')->get();
+
+        $po=Po::where('customer_id',$id)
+            ->whereNotIn('no_po',$picking)
+            ->get();
+
+        return $po;
+    }
 }

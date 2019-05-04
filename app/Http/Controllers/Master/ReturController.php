@@ -23,6 +23,7 @@ class ReturController extends Controller
     }
 
     public function store(Request $request){
+        // return $request->all();
         $rules=[
             'kode'=>'required',
             'customer'=>'required',
@@ -62,6 +63,42 @@ class ReturController extends Controller
                     $total=0;
                     foreach($barang as $key=>$val){
                         $brg=\App\Models\Barang::find($val['kd_barang']);
+
+                        if(request('lunas')==true){
+                            
+                            \DB::statement("UPDATE rorder SET status_retur='Y',dos=dos - ".$val['return_dos'].",
+                                pcs=pcs-".$val['return_pcs']." 
+                                where no_order='".$request->input('no_order')."'
+                                and kd_brg='".$val['kd_barang']."'
+                                ");
+
+                            $sisa_pembayaran=$val['harga']*($brg->pcs * $val['return_dos']) + $val['return_pcs'];
+
+                            \DB::statement("UPDATE orders set total=total-".$sisa_pembayaran.", sisa_pembayaran=sisa_pembayaran-".$sisa_pembayaran."
+                                where no_order='".$request->input('no_order')."'");
+                        }else{
+                            // Contoh saya punya order barang, brg001 dan brg002, 
+                            // kemudian saya retur brg001 tapi pilihannya belum lunas, berarti di order itu barang 001 saya hapus?
+                            // kalo saya order 4 barang, tapi yang di retur cuma 1 barang doang.
+                            // jika jumlah barang yang di retur sama dengan jumlah yang di order, maka data barang itu dihapus aja
+
+                            \DB::statement("UPDATE rorder SET status_retur='Y',dos=dos - ".$val['return_dos'].",
+                                pcs=pcs-".$val['return_pcs']." 
+                                where no_order='".$request->input('no_order')."'
+                                and kd_brg='".$val['kd_barang']."'
+                                ");
+                            
+                            // \DB::table('rorder')
+                            //     ->where('no_order',$request->input('no_order'))
+                            //     ->where('kd_brg',$val['kd_barang'])
+                            //     ->update(
+                            //         [
+                            //             'status_retur'=>'Y'
+                            //         ]
+                            //     );
+                        }
+
+
                         \DB::table('rretur')
                             ->insert(
                                 [
@@ -76,15 +113,6 @@ class ReturController extends Controller
 
                         $total+=($brg->pcs * $val['return_dos']) + $val['return_pcs'] * $brg->jual;
                         $totalpoint=($brg->pcs * $val['return_dos']) + $val['return_pcs'];
-
-                        \DB::table('rorder')
-                            ->where('no_order',$request->input('no_order'))
-                            ->where('kd_brg',$val['kd_barang'])
-                            ->update(
-                                [
-                                    'status_retur'=>'Y'
-                                ]
-                            );
 
                         /* dapatkan point dari barang ini $val['kd_barang'] */
                         $cek=\DB::table('customer_point')

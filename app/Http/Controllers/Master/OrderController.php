@@ -325,7 +325,10 @@ class OrderController extends Controller
             $kode=$request->input('kode');
 
             $lis=\DB::select("SELECT a.no_order, b.kd_brg, b.dos, 
-                b.pcs,c.nm, b.hrg, b.jumlah, b.diskon_persen, b.diskon_rupiah 
+                b.pcs,c.nm, b.hrg, b.jumlah, b.diskon_persen, b.diskon_rupiah, 
+                c.pcs as pcs_barang,
+                (b.dos * c.pcs + b.pcs) as total_pcs,
+                if(b.dos * c.pcs + b.pcs > c.pcs,'lebih','kurang') as statusnya
                 FROM orders a
                 LEFT JOIN rorder b ON b.no_order=a.no_order
                 LEFT JOIN brg c ON c.kd=b.kd_brg
@@ -385,7 +388,7 @@ class OrderController extends Controller
             LEFT JOIN customer e ON e.kd=c.customer_id
             WHERE a.no_order='$id'");
 
-        $detail=\DB::select("SELECT a.*, b.nm FROM rorder a
+        $detail=\DB::select("SELECT a.*, b.nm, b.pcs as pcs_barang FROM rorder a
             LEFT JOIN brg b ON b.kd=a.kd_brg
             WHERE a.no_order='$id'");
 

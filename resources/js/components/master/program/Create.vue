@@ -515,6 +515,8 @@ export default {
             console.log(brg);
             this.barang.kode=brg.kd;
             this.barang.nama=brg.nm;
+            this.$refs.kodebarang.inputValue = brg.kd
+            this.$refs.namabarang.inputValue = brg.nm
 
             this.$refs.myModalRef.hide()
         },

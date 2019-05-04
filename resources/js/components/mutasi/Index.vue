@@ -33,8 +33,8 @@
                         <th width="5%">No.</th>
                         <th>No. Mutasi</th>
                         <th>Tanggal</th>
-                        <th>Gudang Lama</th>
-                        <th>Gudang Baru</th>
+                        <th>Lokasi Lama</th>
+                        <th>Lokasi Baru</th>
                         <th>Keterangan</th>
                         <th>Total Barang</th>
                         <th width="17%"></th>

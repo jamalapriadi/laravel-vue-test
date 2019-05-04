@@ -32,6 +32,7 @@
                     <thead>
                         <tr>
                             <th width="5%">No.</th>
+                            <th>Jenis Customer</th>
                             <th>Nama Toko</th>
                             <th>Nama Pemilik</th>
                             <th>Alias</th>
@@ -52,6 +53,7 @@
                     <tbody>
                         <tr v-for="(l, index) in list.data" v-bind:key="index">
                             <td>{{index+1}}</td>
+                            <td>{{l.jenis_customer}}</td>
                             <td>{{l.nm_toko}}</td>
                             <td>{{l.nm}}</td>
                             <td>{{l.alias}}</td>

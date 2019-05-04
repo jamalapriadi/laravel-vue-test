@@ -27,6 +27,13 @@
 
                     <div class="col-lg-2">
                         <div class="form-group">
+                            <label for="" class="control-label">Keyword</label>
+                            <input type="text" class="form-control" v-model="state.pencarian">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <div class="form-group">
                             <button class="btn btn-primary" style="margin-top:25px;" @click="showData(1)">
                                 <i class="icon-magnifier"></i> Tampilkan
                             </button>
@@ -38,10 +45,11 @@
                 <thead>
                     <tr>
                         <th width='5%'>No.</th>
-                        <th>Kode Barang</th>
+                        <!-- <th>Kode Barang</th> -->
                         <th>Nama Barang</th>
-                        <th>Merk</th>
-                        <th>Kelompok</th>
+                        <th>Lokasi</th>
+                        <th>Rak</th>
+                        <th>Harga</th>
                         <th>Stok</th>
                         <th></th>
                     </tr>
@@ -49,11 +57,11 @@
                 <tbody>
                     <tr v-for="(l, index) in list.data" v-bind:key="index">
                         <td>{{index+1}}</td>
-                        <td>{{l.kd}}</td>
-                        <td>{{l.nm}}</td>
-                        <td>{{l.merk.nm}}</td>
-                        <td>{{l.kelompok.nm}}</td>
-                        <td>{{l.jumlah_stok}}</td>
+                        <td>{{l.nama_barang}}</td>
+                        <td>{{l.nama_lokasi}}</td>
+                        <td>{{l.nama_rak}}</td>
+                        <td>{{l.harga | formatNumber}}</td>
+                        <td>{{l.jumlah_stok | formatNumber}}</td>
                         <td></td>
                     </tr>
                 </tbody>
@@ -68,6 +76,11 @@
 </template>
 
 <script>
+var numeral = require("numeral");
+
+Vue.filter("formatNumber", function (value) {
+return numeral(value).format("0,0"); // displaying other groupings/separators is possible, look at the docs
+});
 import { VueLoading } from 'vue-loading-template'
 
 export default {
@@ -78,7 +91,8 @@ export default {
         return {
             state:{
                 lokasi:'',
-                rak:''
+                rak:'',
+                pencarian:''
             },
             list:[],
             listData:{},
@@ -116,7 +130,7 @@ export default {
                 page = 1;
             }
 
-            axios.get('/data/lihat-stok?page='+page+"&lokasi="+this.state.lokasi+"&rak="+this.state.rak)
+            axios.get('/data/lihat-stok?page='+page+"&lokasi="+this.state.lokasi+"&rak="+this.state.rak+"&q="+this.state.pencarian)
                 .then(response => {
                     this.loading=false;
                     this.list = response.data;

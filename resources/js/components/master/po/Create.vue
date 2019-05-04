@@ -131,6 +131,7 @@
                         <th>Nama Barang</th>
                         <th>Dos</th>
                         <th>Pcs</th>
+                        <th>Rak</th>
                         <th>Total Pcs</th>
                         <th></th>
                     </tr>
@@ -142,6 +143,12 @@
                         <td>{{l.nm_barang}}</td>
                         <td>{{l.dos}}</td>
                         <td>{{l.pcs}}</td>
+                        <td>
+                            <ol v-if="l.rak.length > 0">
+                                <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}}</li>
+                            </ol>
+                            <label class="label label-info" v-else>Rak tidak ditemukan</label>
+                        </td>
                         <td>{{l.total_pcs}}</td>
                         <td>
                             <a @click="deleteBarang(index)" class="btn btn-danger text-white">
@@ -643,18 +650,27 @@ export default {
             //     return false;
             // }
 
+            axios.get('/data/get-rak-by-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs)
+                .then(response => {
+                    if(response.data.success==true){
+                        this.state.listBarang.push(
+                            {
+                                // kd_barang:this.barang.kode.kd,
+                                kd_barang:response.data.kd_barang,
+                                nm_barang:response.data.nm_barang,
+                                dos:parseInt(response.data.dos),
+                                pcs:parseInt(response.data.pcs),
+                                total_pcs:parseInt(this.barang.total_pcs),
+                                harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
+                                rak:response.data.rak
+                            }
+                        );
 
-            this.state.listBarang.push(
-                {
-                    // kd_barang:this.barang.kode.kd,
-                    kd_barang:this.barang.kode,
-                    nm_barang:this.barang.nama,
-                    dos:parseInt(this.barang.dos),
-                    pcs:parseInt(this.barang.pcs),
-                    total_pcs:parseInt(this.barang.total_pcs),
-                    harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs)
-                }
-            );
+                        console.log(this.state.listBarang);
+                    }else{
+                        alert('silahkan lengkapi data');
+                    }
+                })
 
             this.state.totalharga=0;
             for(var a=0; a<this.state.listBarang.length; a++){

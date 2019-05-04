@@ -16,6 +16,13 @@
                         <input type="text" class="form-control" name="kode" :class="{ 'is-invalid': errors.kode }" v-model="state.kode">
                     </div>
                     <div class="form-group">
+                        <label for="" class="control-label">Jenis Customer</label>
+                        <select name="jeniscustomer" id="jeniscustomer" class="form-control" v-model="state.jenis_customer">
+                            <option value="">--Pilih Jenis Customer--</option>
+                            <option v-for="(l,index) in jeniscustomer" v-bind:key="index" v-bind:value="l.jns_customer">{{l.jns_customer}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="" class="control-label">Nama Toko</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.toko }" v-model="state.toko">
                     </div>
@@ -106,6 +113,7 @@ export default {
         return {
             state: {
                 kode: '',
+                jenis_customer:'',
                 toko:'',
                 nama: '',
                 nik:'',
@@ -121,6 +129,7 @@ export default {
                 top:'',
                 jenis:''
             },
+            jeniscustomer:[],
             message:'',
             loading:false,
             errors: [],
@@ -137,6 +146,7 @@ export default {
                     this.errors = [];
                     this.state = {
                         kode: '',
+                        jenis_customer:'',
                         toko:'',
                         nama: '',
                         nik:'',
@@ -154,6 +164,7 @@ export default {
                     }
                     // this.getKodeCustomer();
                     this.message = 'Data has been saved.';
+                    this.getJenisCustomer();
                 }else{
                     this.loading=false;
                     this.errors.nama=true;
@@ -177,6 +188,13 @@ export default {
                 })
         },
 
+        getJenisCustomer(){
+            axios.get('/data/list-jenis-customer')
+                .then( response => {
+                    this.jeniscustomer = response.data;
+                })
+        },
+
         getKodeCustomer(){
             axios.get('/data/autonumber-customer')
                 .then( response => {
@@ -187,6 +205,7 @@ export default {
     mounted() {
         // this.getKodeCustomer();
         this.getKota();
+        this.getJenisCustomer()
     },
     computed:{
         valKode() {

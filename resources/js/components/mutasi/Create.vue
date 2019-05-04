@@ -46,9 +46,9 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label for="" class="control-label">Pilih Gudang Awal</label>
+                                <label for="" class="control-label">Pilih Lokasi Awal</label>
                                 <select name="" id="" class="form-control" v-model="state.gudang_lama" @change="changeLokasi(state.gudang_lama.id,'lama')">
-                                    <option value="" disabled selected>--Pilih Gudang--</option>
+                                    <option value="" disabled selected>--Pilih Lokasi--</option>
                                     <option v-for="(l,index) in lokasis" v-bind:key="index" v-bind:value="l">{{l.nm}}</option>
                                 </select>
                             </div>
@@ -56,9 +56,9 @@
 
                         <div class="col-lg-6">
                             <div class="form-group">
-                                <label for="" class="control-label">Pilih Gudang Tujuan</label>
+                                <label for="" class="control-label">Pilih Lokasi Tujuan</label>
                                 <select name="" id="" class="form-control" v-model="state.gudang_baru" @change="changeLokasi(state.gudang_baru.id,'baru')">
-                                    <option value="" disabled selected>--Pilih Gudang--</option>
+                                    <option value="" disabled selected>--Pilih Lokasi--</option>
                                     <option v-for="(l,index) in lokasis" v-bind:key="index" v-bind:value="l">{{l.nm}}</option>
                                 </select>
                             </div>

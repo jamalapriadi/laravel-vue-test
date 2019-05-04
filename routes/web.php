@@ -20,6 +20,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
+    Route::get('list-keterangan','HomeController@list_keterangan');
+    Route::post('keterangan','HomeController@keterangan');
     Route::resource('bank','Master\BankController');
     Route::get('list-bank','Master\BankController@list_bank');
     Route::resource('barang','Master\BarangController');
@@ -119,4 +121,9 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('autonumber-stok-opname','Master\StokopnameController@autonumber_stok_opname');
     Route::resource('stok-opname','Master\StokopnameController');
     Route::get('stok-opname-by-lokasi/{id}','Master\StokopnameController@stok_opname_by_lokasi');
+    Route::get('get-rak-by-barang/{id}','Master\BarangController@get_rak_by_barang');
+    Route::get('customer-not-in-picking','Master\CustomerController@customer_not_in_picking');
+    Route::get('po-by-customer/{id}','Master\PoController@po_by_customer');
+    Route::resource('jenis-customer','Master\JeniscustomerController');
+    Route::get('list-jenis-customer','Master\JeniscustomerController@list_jenis_customer');
 });

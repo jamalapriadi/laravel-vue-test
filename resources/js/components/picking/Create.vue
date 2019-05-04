@@ -37,7 +37,7 @@
                             <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Customer</label>
                                 <div class="col-lg-9">
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="col-lg-5">
                                             <vue-bootstrap-typeahead v-model="caritokocustomer" :data="listtokocustomer" placeholder="Nama Toko" @hit="getTokoCustomer($event)" ref="tokocustomer"/>
                                         </div>
@@ -45,7 +45,11 @@
                                         <div class="col-lg-7">
                                             <vue-bootstrap-typeahead v-model="carinamacustomer" :data="listcaricustomer" placeholder="Cari Customer..." @hit="getNamaCustomer($event)" ref="namacustomer"/>
                                         </div>
-                                    </div>
+                                    </div> -->
+                                    <select name="customer" id="customer" class="form-control" v-model="state.customer" @change="ubahCustomer">
+                                        <option value="" disabled selected>--Pilih Customer--</option>
+                                        <option v-for="(l,index) in customers" v-bind:key="index" v-bind:value="l.customer_id">{{l.nm}}</option> 
+                                    </select>
                                 </div>
                             </div>
 
@@ -128,10 +132,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" id="dos" placeholder="Dos" v-model.number="state.dos[index]" readonly>
+                                    <input type="number" class="form-control" id="dos" placeholder="Dos" v-model.number="state.dos[index]">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]" readonly>
+                                    <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]">
                                     <small>
                                         {{ stok[index] }}
                                     </small>
@@ -288,7 +292,7 @@ export default {
     },
     mounted() {
         this.getCode();
-        // this.getCustomer();
+        this.getCustomer();
         // this.getPerusahaan();
         // this.getNoPo("true");
         // this.getSales();
@@ -413,7 +417,7 @@ export default {
                     this.state.pdos=[];
                     this.state.ppc=[];
                     this.state.idstok=[];
-                    this.state.customer=response.data.po.customer.nm;
+                    this.state.customer=response.data.po.customer_id;
                     this.state.lokasi=response.data.po.lokasi_id;
                     this.changeLokasi();
                     // this.state.listBarang=response.data.list;
@@ -485,7 +489,7 @@ export default {
         },
 
         getCustomer(){
-            axios.get('/data/list-customer')
+            axios.get('/data/customer-not-in-picking')
                 .then(response => {
                     this.customers = response.data;
                 })
@@ -680,6 +684,13 @@ export default {
             this.state.kodes.push(br.kd);
             this.state.pdos.push(br.pivot.dos)
             this.state.ppcs.push(br.pivot.pcs)
+        },
+
+        ubahCustomer(){
+            axios.get('/data/po-by-customer/'+this.state.customer)
+                .then(response => {
+                    this.pos = response.data
+                })
         },
 
         saveProgram(){

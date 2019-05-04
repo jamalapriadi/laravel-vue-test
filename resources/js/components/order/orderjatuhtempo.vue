@@ -1,6 +1,6 @@
 <template>
     <div class="card card-default">
-        <div class="card-header">List PO Konfirmasi</div>
+        <div class="card-header">List Approval</div>
         <div class="card-body">
             <div class="row">
                 <div class="col-lg-5">

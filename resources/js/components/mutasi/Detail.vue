@@ -16,11 +16,11 @@
                             <th>{{state.tanggal}}</th>
                         </tr>
                         <tr>
-                            <th>Gudang Awal</th>
-                            <th>{{state.gudang_lama}}</th>
+                            <th>Lokasi Awal</th>
+                            <th>{{state.Lokasi_lama}}</th>
                         </tr>
                         <tr>
-                            <th>Gudang Tujuan</th>
+                            <th>Lokasi Tujuan</th>
                             <th>{{state.gudang_baru}}</th>
                         </tr>
                         

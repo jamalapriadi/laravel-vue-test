@@ -11,6 +11,13 @@
                         <input type="text" class="form-control" name="kode" :class="{ 'is-invalid': errors.kode }" v-model="state.kode">
                     </div>
                     <div class="form-group">
+                        <label for="" class="control-label">Jenis Customer</label>
+                        <select name="jeniscustomer" id="jeniscustomer" class="form-control" v-model="state.jenis_customer">
+                            <option value="">--Pilih Jenis Customer--</option>
+                            <option v-for="(l,index) in jeniscustomer" v-bind:key="index" v-bind:value="l.jns_customer">{{l.jns_customer}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="" class="control-label">Nama Toko</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.toko }" v-model="state.toko">
                     </div>
@@ -97,6 +104,7 @@ export default {
             url: window.location.origin + window.location.pathname,
             state: {
                 kode: '',
+                jenis_customer:'',
                 toko:'',
                 nama: '',
                 nik:'',
@@ -126,6 +134,7 @@ export default {
             axios.get('/data/customer/'+id)
                 .then(response => {
                     this.state.kode = response.data.kd;
+                    this.state.jenis_customer = response.data.jenis_customer;
                     this.state.toko = response.data.nm_toko;
                     this.state.nama = response.data.nm;
                     this.state.nik = response.data.nik;
@@ -143,6 +152,13 @@ export default {
                 })
                 .catch( error => {
                     alert('data tidak dapat di load');
+                })
+        },
+
+        getJenisCustomer(){
+            axios.get('/data/list-jenis-customer')
+                .then( response => {
+                    this.jeniscustomer = response.data;
                 })
         },
 
@@ -169,6 +185,7 @@ export default {
         }
     },
     mounted() {
+        this.getJenisCustomer();
         this.getKota();
         this.getData();
     }

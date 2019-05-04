@@ -96,20 +96,45 @@ class StokController extends Controller
             $wl.=" AND ax.rak_id=".$request->input('rak');
         }
 
-        $lis=\App\Models\Barang::with(
-            [
-                'merk',
-                'kelompok'
-            ]
-        )->select(
-            'kd','nm','merk_id','kelompok_id',
-            \DB::raw("IFNULL((
-                SELECT SUM(pcs) AS jumlah_stok FROM stok ax
-                WHERE ax.kd_brg=brg.kd
-                $wl
-                GROUP BY ax.kd_brg
-            ),0) AS jumlah_stok")
-        )->paginate(25);
+        // SELECT a.kd, a.nm as nama_barang, 
+        // b.pcs AS jumlah_stok,
+        // d.nm AS nama_lokasi, 
+        // c.nm AS nama_rak,
+        // a.jual AS harga
+        // FROM brg a
+        // LEFT JOIN stok b ON b.kd_brg=a.kd
+        // LEFT JOIN rak c ON c.kd=b.rak_id
+        // LEFT JOIN lokasi d ON d.id=b.lokasi_id
+        // WHERE b.pcs > 0
+
+        $lis=\App\Models\Barang::leftJoin('stok as b','b.kd_brg','=','brg.kd')
+            ->leftJoin('rak as c','c.kd','=','b.rak_id')
+            ->leftJoin('lokasi as d','d.id','=','b.lokasi_id')
+            ->select(
+                'brg.kd',
+                'brg.nm as nama_barang',
+                \DB::Raw("sum(b.pcs) as jumlah_stok"),
+                'd.nm as nama_lokasi',
+                'c.nm as nama_rak',
+                'brg.jual as harga'
+            )->where('b.pcs','>',0);
+
+        if($request->has('lokasi') && $request->input('lokasi')!=null){
+            // $wl.=" AND ax.lokasi_id=".$request->input('lokasi');
+            $lis=$lis->where('b.lokasi_id',$request->input('lokasi'));
+        }
+
+        if($request->has('rak') && $request->input('rak')!=null){
+            // $wl.=" AND ax.rak_id=".$request->input('rak');
+            $lis=$lis->where('b.rak_id',$request->input('rak'));
+        }
+
+        if($request->has('q') && $request->input('q')!=null){
+            $lis=$lis->where('brg.nm','like','%'.$request->input('q').'%');
+        }
+
+        // GROUP BY a.kd, b.lokasi_id, b.rak_id
+        $lis=$lis->groupBy('brg.kd','b.lokasi_id','b.rak_id')->paginate(25);
 
 
         // $lis=\DB::select("SELECT a.kd, a.nm, b.nm AS merk_name,c.nm AS kelompok_name,

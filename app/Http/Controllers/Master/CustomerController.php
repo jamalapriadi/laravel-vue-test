@@ -46,6 +46,7 @@ class CustomerController extends Controller
     {
         $rules=[
             'nama'=>'required',
+            'jenis_customer'=>'required',
             'toko'=>'required',
             'nik'=>'required',
             'npwp'=>'required',
@@ -69,6 +70,7 @@ class CustomerController extends Controller
         }else{
             $cus=new Customer;
             $cus->kd=request('kode');
+            $cus->jenis_customer=request('jenis_customer');
             $cus->nm_toko=request('toko');
             $cus->nm=request('nama');
             $cus->alamat=request('alamat');
@@ -131,6 +133,7 @@ class CustomerController extends Controller
     {
         $rules=[
             'nama'=>'required',
+            'jenis_customer'=>'required',
             'toko'=>'required',
             'nik'=>'required',
             'npwp'=>'required',
@@ -154,6 +157,7 @@ class CustomerController extends Controller
         }else{
             $cus=Customer::find($id);
             $cus->nm_toko=request('toko');
+            $cus->jenis_customer=request('jenis_customer');
             $cus->nm=request('nama');
             $cus->alamat=request('alamat');
             $cus->alias=request('alias');
@@ -248,5 +252,15 @@ class CustomerController extends Controller
         $cus=$cus->get();
 
         return $cus;
+    }
+
+    public function customer_not_in_picking(Request $request)
+    {
+        $lis=\DB::select("SELECT a.customer_id, b.nm FROM po a
+            LEFT JOIN customer b ON b.kd=a.customer_id
+            WHERE a.no_po NOT IN (SELECT no_po FROM picking)
+            GROUP BY a.customer_id");
+
+        return $lis;
     }
 }

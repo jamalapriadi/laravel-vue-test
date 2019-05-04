@@ -354,4 +354,68 @@ class BarangController extends Controller
 
         return $barang->get();
     }
+
+    public function get_rak_by_barang(Request $request, $id)
+    {
+        $rules=[
+            'dos'=>'required',
+            'pcs'=>'required'
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            //hapus dulu barang di tabel stok yang pcs nya adalah 0
+            \DB::table('stok')
+                ->where('pcs',0)
+                ->delete();
+
+            $barang=Barang::find($id);            
+
+            $pcs=$request->input('pcs');
+            $dos=$request->input('dos');
+            $kurangnya=$barang->pcs*$dos+$pcs;
+
+            //cek stok barangnya
+            $stokbarang=\DB::table('stok')
+                ->leftJoin('rak','rak.kd','=','stok.rak_id')
+                ->where('kd_brg',$id)
+                ->select('rak.nm as nama_rak','stok.*')
+                ->get();
+
+            $rak=array();
+            foreach($stokbarang as $row){
+                if($kurangnya > 0){
+                    $rak[]=array(
+                        'rak'=>$row->nama_rak,
+                        'pcs'=>$row->pcs
+                    );
+
+                    $kurangnya=round($kurangnya-$row->pcs);
+                }
+            }
+
+
+            $data=array(
+                'success'=>true,
+                'pesan'=>'Data berhasil',
+                'kd_barang'=>$id,
+                'nm_barang'=>$barang->nm,
+                'dos'=>$dos,
+                'pcs'=>$pcs,
+                'kurangnya'=>$barang->pcs*$dos+$pcs,
+                'rak'=>$rak
+            );
+        }
+
+        return $data;
+
+        
+    }
 }

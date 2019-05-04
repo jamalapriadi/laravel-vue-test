@@ -93,6 +93,9 @@ const routes = [
     { path: '/bank', name: 'bankIndex', component: require('./components/master/bank/Index.vue').default },
     { path: '/add-bank', name: 'bankCreate', component: require('./components/master/bank/Create.vue').default },
     { path: '/edit-bank/:id', name: 'bankEdit', component: require('./components/master/bank/Edit.vue').default },
+    { path: '/jenis-customer', name: 'jeniscustomerIndex', component: require('./components/master/jeniscustomer/index.vue').default },
+    { path: '/add-jeniscustomer', name: 'jeniscustomerCreate', component: require('./components/master/jeniscustomer/create.vue').default },
+    { path: '/edit-jeniscustomer/:id', name: 'jenisCostumerEdit', component: require('./components/master/jeniscustomer/update.vue').default },
     { path: '/kelompok', name: 'kelompokIndex', component: require('./components/master/kelompok/Index.vue').default },
     { path: '/add-kelompok', name: 'kelompokCreate', component: require('./components/master/kelompok/Create.vue').default },
     { path: '/edit-kelompok/:id', name: 'kelompokEdit', component: require('./components/master/kelompok/Edit.vue').default },
@@ -172,6 +175,7 @@ const routes = [
     { path: '/stok-opname', name:'StopOpnameIndex', component: require('./components/stok/stok-opname.vue').default},
     { path: '/add-new-stok-opname', name:'StopOpnameCreate', component: require('./components/stok/create-stok-opname.vue').default},
     { path: '/stok-opname-detail/:id', name:'stopopnameDetail', component: require('./components/stok/detail-stok-opname.vue').default},
+    { path: '/keterangan', name:'KeteranganIndex', component: require('./components/keterangan.vue').default},
 ]
 
 const router = new VueRouter({ routes });

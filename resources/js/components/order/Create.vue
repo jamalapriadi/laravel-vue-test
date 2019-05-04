@@ -111,25 +111,29 @@
                                 <td>{{l.kd_brg}} / {{l.nm}}</td>
                                 <td>{{l.dos}} / {{l.pcs}}</td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="state.jualhit[index]" readonly>
+                                    <input type="text" class="form-control" v-model="state.jualhit[index]">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="state.jumlahhit[index]" readonly>
                                 </td>
                                 <td>
-                                    <div class="input-group" style="width:80px;">
+                                    <div class="input-group">
                                         <input type="number" class="form-control" v-model="state.diskon_persen[index]" @keyup.enter="ubahJumlahDiskonPersen(index)" @input="hitungTotal($event, index)" placeholder="%">
-                                        <span style="margin-top:5px;margin-left:5px;">%</span>
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                %
+                                            </span>
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group">
+                                        <input type="number" class="form-control" v-model="state.diskon_rupiah[index]" @keyup.enter="ubahJumlahDiskonRupiah(index)" @input="hitungTotalRupiah($event, index)">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">
-                                                Rp.
+                                                %
                                             </span>
                                         </div>
-                                        <input type="number" class="form-control" v-model="state.diskon_rupiah[index]" @keyup.enter="ubahJumlahDiskonRupiah(index)" @input="hitungTotalRupiah($event, index)">
                                     </div>
                                 </td>
                                 <td>
@@ -362,7 +366,7 @@ export default {
                         this.state.pcshit.push(this.hitungan[c].pcs);
                         this.state.jumlahhit[c]=this.hitungan[c].jumlah;
                         this.state.jualhit[c]=this.hitungan[c].harga;
-                        this.state.subtotal[c]=parseInt(this.hitungan[c].subtotal);
+                        this.state.subtotal[c]=parseFloat(this.hitungan[c].subtotal);
                         this.state.diskon_persen[c]=0;
                         this.state.diskon_rupiah[c]=0;
                         // this.ubahJumlah(c);
@@ -410,144 +414,153 @@ export default {
         },
 
         ubahJumlah(index){
-            this.state.subtotal[index]=parseInt(this.state.jual[index]) * parseInt(this.state.jumlah[index]);
+            this.state.subtotal[index]=parseFloat(this.state.jual[index]) * parseFloat(this.state.jumlah[index]);
 
             this.total();
-            this.subtotalnya();
-            this.diskonnya();
+            // this.subtotalnya();
+            // this.diskonnya();
         },
 
         ubahJumlahDiskonPersen(index){
-            this.state.subtotal[index]=0;
-            var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
-            var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
+            var jumlah=parseFloat(this.state.jumlahhit[index]);
+            var harga=parseFloat(this.state.jualhit[index])
+            var subtotal=harga * jumlah;
+            var diskon_pertama=parseFloat(this.state.diskon_persen[index]);
+            var diskon_kedua=parseFloat(this.state.diskon_rupiah[index]);
+            var nilai_diskon_pertama=parseFloat(subtotal * diskon_pertama / 100);
+            var hasil_hitung_diskon_pertama=parseFloat(subtotal - nilai_diskon_pertama);
+            var hasil_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama * diskon_kedua / 100);
+            var hasil_hitung_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama - hasil_diskon_kedua);
+            var hasil_akhir=parseFloat(hasil_hitung_diskon_kedua);
 
-            // this.state.diskon_rupiah[index]= diskonnya;
-            this.state.subtotal[index]=parseInt(harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]));
+            
+            
+            this.state.subtotal[index]=parseInt(hasil_hitung_diskon_kedua);
 
             this.total();
-            this.subtotalnya();
+            // this.subtotalnya();
             // this.diskonnya();
-
-            var alldiskon=0;
-            var allharganya=0;
-            var s=0;
-            var tmp_total=0;
-            var diskon_rupiah=0;
-            for(var i=0; i<this.state.jualhit.length; i++){
-                // s=parseInt(s)+parseInt(this.state.diskon_rupiah[i]);
-                alldiskon +=parseInt(this.state.jualhit[i]) * parseInt(this.state.jumlahhit[i]) * parseInt(this.state.diskon_persen[i]) / 100;
-                allharganya +=parseInt(this.state.jualhit[i]) * parseInt(this.state.jumlahhit[i]);
-
-                diskon_rupiah += this.state.diskon_rupiah[i]
-            }
-
-            this.diskon=alldiskon
-
-            // this.diskon=s;
         },
 
         hitungTotal(event, index){
-            var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
-            var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
+            var jumlah=parseFloat(this.state.jumlahhit[index]);
+            var harga=parseFloat(this.state.jualhit[index])
+            var subtotal=harga * jumlah;
+            var diskon_pertama=parseFloat(this.state.diskon_persen[index]);
+            var diskon_kedua=parseFloat(this.state.diskon_rupiah[index]);
+            var nilai_diskon_pertama=parseFloat(subtotal * diskon_pertama / 100);
+            var hasil_hitung_diskon_pertama=parseFloat(subtotal - nilai_diskon_pertama);
+            var hasil_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama * diskon_kedua / 100);
+            var hasil_hitung_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama - hasil_diskon_kedua);
+            var hasil_akhir=parseFloat(hasil_hitung_diskon_kedua);
 
-            // this.state.diskon_rupiah[index]= diskonnya;
-            this.state.subtotal[index]=parseInt(harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]));
+            
+            
+            this.state.subtotal[index]=parseInt(hasil_hitung_diskon_kedua);
 
             this.total();
-            this.subtotalnya();
+            // this.subtotalnya();
             // this.diskonnya();
-
-            var alldiskon=0;
-            var allharganya=0;
-            var s=0;
-            var tmp_total=0;
-            var diskon_rupiah=0;
-            for(var i=0; i<this.state.jualhit.length; i++){
-                // s=parseInt(s)+parseInt(this.state.diskon_rupiah[i]);
-                alldiskon +=parseInt(this.state.jualhit[i]) * parseInt(this.state.jumlahhit[i]) * parseInt(this.state.diskon_persen[i]) / 100;
-                allharganya +=parseInt(this.state.jualhit[i]) * parseInt(this.state.jumlahhit[i]);
-
-                diskon_rupiah += this.state.diskon_rupiah[i]
-            }
-
-            this.diskon=alldiskon
         },
 
         hitungTotalRupiah(event, index){
-            var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
-            var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
+            var jumlah=parseFloat(this.state.jumlahhit[index]);
+            var harga=parseFloat(this.state.jualhit[index])
+            var subtotal=harga * jumlah;
+            var diskon_pertama=parseFloat(this.state.diskon_persen[index]);
+            var diskon_kedua=parseFloat(this.state.diskon_rupiah[index]);
+            var nilai_diskon_pertama=parseFloat(subtotal * diskon_pertama / 100);
+            var hasil_hitung_diskon_pertama=parseFloat(subtotal - nilai_diskon_pertama);
+            var hasil_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama * diskon_kedua / 100);
+            var hasil_hitung_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama - hasil_diskon_kedua);
+            var hasil_akhir=parseFloat(hasil_hitung_diskon_kedua);
 
-            // this.state.diskon_rupiah[index]= diskonnya;
-            this.state.subtotal[index]=parseInt(harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]));
+            
+            
+            this.state.subtotal[index]=parseInt(hasil_hitung_diskon_kedua);
 
             this.total();
-            this.subtotalnya();
-            this.diskonnya();
+            // this.subtotalnya();
+            // this.diskonnya();
         },
 
         ubahJumlahDiskonRupiah(index){
-            this.state.subtotal[index]=0;
-            
-            var diskonnya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]) * parseInt(this.state.diskon_persen[index]) / 100;
-            var harganya=parseInt(this.state.jualhit[index]) * parseInt(this.state.jumlahhit[index]);
+            var jumlah=parseFloat(this.state.jumlahhit[index]);
+            var harga=parseFloat(this.state.jualhit[index])
+            var subtotal=harga * jumlah;
+            var diskon_pertama=parseFloat(this.state.diskon_persen[index]);
+            var diskon_kedua=parseFloat(this.state.diskon_rupiah[index]);
+            var nilai_diskon_pertama=parseFloat(subtotal * diskon_pertama / 100);
+            var hasil_hitung_diskon_pertama=parseFloat(subtotal - nilai_diskon_pertama);
+            var hasil_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama * diskon_kedua / 100);
+            var hasil_hitung_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama - hasil_diskon_kedua);
+            var hasil_akhir=parseFloat(hasil_hitung_diskon_kedua);
 
-            // this.state.diskon_rupiah[index]= diskonnya;
-            this.state.subtotal[index]=parseInt(harganya - diskonnya - parseInt(this.state.diskon_rupiah[index]));
+            
+            
+            this.state.subtotal[index]=parseInt(hasil_hitung_diskon_kedua);
 
             this.total();
-            this.subtotalnya();
-            this.diskonnya();
+            // this.subtotalnya();
+            // this.diskonnya();
         },
 
         ubahDiskon(index){
-            var jual=parseInt(this.state.jual[index]);
-            var jumlah=parseInt(this.state.jumlah[index]);
-            var diskon=parseInt(this.state.diskon[index]);
+            var jual=parseFloat(this.state.jual[index]);
+            var jumlah=parseFloat(this.state.jumlah[index]);
+            var diskon=parseFloat(this.state.diskon[index]);
 
             var h=(jual*jumlah)*diskon/100;
 
             // this.state.subtotal[index]=(jual*jumlah)*diskon/100;
 
             this.total();
-            this.subtotalnya();
-            this.diskonnya();
+            // this.subtotalnya();
+            // this.diskonnya();
         },
 
         total(){
             var s=0;
+            var subtotalnya=0;
+            var diskon_tambahan=this.state.diskon_tambahan;
             for(var i=0; i<this.state.subtotal.length; i++){
-                s=parseInt(s)+parseInt(this.state.subtotal[i]);
+                subtotalnya=parseFloat(subtotalnya)+parseFloat(this.state.subtotal[i]);
             }
 
-            this.state.total=parseInt(s);
+            var hasil_diskon_tambahan=subtotalnya * diskon_tambahan / 100;
+            this.subtotal=subtotalnya;
+            this.state.total=parseFloat(subtotalnya - hasil_diskon_tambahan);
         },
 
         hitungDiskonTambahan(){
             var s=0;
+            var subtotalnya=0;
+            var diskon_tambahan=this.state.diskon_tambahan;
             for(var i=0; i<this.state.subtotal.length; i++){
-                s=parseInt(s)+parseInt(this.state.subtotal[i]);
+                subtotalnya=parseFloat(subtotalnya)+parseFloat(this.state.subtotal[i]);
             }
 
-            this.state.total=parseInt(s) - parseInt(this.state.diskon_tambahan);
+            var hasil_diskon_tambahan=subtotalnya * diskon_tambahan / 100;
+            this.subtotal=subtotalnya;
+            this.state.total=parseFloat(subtotalnya - hasil_diskon_tambahan);
         },
 
         subtotalnya(){
             var s=0;
             for(var i=0; i<this.state.subtotal.length; i++){
-                s=parseInt(s)+parseInt(this.state.subtotal[i]);
+                s=parseFloat(s)+parseFloat(this.state.subtotal[i]);
             }
 
-            this.subtotal=parseInt(s);
+            this.subtotal=parseFloat(s);
         },
         
         diskonnya(){
             var s=0;
             for(var i=0; i<this.state.subtotal.length; i++){
-                s=parseInt(s)+parseInt(this.state.diskon_rupiah[i]);
+                s=parseFloat(s)+parseFloat(this.state.diskon_rupiah[i]);
             }
 
-            this.diskon=parseInt(s);
+            this.diskon=parseFloat(s);
         },
 
 

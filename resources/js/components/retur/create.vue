@@ -27,10 +27,22 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="form-group row">
-                                <label for="" class="control-label col-lg-3">Full Nota?</label>
-                                <div class="col-lg-9">
-                                    <toggle-button :value="true" :labels="{checked: 'Yes', unchecked: 'No'}" v-model="state.full_nota" @change="ubahPoPending(state.full_nota)"/>
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="form-group row">
+                                        <label for="" class="control-label col-lg-5">Full Nota?</label>
+                                        <div class="col-lg-7">
+                                            <toggle-button :value="true" :labels="{checked: 'Yes', unchecked: 'No'}" v-model="state.full_nota" @change="ubahPoPending(state.full_nota)"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="form-group row">
+                                        <label for="" class="control-label col-lg-5">Lunas?</label>
+                                        <div class="col-lg-7">
+                                            <toggle-button :value="true" :labels="{checked: 'Yes', unchecked: 'No'}" v-model="state.lunas"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -254,6 +266,7 @@ export default {
         return {
             state: {
                 full_nota:true,
+                lunas:true,
                 no_order:'',
                 tampil_order:false,
                 kode:'',
@@ -273,12 +286,15 @@ export default {
                 kd:'',
                 nama:'',
                 harga:'',
+                jumlah:0,
                 dos:'',
                 pcs:'',
                 diskon_persen:'',
                 diskon_rupiah:'',
                 return_dos:0,
                 return_pcs:0,
+                total_pcs:0,
+                pcs_barang:0
             },
             pos:[],
             barang:[],
@@ -442,6 +458,9 @@ export default {
                         this.form.harga=response.data.data[0].hrg;
                         this.form.return_dos=0;
                         this.form.return_pcs=0;
+                        this.form.jumlah=response.data.data[0].jumlah;
+                        this.form.pcs_barang=response.data.data[0].pcs_barang;
+                        this.form.total_pcs=response.data.data[0].total_pcs;
                     }
                 })
         },
@@ -477,7 +496,8 @@ export default {
                                     diskon_persen:this.barang[0].diskon_persen,
                                     diskon_rupiah:this.barang[0].diskon_rupiah,
                                     return_dos:this.barang[0].dos,
-                                    return_pcs:this.barang[0].pcs
+                                    return_pcs:this.barang[0].pcs,
+                                    pcs_barang:this.barang[0].pcs_barang
                                 }
                             );   
                         }
@@ -549,21 +569,38 @@ export default {
                 return false;
             }
 
+            var statusnya="sama";
+            var totalpcs=parseInt(this.form.return_dos*this.form.pcs_barang)+parseInt(this.form.return_pcs);
 
-            this.state.barang.push(
-                {
-                    no_order:this.form.no_order,
-                    kd_barang:this.form.kd,
-                    nm_barang:this.form.nama,
-                    harga:this.form.harga,
-                    dos:this.form.dos,
-                    pcs:this.form.pcs,
-                    diskon_persen:this.form.diskon_persen,
-                    diskon_rupiah:this.form.diskon_rupiah,
-                    return_dos:this.form.return_dos,
-                    return_pcs:this.form.return_pcs
+            if(totalpcs > this.form.total_pcs){
+                alert('Jumlah barang retur tidak sesuai dengan jumlah barang dibeli');
+            }else{
+                if(this.form.total_pcs == totalpcs){
+                    statusnya="sama";
+                }else{
+                    statusnya="kurang";
                 }
-            );
+
+                this.state.barang.push(
+                    {
+                        no_order:this.form.no_order,
+                        kd_barang:this.form.kd,
+                        nm_barang:this.form.nama,
+                        harga:this.form.harga,
+                        dos:this.form.dos,
+                        pcs:this.form.pcs,
+                        diskon_persen:this.form.diskon_persen,
+                        diskon_rupiah:this.form.diskon_rupiah,
+                        return_dos:this.form.return_dos,
+                        return_pcs:this.form.return_pcs,
+                        jumlah:this.form.jumlah,
+                        statusnya:statusnya,
+                        pcs_barang:this.form.pcs_barang
+                    }
+                );
+            }
+
+            console.log(this.state.barang);
 
             this.kosongBarang();
         },
