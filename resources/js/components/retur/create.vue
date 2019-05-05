@@ -352,7 +352,7 @@ export default {
         },
         
         getNoOrder(){
-            axios.get('/data/list-order-client?customer='+this.state.customer+"&nota="+this.state.full_nota)
+            axios.get('/data/list-order-client?customer='+this.state.customer+"&nota="+this.state.full_nota+"&lunas="+this.state.lunas)
                 .then(response => {
                     this.pos= response.data
                 })

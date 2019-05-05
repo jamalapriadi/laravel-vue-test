@@ -173,7 +173,43 @@ class PoController extends Controller
             ]
         )->find($id);
 
-        return $po;
+        //cek stok barangnya
+        $list=array();
+        foreach($po->detail as $detail){
+            $barang=\App\Models\Barang::find($detail->kd);            
+
+            $pcs=$detail->pivot->pcs;
+            $dos=$detail->pivot->dos;
+            $kurangnya=$barang->pcs*$dos+$pcs;
+
+            $stokbarang=\DB::table('stok')
+                ->leftJoin('rak','rak.kd','=','stok.rak_id')
+                ->where('kd_brg',$detail->kd)
+                ->select('rak.nm as nama_rak','stok.*')
+                ->get();
+
+            $rak=array();
+            foreach($stokbarang as $row){
+                if($kurangnya > 0){
+                    $rak[]=array(
+                        'rak'=>$row->nama_rak,
+                        'pcs'=>$row->pcs
+                    );
+
+                    $kurangnya=round($kurangnya-$row->pcs);
+                }
+            }
+
+            $list[]=array(
+                'kd'=>$detail->kd,
+                'nm'=>$detail->nm,
+                'dos'=>$detail->pivot->dos,
+                'pcs'=>$detail->pivot->pcs,
+                'rak'=>$rak
+            );
+        }
+
+        return array('po'=>$po,'detail'=>$list);
     }
 
     public function po_by_id(Request $request,$id)

@@ -349,6 +349,17 @@ class OrderController extends Controller
     public function list_order_client(Request $request)
     {
         $cus=$request->input('customer');
+        $status="";
+
+        if($request->has('lunas')){
+            $lunas=$request->input('lunas');
+
+            if($lunas==true){
+                $status.=" AND a.status_pembayaran='Lunas'";
+            }else{
+                $status.=" AND a.status_pembayaran in ('Kredit','Belum Lunas')";
+            }
+        }
 
         if($request->has('nota')){
             $nota=$request->input('nota');
@@ -359,20 +370,21 @@ class OrderController extends Controller
                     LEFT JOIN picking b ON b.kd_picking=a.kd_picking
                     LEFT JOIN po c ON c.no_po=b.no_po
                     WHERE c.customer_id='$cus'
+                    $status
                     AND a.no_order not in (select distinct no_order from retur)");
             }else if($nota==false){
                 $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id 
                     FROM orders a
                     LEFT JOIN picking b ON b.kd_picking=a.kd_picking
                     LEFT JOIN po c ON c.no_po=b.no_po
-                    WHERE c.customer_id='$cus'");
+                    WHERE c.customer_id='$cus' $status");
             }
         }else{
             $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id
                 FROM orders a
                 LEFT JOIN picking b ON b.kd_picking=a.kd_picking
                 LEFT JOIN po c ON c.no_po=b.no_po
-                WHERE c.customer_id='$cus'");
+                WHERE c.customer_id='$cus' $status");
         }
         
 

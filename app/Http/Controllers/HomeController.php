@@ -28,7 +28,9 @@ class HomeController extends Controller
 
     public function list_keterangan()
     {
-        $cek=\DB::table('ket')->get();
+        $cek=\DB::table('ket')
+            ->where('perusahaan_id',auth()->user()->perusahaan_id)
+            ->get();
 
         return $cek;
     }
@@ -54,6 +56,7 @@ class HomeController extends Controller
             if($cek > 0)
             {
                 \DB::table('ket')
+                    ->where('perusahaan_id',auth()->user()->perusahaan_id)
                     ->update(
                         [
                             'no_hp'=>request('no_hp'),
@@ -69,7 +72,8 @@ class HomeController extends Controller
                             'no_hp'=>request('no_hp'),
                             'email'=>request('email'),
                             'npwp'=>request('npwp'),
-                            'pin'=>request('pin')
+                            'pin'=>request('pin'),
+                            'perusahaan_id'=>auth()->user()->perusahaan_id
                         ]
                     );
             }

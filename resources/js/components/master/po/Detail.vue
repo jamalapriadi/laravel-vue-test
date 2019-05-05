@@ -43,6 +43,7 @@
                                     <th>No.</th>
                                     <th>Kode Barang</th>
                                     <th>Nama Barang</th>
+                                    <th>Rak</th>
                                     <th>Dos</th>
                                     <th>Pcs</th>
                                 </tr>
@@ -52,8 +53,13 @@
                                     <td>{{index+1}}</td>
                                     <td>{{l.kd}}</td>
                                     <td>{{l.nm}}</td>
-                                    <td>{{l.pivot.dos}}</td>
-                                    <td>{{l.pivot.pcs}}</td>
+                                    <td>
+                                        <ul>
+                                            <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}}</li>
+                                        </ul>
+                                    </td>
+                                    <td>{{l.dos}}</td>
+                                    <td>{{l.pcs}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -102,12 +108,12 @@ export default {
 
             axios.get('/data/po/'+id)
                 .then(response => {
-                    this.state.kode= response.data.no_po;
-                    this.state.customer= response.data.customer.nm;
-                    this.state.tanggal= response.data.tgl;
-                    this.state.perusahaan= response.data.perusahaan.nama;
-                    this.state.lokasi = response.data.lokasi.nm;
-                    this.state.keterangan= response.data.ket;
+                    this.state.kode= response.data.po.no_po;
+                    this.state.customer= response.data.po.customer.nm;
+                    this.state.tanggal= response.data.po.tgl;
+                    this.state.perusahaan= response.data.po.perusahaan.nama;
+                    this.state.lokasi = response.data.po.lokasi.nm;
+                    this.state.keterangan= response.data.po.ket;
                     this.state.listBarang= response.data.detail;
                 })
                 .catch( error => {
