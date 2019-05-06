@@ -181,6 +181,7 @@ class PoController extends Controller
             $pcs=$detail->pivot->pcs;
             $dos=$detail->pivot->dos;
             $kurangnya=$barang->pcs*$dos+$pcs;
+            $sudahdiambil=$barang->pcs*$dos+$pcs;
 
             $stokbarang=\DB::table('stok')
                 ->leftJoin('rak','rak.kd','=','stok.rak_id')
@@ -189,11 +190,36 @@ class PoController extends Controller
                 ->get();
 
             $rak=array();
+            $sisa=0;
+
             foreach($stokbarang as $row){
                 if($kurangnya > 0){
+                    // if($row->pcs > $kurangnya){
+                    //     $diambil = $row->pcs;
+                    // }else{
+                    //     $diambil = $row->pcs;
+                    // }
+                    
+                    //jika stok barang lebih dari jumlah kurangnya, maka diambil semua kurang nya
+                    if($kurangnya > $row->pcs){
+                        $diambil=$row->pcs;
+                    }else{
+                        //jika stok barang kurang dari  barang yang ingin diambil
+                        if($row->pcs > $kurangnya){
+                            $diambil=$kurangnya;
+                        }else{
+                            $diambil=$row->pcs;
+                        }
+                    }
+                    
+
                     $rak[]=array(
                         'rak'=>$row->nama_rak,
-                        'pcs'=>$row->pcs
+                        'pcs'=>$row->pcs,
+                        'stok'=>$row->pcs,
+                        'kurangnya'=>$kurangnya,
+                        'sisa'=>$kurangnya - $row->pcs,
+                        'diambil'=>$diambil
                     );
 
                     $kurangnya=round($kurangnya-$row->pcs);

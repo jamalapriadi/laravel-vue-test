@@ -55,7 +55,7 @@
                                     <td>{{l.nm}}</td>
                                     <td>
                                         <ul>
-                                            <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}}</li>
+                                            <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}} - {{k.diambil}}</li>
                                         </ul>
                                     </td>
                                     <td>{{l.dos}}</td>

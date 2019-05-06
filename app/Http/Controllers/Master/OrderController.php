@@ -354,10 +354,10 @@ class OrderController extends Controller
         if($request->has('lunas')){
             $lunas=$request->input('lunas');
 
-            if($lunas==true){
-                $status.=" AND a.status_pembayaran='Lunas'";
+            if($lunas=="true"){
+                $status=" AND a.status_pembayaran='Lunas'";
             }else{
-                $status.=" AND a.status_pembayaran in ('Kredit','Belum Lunas')";
+                $status=" AND a.status_pembayaran!='Lunas'";
             }
         }
 
@@ -365,7 +365,7 @@ class OrderController extends Controller
             $nota=$request->input('nota');
 
             if($nota==true){
-                $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id 
+                $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id, a.status_pembayaran 
                     FROM orders a
                     LEFT JOIN picking b ON b.kd_picking=a.kd_picking
                     LEFT JOIN po c ON c.no_po=b.no_po
@@ -373,14 +373,14 @@ class OrderController extends Controller
                     $status
                     AND a.no_order not in (select distinct no_order from retur)");
             }else if($nota==false){
-                $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id 
+                $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id , a.status_pembayaran
                     FROM orders a
                     LEFT JOIN picking b ON b.kd_picking=a.kd_picking
                     LEFT JOIN po c ON c.no_po=b.no_po
                     WHERE c.customer_id='$cus' $status");
             }
         }else{
-            $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id
+            $lis=\DB::select("SELECT a.no_order, b.kd_picking, c.customer_id, a.status_pembayaran
                 FROM orders a
                 LEFT JOIN picking b ON b.kd_picking=a.kd_picking
                 LEFT JOIN po c ON c.no_po=b.no_po
