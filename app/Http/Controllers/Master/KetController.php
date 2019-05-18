@@ -41,7 +41,7 @@ class KetController extends Controller
         $rules=[
             'nohp'=>'required',
             'email'=>'required',
-            'pin'=>'required',
+            'no_rekening'=>'required',
             'npwp'=>'required'
         ];
 
@@ -57,7 +57,7 @@ class KetController extends Controller
             $ket=new Ket;
             $ket->no_hp=request('nohp');
             $ket->email=request('email');
-            $ket->pin=request('pin');
+            $ket->no_rekening=request('no_rekening');
             $ket->npwp=request('npwp');
             $ket->save();
 
@@ -105,7 +105,7 @@ class KetController extends Controller
         $rules=[
             'nohp'=>'required',
             'email'=>'required',
-            'pin'=>'required',
+            'no_rekening'=>'required',
             'npwp'=>'required'
         ];
 
@@ -121,7 +121,7 @@ class KetController extends Controller
             $ket=Ket::find($id);
             $ket->no_hp=request('nohp');
             $ket->email=request('email');
-            $ket->pin=request('pin');
+            $ket->no_rekening=request('no_rekening');
             $ket->npwp=request('npwp');
             $ket->save();
 

@@ -39,7 +39,7 @@ class HomeController extends Controller
         $rules=[
             'no_hp'=>'required',
             'email'=>'required',
-            'pin'=>'required',
+            'no_rekening'=>'required',
             'npwp'=>'required'
         ];
 
@@ -62,7 +62,7 @@ class HomeController extends Controller
                             'no_hp'=>request('no_hp'),
                             'email'=>request('email'),
                             'npwp'=>request('npwp'),
-                            'pin'=>request('pin')
+                            'no_rekening'=>request('no_rekening')
                         ]
                     );
             }else{
@@ -72,7 +72,7 @@ class HomeController extends Controller
                             'no_hp'=>request('no_hp'),
                             'email'=>request('email'),
                             'npwp'=>request('npwp'),
-                            'pin'=>request('pin'),
+                            'no_rekening'=>request('no_rekening'),
                             'perusahaan_id'=>auth()->user()->perusahaan_id
                         ]
                     );

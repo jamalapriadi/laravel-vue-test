@@ -24,10 +24,10 @@ class AllBarangExport implements FromCollection,WithHeadings,WithMapping
             $barang->nm,
             $barang->kelompok_id,
             $barang->merk_id,
-            // $barang->status,
-            // $barang->satuan,
+            $barang->status,
+            $barang->satuan,
             $barang->pcs,
-            // $barang->hrgb,
+            $barang->hrgb,
             $barang->hrgp,
             $barang->jual
         ];
@@ -40,10 +40,10 @@ class AllBarangExport implements FromCollection,WithHeadings,WithMapping
             'nm_barang',
             'kelompok_id',
             'merk_id',
-            // 'status',
-            // 'satuan',
+            'status',
+            'satuan',
             'pcs',
-            // 'harga_beli',
+            'harga_beli',
             'harga_pokok',
             'jual'
         ];

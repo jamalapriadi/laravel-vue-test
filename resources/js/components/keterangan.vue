@@ -21,8 +21,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="" class="control-label">Pin</label>
-                        <input type="text" class="form-control" v-model="state.pin">
+                        <label for="" class="control-label">No. Rekening</label>
+                        <textarea name="" id="" cols="30" rows="3" class="form-control" v-model="state.no_rekening"></textarea>
                     </div>
 
                     <div class="form-group">
@@ -53,7 +53,7 @@ export default {
             state: {
                 no_hp: '',
                 email: '',
-                pin: '',
+                no_rekening: '',
                 npwp:''
             },
             message:'',
@@ -72,7 +72,7 @@ export default {
                     this.state = {
                         no_hp: '',
                         email: '',
-                        pin: '',
+                        no_rekening: '',
                         npwp:''
                     }
                     this.message = 'Data has been saved.';
@@ -99,14 +99,14 @@ export default {
                         this.state={
                             'no_hp':response.data[0].no_hp,
                             'email':response.data[0].email,
-                            'pin':response.data[0].pin,
+                            'no_rekening':response.data[0].no_rekening,
                             'npwp':response.data[0].npwp
                         }
                     }else{
                         this.state= {
                             no_hp: '',
                             email: '',
-                            pin: '',
+                            no_rekening: '',
                             npwp:''
                         }
                     }

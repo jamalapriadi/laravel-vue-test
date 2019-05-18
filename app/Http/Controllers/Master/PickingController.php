@@ -169,11 +169,22 @@ class PickingController extends Controller
                     }
                 }
 
+                $nota=Picking::with(
+                    [
+                        'detail',
+                        'po',
+                        'po.customer',
+                        'po.lokasi',
+                        'perusahaan'
+                    ]
+                )->find(request('kode'));
+
                 $data=array(
                     'success'=>true,
                     'pesan'=>'Data berhasil disimpan',
                     'errors'=>'',
-                    'adahutang'=>false
+                    'adahutang'=>false,
+                    'nota'=>$nota
                 );
             }else{
                 $data=array(

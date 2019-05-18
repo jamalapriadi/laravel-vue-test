@@ -187,10 +187,26 @@ class OrderController extends Controller
                 //     }
                 // }
 
+                $nota=Order::with(
+                    [
+                        'picking',
+                        'picking.po.customer',
+                        'picking.lokasi',
+                        'picking.perusahaan',
+                        'detail',
+                        'perusahaan',
+                        'sales'
+                    ]
+                )->find(request('kode'));
+
+                $keterangan=\App\Models\Ket::where('perusahaan_id',auth()->user()->perusahaan_id)->first();
+
                 $data=array(
                     'success'=>true,
                     'pesan'=>'Data berhasil disimpan',
-                    'errors'=>''
+                    'errors'=>'',
+                    'nota'=>$nota,
+                    'keterangan'=>$keterangan
                 );
             }else{
                 $data=array(

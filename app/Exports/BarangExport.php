@@ -24,7 +24,10 @@ class BarangExport implements FromCollection,WithHeadings,WithMapping
             $barang->nm,
             $barang->kelompok_id,
             $barang->merk_id,
+            $barang->status,
+            $barang->satuan,
             $barang->pcs,
+            $barang->hrgb,
             $barang->hrgp,
             $barang->jual
         ];
@@ -37,7 +40,10 @@ class BarangExport implements FromCollection,WithHeadings,WithMapping
             'nm_barang',
             'kelompok_id',
             'merk_id',
+            'status',
+            'satuan',
             'pcs',
+            'harga_beli',
             'harga_pokok',
             'jual'
         ];

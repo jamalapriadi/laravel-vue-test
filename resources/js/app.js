@@ -39,6 +39,20 @@ import Autocomplete from 'v-autocomplete'
 import 'v-autocomplete/dist/v-autocomplete.css'
 import ToggleButton from 'vue-js-toggle-button'
 import Snotify from 'vue-snotify';
+import VueHtmlToPaper from 'vue-html-to-paper';
+
+const options = {
+  name: '_blank',
+  specs: [
+    'fullscreen=yes',
+    'titlebar=yes',
+    'scrollbars=yes'
+  ],
+  styles: [
+    'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+    'https://unpkg.com/kidlat-css/css/kidlat.css'
+  ]
+}
 
 
 Vue.use(VueRouter);
@@ -49,6 +63,7 @@ Vue.use(Vuelidate);
 Vue.use(Autocomplete)
 Vue.use(ToggleButton)
 Vue.use(Snotify)
+Vue.use(VueHtmlToPaper, options);
 
 //define routes for users
 const routes = [

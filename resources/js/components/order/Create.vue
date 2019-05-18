@@ -176,6 +176,108 @@
                     </div>
                 </div>
             </div>
+
+            <!-- SOURCE -->
+            <div id="printMe" style="margin-top:10px;display:none;">
+                <div class="container">
+                    <br><br>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3">
+                            <div class="form-group row" style="margin-top:10px;">
+                                <label for="" class="control-label">{{dataprint.perusahaan}}</label>
+                            </div>
+                            <div class="form-group row" style="margin-top:-20px;">
+                                <label for="" class="control-label">{{dataprint.telp}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <h3 class="text-center">NOTA PENJUALAN</h3>
+                        </div>
+                        <div class="col-lg-3 col-md-3" style="margin-top:10px;">
+                            <div class="form-group row">
+                                <label for="" class="control-label">{{dataprint.sales}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="control-label">Nomor</label>
+                                <div class="col-lg-9 col-md-9">
+                                    : {{dataprint.no_order}}
+                                </div>
+                            </div>
+                            <div class="form-group row" style="margin-top:-20px;">
+                                <label for="" class="control-label">Tanggal</label>
+                                <div class="col-lg-9 col-md-9">
+                                    : {{dataprint.tgl}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="control-label">Customer</label>
+                                <div class="col-lg-9 col-md-9">
+                                    {{dataprint.customer.nm}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Qty</th>
+                                    <th>Harga Disc (%)</th>
+                                    <th>Discount</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(l,index) in dataprint.detail" v-bind:key="index">
+                                    <td>{{l.nm}}</td>
+                                    <td>{{l.pivot.pcs}}</td>
+                                    <td>{{l.pivot.diskon_persen}}</td>
+                                    <td>{{l.pivot.diskon_rupiah}}</td>
+                                    <td>{{l.jual}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>TOTAL</th>
+                                    <th>{{dataprint.total}}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="col-lg-6 col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="control-label">No. HP</label>
+                                <div class="col-lg-9 col-md-9">
+                                    : {{dataprint.keterangan.no_hp}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="control-label">No. HP</label>
+                                <div class="col-lg-9 col-md-9">
+                                    : {{dataprint.keterangan.email}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    <!-- OUTPUT -->
+
         </div>
     </div>
 </template>
@@ -281,7 +383,25 @@ export default {
             pickings:[],
             tampilDetail:false,
             subtotal:0,
-            diskon:0
+            diskon:0,
+            dataprint:{
+                perusahaan:'',
+                telp:'',
+                sales:'',
+                no_order:'',
+                tanggal:'',
+                tanggaljt:'',
+                customer:{},
+                datail:[],
+                total:0,
+                kd_trans:'',
+                kd_picking:'',
+                status_pembayaran:'',
+                detail:[],
+                total:0,
+                keterangan:{}
+            },
+            output:null
         }
     },
     watch: {
@@ -305,6 +425,10 @@ export default {
         rupiah(value) {
             let val = (value/1).toFixed().replace('.', ',')
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        },
+
+        print(){
+            this.$htmlToPaper('printMe');
         },
 
         getCode(){
@@ -849,6 +973,30 @@ export default {
                         this.state.diskon_tambahan=0
 
                         this.tampilDetail=false;
+
+                        // console.log(this.state);
+                        this.dataprint={
+                            perusahaan:response.data.nota.perusahaan.nama,
+                            telp:response.data.nota.picking.po.customer.tlpn,
+                            sales:response.data.nota.sales.nm,
+                            no_order:response.data.nota.no_order,
+                            tanggal:response.data.nota.tgl,
+                            tanggaljt:response.data.nota.tgljt,
+                            customer:response.data.nota.picking.po.customer,
+                            datail:response.data.nota.detail,
+                            total:response.data.nota.total,
+                            kd_trans:response.data.nota.kd_trans,
+                            kd_picking:response.data.nota.kd_picking,
+                            status_pembayaran:response.data.nota.status_pembayaran,
+                            detail:response.data.nota.detail,
+                            keterangan:response.data.keterangan,
+                            total:response.data.nota.total
+                        }
+                        // this.print();
+
+                        this.$nextTick(() => {
+                            this.$htmlToPaper('printMe');
+                        });
 
                         this.getCode();
                         this.getPicking();

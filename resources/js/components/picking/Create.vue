@@ -180,6 +180,49 @@
                 </div>
             </div>
         </div>
+
+        <div id="printMe" style="margin-top:10px;display:none;">
+            <br>
+            <table>
+                <tr>
+                    <td>No. Picking</td>
+                    <td> : </td>
+                    <td>{{dataprint.no_picking}}</td>
+                </tr>
+                <tr>
+                    <td>No. PO</td>
+                    <td> : </td>
+                    <td>{{dataprint.no_po}}</td>
+                </tr>
+                <tr>
+                    <td>Customer</td>
+                    <td> : </td>
+                    <td>{{dataprint.customer}}</td>
+                </tr>
+                <tr>
+                    <td>Lokasi</td>
+                    <td> : </td>
+                    <td>{{dataprint.lokasi}}</td>
+                </tr>
+            </table>
+            <hr>
+            <div v-for="(l,index) in dataprint.detail" v-bind:key="index">
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <th rowspan="3">{{l.nm}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{l.nama_rak}}</td>
+                            <td>{{l.pivot.dos}} Dos</td>
+                            <td>{{l.pivot.pcs}} Pcs</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     
 </template>
@@ -269,6 +312,13 @@ export default {
             caritokocustomer:'',
             listcaricustomer:[],
             listtokocustomer:[],
+            dataprint:{
+                no_picking:'',
+                no_po:'',
+                customer:'',
+                lokasi:'',
+                detail:[]
+            }
             
             
         }
@@ -305,6 +355,10 @@ export default {
                     this.pos= response.data
                 })
         },
+        print(){
+            this.$htmlToPaper('printMe');
+        },
+
         getCode(){
             axios.get('/data/autonumber-picking')
                 .then(response => {
@@ -742,6 +796,19 @@ export default {
                         this.message = 'Data has been saved.';
                         this.loading = false;
                         this.adahutang=false;
+
+                        this.dataprint={
+                            perusahaan:response.data.nota.perusahaan.nama,
+                            no_picking:response.data.nota.kd_picking,
+                            no_po:response.data.nota.no_po,
+                            customer:response.data.nota.po.customer.nm,
+                            lokasi:response.data.nota.po.lokasi.nm,
+                            detail:response.data.nota.detail
+                        }
+
+                        this.$nextTick(() => {
+                            this.$htmlToPaper('printMe');
+                        });
                     }else{
                         if(response.data.adahutang==true){
                             this.adahutang=true;
