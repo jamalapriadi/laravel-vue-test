@@ -6,7 +6,7 @@ use App\Models\Koreksi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class KotaController extends Controller
+class KoreksiController extends Controller
 {
     public function index(Request $request)
     {
