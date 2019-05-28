@@ -58,7 +58,7 @@
 
             <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
             <div align="right">
-                <pagination :data="listData" @pagination-change-page="showData" :show-disabled="true"></pagination>
+                <pagination :data="listData" :limit="3" @pagination-change-page="showData" :show-disabled="true"></pagination>
             </div>
         </div>
     </div>

@@ -30,7 +30,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th width="5%">No.</th>
+                        <th width="15%">Merk ID</th>
                         <th>Nama</th>
                         <th>Persen</th>
                         <th width="17%"></th>
@@ -38,7 +38,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(l, index) in list.data" v-bind:key="index">
-                        <td>{{index+1}}</td>
+                        <td>{{l.id}}</td>
                         <td>{{l.nm}}</td>
                         <td>{{l.persen}}</td>
                         <td>
@@ -58,7 +58,7 @@
 
             <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
             <div align="right">
-                <pagination :data="listData" @pagination-change-page="showData" :show-disabled="true"></pagination>
+                <pagination :data="listData" :limit="3" @pagination-change-page="showData" :show-disabled="true"></pagination>
             </div>
         </div>
     </div>

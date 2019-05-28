@@ -40,6 +40,7 @@ import 'v-autocomplete/dist/v-autocomplete.css'
 import ToggleButton from 'vue-js-toggle-button'
 import Snotify from 'vue-snotify';
 import VueHtmlToPaper from 'vue-html-to-paper';
+import LaravelPagination from 'laravel-vue-pagination'
 
 const options = {
   name: '_blank',
@@ -64,6 +65,7 @@ Vue.use(Autocomplete)
 Vue.use(ToggleButton)
 Vue.use(Snotify)
 Vue.use(VueHtmlToPaper, options);
+Vue.component('pagination', LaravelPagination);
 
 //define routes for users
 const routes = [

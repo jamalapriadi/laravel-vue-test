@@ -121,6 +121,7 @@ export default {
                 jenis:''
             },
             message:'',
+            jeniscustomer:[],
             errors: [],
             kota:[]
         }
@@ -164,6 +165,66 @@ export default {
 
         saveForm(){
             var newState = this.state;
+
+            if(this.state.nama=="" || this.state.nama==null){
+                alert('Nama harus diisi');
+
+                return false;
+            }
+
+            if(this.state.jenis_customer=="" || this.state.jenis_customer==null){
+                alert('Jenis Customer harus diisi');
+
+                return false;
+            }
+
+            if(this.state.toko=="" || this.state.toko==null){
+                alert('Nama Toko harus diisi');
+
+                return false;
+            }
+
+            if(this.state.nik=="" || this.state.nik==null){
+                alert('Nik harus diisi');
+
+                return false;
+            }
+
+            if(this.state.npwp=="" || this.state.npwp==null){
+                alert('NPWP harus diisi');
+
+                return false;
+            }
+
+            if(this.state.alamat=="" || this.state.alamat==null){
+                alert('Alamat harus diisi');
+
+                return false;
+            }
+
+            if(this.state.alias=="" || this.state.alias==null){
+                alert('Alias harus diisi');
+
+                return false;
+            }
+
+            if(this.state.kota=="" || this.state.kota==null){
+                alert('Kota harus diisi');
+
+                return false;
+            }
+
+            if(this.state.telepon=="" || this.state.telepon==null){
+                alert('Telepon harus diisi');
+
+                return false;
+            }
+
+            if(this.state.kota=="" || this.state.kota==null){
+                alert('Kota harus diisi');
+
+                return false;
+            }
 
             axios.patch('/data/customer/'+this.lokasiId, newState)
                 .then(response => {
