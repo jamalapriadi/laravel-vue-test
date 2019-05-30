@@ -79,6 +79,9 @@
                         <label for="" class="control-label">Jenis</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.jenis }" v-model="state.jenis">
                     </div> -->
+                    <div v-if="message" class="alert alert-success">
+                        {{ message }}
+                    </div>
                     <hr>
                     <div class="form-group">
                         <router-link to="/customer" class="btn btn-default">
@@ -229,7 +232,8 @@ export default {
             axios.patch('/data/customer/'+this.lokasiId, newState)
                 .then(response => {
                     if(response.data.success==true){
-                        this.$router.replace('/customer');
+                        this.message="Dat Berhasil diupdate"
+                        // this.$router.replace('/customer');
                     }else{
                         alert('Update Data Gagal');
                     }
