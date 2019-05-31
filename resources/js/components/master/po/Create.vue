@@ -660,7 +660,7 @@ export default {
                                 nm_barang:response.data.nm_barang,
                                 dos:parseInt(response.data.dos),
                                 pcs:parseInt(response.data.pcs),
-                                total_pcs:parseInt(this.barang.total_pcs),
+                                total_pcs:parseInt(response.data.total_pcs),
                                 harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
                                 rak:response.data.rak
                             }

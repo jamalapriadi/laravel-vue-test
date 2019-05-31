@@ -410,6 +410,8 @@ class BarangController extends Controller
                 'dos'=>$dos,
                 'pcs'=>$pcs,
                 'kurangnya'=>$barang->pcs*$dos+$pcs,
+                'total_pcs'=>$barang->pcs*$dos+$pcs,
+                'total_harga'=>$barang->jual*($barang->pcs*$dos+$pcs),
                 'rak'=>$rak
             );
         }
