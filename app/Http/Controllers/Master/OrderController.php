@@ -153,20 +153,17 @@ class OrderController extends Controller
                         }
                     }
                 }
+
+                /* update stok
                 if($request->has('kodes')){
                     $kodes=request('kodes');
 
                     foreach($kodes as $key=>$val){
-
-                        // \DB::statement("UPDATE stok SET pcs = pcs-".$request->input('jumlah')[$key]." 
-                        //     where kd_brg='".$val."' 
-                        //     and lokasi_id='".$request->input('lokasiid')."' 
-                        //     and rak_id='".$request->input('rak')[$key]."'");
-
                         \DB::statement("UPDATE stok SET pcs = pcs-".$request->input('jumlah')[$key]." 
                         where id='".$request->input('idstok')[$key]."'");
                     }
                 }
+                */
 
                 // if($request->has('listBarang')){
                 //     $listbarang=request('listBarang');

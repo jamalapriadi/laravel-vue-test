@@ -474,7 +474,6 @@ export default {
                     this.state.customer=response.data.po.customer_id;
                     this.state.lokasi=response.data.po.lokasi_id;
                     this.changeLokasi();
-                    // this.state.listBarang=response.data.list;
 
                     this.barang=response.data.list;
                     this.state.kurang=response.data.kurang;
