@@ -427,15 +427,15 @@ class PoController extends Controller
             $status=$request->input('status');
 
             if($status=="true"){
-                $dimana="and no_ref_po is null";
+                $dimana.=" and no_ref_po is null";
             }
 
             if($status=="false"){
-                $dimana="and no_ref_po is not null";
+                $dimana.=" and no_ref_po is not null";
             }
         }
 
-        if($request->has('customer')){
+        if($request->has('customer') && $request->input('customer')!=""){
             $customer=$request->input('customer');
             $dimana.=" and customer_id='".$customer."'";
         }
