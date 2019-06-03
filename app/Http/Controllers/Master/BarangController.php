@@ -393,6 +393,7 @@ class BarangController extends Controller
             foreach($stokbarang as $row){
                 if($kurangnya > 0){
                     $rak[]=array(
+                        'stok_id'=>$row->id,
                         'rak'=>$row->nama_rak,
                         'pcs'=>$row->pcs
                     );

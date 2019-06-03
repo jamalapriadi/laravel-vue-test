@@ -153,6 +153,9 @@ class PickingController extends Controller
                     $kodes=request('kodes');
 
                     foreach($kodes as $key=>$val){
+                        $cekB=\App\Models\Barang::find($val);
+                        $totalpcnya=($cekB->pcs * $request->input('pdos')[$key]) + $request->input('ppcs')[$key];
+
                         \DB::table('rpicking')
                             ->insert(
                                 [
@@ -166,6 +169,9 @@ class PickingController extends Controller
                                     'stok_id'=>$request->input('idstok')[$key]
                                 ]
                             );
+
+                        \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
+                            where id='".$request->input('idstok')[$key]."'");
                     }
                 }
 
