@@ -458,8 +458,8 @@ export default {
             this.state.dos=[];
             this.state.pcs=[];
             this.barang=[];
-            this.$refs.tokocustomer.inputValue = ""
-            this.$refs.namacustomer.inputValue = ""
+            // this.$refs.tokocustomer.inputValue = ""
+            // this.$refs.namacustomer.inputValue = ""
 
             this.getNoPo(ppending);
         },
