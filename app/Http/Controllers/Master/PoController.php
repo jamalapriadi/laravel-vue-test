@@ -15,6 +15,8 @@ class PoController extends Controller
      */
     public function index(Request $request)
     {
+        $picking=\App\Models\Picking::where('status_terpenuhi','Y')->pluck('no_po');
+
         $po=Po::with(
             [
                 'detail',
@@ -22,7 +24,8 @@ class PoController extends Controller
                 'perusahaan',
                 'lokasi'
             ]
-        )->where('perusahaan_id',auth()->user()->perusahaan_id);
+        )->where('perusahaan_id',auth()->user()->perusahaan_id)
+        ->whereNotIn('no_po',$picking);
 
         if($request->has('q')){
             $po=$po->where('customer_id','like','%'.request('q').'%');

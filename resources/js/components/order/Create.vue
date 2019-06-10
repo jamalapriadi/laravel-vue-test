@@ -164,16 +164,31 @@
             
                     <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
 
-                    <div class="form-group">
-                        <router-link to="/list-picking" class="btn btn-default">
-                            <i class="fa fa-backward"></i> Back
-                        </router-link>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <router-link to="/list-picking" class="btn btn-default">
+                                    <i class="fa fa-backward"></i> Back
+                                </router-link>
 
-                        <button class="btn btn-primary" v-on:click="saveProgram">
-                            <i class="fa fa-save"></i>
-                            Save
-                        </button>
+                                <button class="btn btn-primary" v-on:click="saveProgram">
+                                    <i class="fa fa-save"></i>
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="float-right">
+                                <button class="btn btn-danger" v-on:click="batalOrder">
+                                    <i class="fa fa-trash"></i>
+                                    Batal
+                                </button>
+                            </div>
+                        </div>
                     </div>
+
+                    
                 </div>
             </div>
 
@@ -212,7 +227,7 @@
                             <div class="form-group row" style="margin-top:-20px;">
                                 <label for="" class="control-label">Tanggal</label>
                                 <div class="col-lg-9 col-md-9">
-                                    : {{dataprint.tgl}}
+                                    : {{dataprint.tanggal}}
                                 </div>
                             </div>
                         </div>
@@ -221,6 +236,10 @@
                                 <label for="" class="control-label">Customer</label>
                                 <div class="col-lg-9 col-md-9">
                                     {{dataprint.customer.nm}}
+                                    <br>
+                                    {{dataprint.customer.nm_toko}}
+                                    <br>
+                                    {{dataprint.customer.alamat}}
                                 </div>
                             </div>
                         </div>
@@ -246,8 +265,8 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th></th>
-                                    <th></th>
+                                    <th>{{dataprint.update_at}}</th>
+                                    <th>PM Mira</th>
                                     <th></th>
                                     <th>TOTAL</th>
                                     <th>{{dataprint.total}}</th>
@@ -259,18 +278,37 @@
                             <div class="form-group row">
                                 <label for="" class="control-label">No. HP</label>
                                 <div class="col-lg-9 col-md-9">
-                                    : {{dataprint.keterangan.no_hp}}
+                                    : 082451657777 (WHATSAPP)
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="" class="control-label">No. HP</label>
+                                <label for="" class="control-label">Email</label>
                                 <div class="col-lg-9 col-md-9">
-                                    : {{dataprint.keterangan.email}}
+                                    : tunggallarisg@yahoo.com
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6">
-
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="" class="control-label">Penerima</label>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        BKL WAYAN TORUE
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="" class="control-label">Hormat Kami</label>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        ......................
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -303,6 +341,7 @@ export default {
     },
     data() {
         return {
+            detailPicking:[],
             state: {
                 kd_picking:'',
                 kd_customer:'',
@@ -385,6 +424,7 @@ export default {
             subtotal:0,
             diskon:0,
             dataprint:{
+                update_at:'',
                 perusahaan:'',
                 telp:'',
                 sales:'',
@@ -452,7 +492,6 @@ export default {
         },
 
         ubahPicking(){
-            console.log(this.state.kd_picking);
             this.hitungan=[];
             this.barangs=[];
             this.state.kodehit=[];
@@ -470,8 +509,9 @@ export default {
 
             axios.get('/data/picking/'+this.state.kd_picking)
                 .then(response => {
+                    this.detailPicking = response.data;
                     this.tampilDetail=true;
-                    console.log(response.data);
+                    console.log(this.detailPicking);
                     this.state.no_po=response.data.no_po;
                     this.state.tanggal=response.data.tgl;
                     this.state.customer=response.data.po.customer.nm;
@@ -990,7 +1030,8 @@ export default {
                             status_pembayaran:response.data.nota.status_pembayaran,
                             detail:response.data.nota.detail,
                             keterangan:response.data.keterangan,
-                            total:response.data.nota.total
+                            total:response.data.nota.total,
+                            update_at: response.data.nota.updated_at,
                         }
                         // this.print();
 
@@ -1001,6 +1042,70 @@ export default {
                         this.getCode();
                         this.getPicking();
                         this.message = 'Data has been saved.';
+                        this.loading = false;
+                    }else{
+                        alert('Internal server error');
+                    }
+                })
+        },
+
+        batalOrder(){
+            if(this.state.kode==""){
+                alert('Kode harus diisi');
+
+                return false;
+            }
+
+            if(this.state.kd_picking==""){
+                alert('No Po harus diisi');
+
+                return false;
+            }
+
+            this.loading = true;
+
+            axios.post('/data/cancel-order', this.detailPicking)
+                .then(response => {
+                    if(response.data.success==true){
+                        this.state.kd_picking='';
+                        this.state.kode='';
+                        this.state.nama= '';
+                        this.state.customer='';
+                        this.state.tanggal=new Date();
+                        this.state.tanggaljt=new Date();
+                        this.state.perusahaan='';
+                        this.state.keterangan='';
+                        this.state.sales='';
+                        this.state.lokkasiname='';
+                        this.state.lokasiid='';
+                        this.state.customertop='';
+                        this.state.total=0;
+                        this.state.kd_trans='Tunai';
+                        this.state.listBarang=[];
+                        this.state.kodes=[];
+                        this.state.kodehit=[];
+                        this.state.jual=[];
+                        this.state.jumlah=[];
+                        this.state.diskon_persen=[];
+                        this.state.diskon_rupiah=[];
+                        this.state.subtotal=[];
+                        this.state.dos=[];
+                        this.state.pcs=[];
+                        this.state.saless=[];
+                        this.state.lokasi=[];
+                        this.state.rak=[];
+                        this.state.stokid=[];
+                        this.state.doshit=[];
+                        this.state.pcshit=[];
+                        this.state.jualhit=[];
+                        this.state.jumlahhit=[]
+                        this.state.diskon_tambahan=0
+
+                        this.tampilDetail=false;
+
+                        this.getCode();
+                        this.getPicking();
+                        this.message = 'Order berhasil dicancel';
                         this.loading = false;
                     }else{
                         alert('Internal server error');

@@ -371,10 +371,6 @@ class BarangController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
-            //hapus dulu barang di tabel stok yang pcs nya adalah 0
-            \DB::table('stok')
-                ->where('pcs',0)
-                ->delete();
 
             $barang=Barang::find($id);            
 

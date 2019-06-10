@@ -38,6 +38,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('perusahaan','Master\PerusahaanController');
     Route::resource('mutasi','Master\MutasiController');
     Route::resource('order','Master\OrderController');
+    Route::post('cancel-order','Master\OrderController@cancel_order');
     Route::resource('picking','Master\PickingController');
     Route::resource('po','Master\PoController');
     Route::resource('program','Master\ProgramController');
