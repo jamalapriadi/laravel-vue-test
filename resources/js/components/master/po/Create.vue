@@ -238,6 +238,60 @@
             </b-modal>
 
         </div>
+
+        <!-- print -->
+        <div id="printMe" style="margin-top:10px;display:none;">
+            <br>
+            <table>
+                <tr>
+                    <td>No. PO</td>
+                    <td> : </td>
+                    <td>{{dataprint.no_po}}</td>
+                </tr>
+                <tr>
+                    <td>Tanggal</td>
+                    <td> : </td>
+                    <td>{{dataprint.tanggal}}</td>
+                </tr>
+                <tr>
+                    <td>Customer</td>
+                    <td> : </td>
+                    <td>{{dataprint.customer}}</td>
+                </tr>
+                <tr>
+                    <td>Lokasi</td>
+                    <td> : </td>
+                    <td>{{dataprint.lokasi}}</td>
+                </tr>
+                <tr>
+                    <td>Keterangan</td>
+                    <td> : </td>
+                    <td>{{dataprint.keterangan}}</td>
+                </tr>
+            </table>
+            <hr>
+            <div v-for="(l,index) in dataprint.detail" v-bind:key="index">
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <th rowspan="3">{{l.nm}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{l.nama_rak}}</td>
+                            <td>{{l.pivot.dos}} Dos</td>
+                            <td>{{l.pivot.pcs}} Pcs</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
+
     </div>
 </template>
 
@@ -320,7 +374,15 @@ export default {
             carinamacustomer:'',
             carikodecustomer:'',
             hasilpcs:0,
-            lokasis:[]
+            lokasis:[],
+            dataprint:{
+                no_po:'',
+                tanggal:'',
+                customer:'',
+                lokasi:'',
+                keterangan:'',
+                detail:[]
+            }
         }
     },
     watch: {
@@ -847,6 +909,21 @@ export default {
                         this.getCode();
                         this.message = 'Data has been saved.';
                         this.loading = false;
+
+                        this.dataprint={
+                            perusahaan:response.data.nota.perusahaan.nama,
+                            no_po:response.data.nota.no_po,
+                            tanggal:response.data.nota.tgl,
+                            customer:response.data.nota.customer.nm,
+                            lokasi:response.data.nota.lokasi.nm,
+                            keterangan:response.data.nota.keterangan,
+                            detail:response.data.nota.detail
+                        }
+
+                        this.$nextTick(() => {
+                            this.$htmlToPaper('printMe');
+                        });
+                        
                     }else{
                         alert('Internal server error');
                     }

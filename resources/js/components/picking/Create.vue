@@ -441,7 +441,7 @@ export default {
         ubahPoPending(ppending){
             this.listcaricustomer=[];
             this.listCCustomer=[];
-            this.customers=[];
+            // this.customers=[];
             this.state.no_po='';
             this.state.customer='';
             this.state.tanggal=new Date();
@@ -543,7 +543,11 @@ export default {
         },
 
         getCustomer(){
-            axios.get('/data/customer-not-in-picking')
+            axios.get('/data/customer-not-in-picking',{
+                param:{
+
+                }
+            })
                 .then(response => {
                     this.customers = response.data;
                 })
@@ -741,7 +745,7 @@ export default {
         },
 
         ubahCustomer(){
-            axios.get('/data/po-by-customer/'+this.state.customer)
+            axios.get('/data/po-by-customer/'+this.state.customer+'?status='+this.state.po_pending)
                 .then(response => {
                     this.pos = response.data
                 })
