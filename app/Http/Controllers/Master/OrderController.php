@@ -219,6 +219,60 @@ class OrderController extends Controller
         return $data;
     }
 
+    public function cancel_order(Request $request)
+    {
+        $rules=[
+            'kd_picking'=>'required',
+            'detail'=>'required',
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi error',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $picking=\App\Models\Picking::find(request('kd_picking'));
+            $hapus=$picking->delete();
+
+            if($hapus){
+                \DB::table('rpicking')
+                    ->where('kd_picking',request('kd_picking'))
+                    ->delete();
+
+
+                if($request->has('detail')){
+                    $detail=$request->input('detail');
+
+                    foreach($detail as $key=>$val){
+                        \DB::statement("UPDATE stok SET pcs = pcs+".$val['total']." 
+                        where id='".$val['pivot']['stok_id']."'
+                        ");
+                    }
+                }
+
+                $data=array(
+                    'success'=>true,
+                    'pesan'=>'Stok berhasil dikembalikan',
+                    'errors'=>''
+                );
+            }else{
+                $data=array(
+                    'success'=>false,
+                    'pesan'=>'Data gagal disimpan',
+                    'errors'=>''
+                );
+            }
+
+            
+        }
+
+        return $data;
+    }
+
     /**
      * Display the specified resource.
      *
@@ -304,9 +358,9 @@ class OrderController extends Controller
         $sql=Order::select(\DB::Raw("max(no_order) as maxKode"))
             ->first();
         $kodeOrder = $sql->maxKode;
-        $noUrut= (int) substr($kodeOrder, 6,6);
+        $noUrut= (int) substr($kodeOrder, 10,10);
         $noUrut++;
-        $char = date('y')."-";
+        $char = "ODR-TLG-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;

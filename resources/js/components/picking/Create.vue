@@ -128,7 +128,7 @@
                                 <td>
                                     <select name="rak" id="rak" class="form-control" v-model="state.rak[index]">
                                         <option value="" disabled selected>--Pilih Rak--</option>
-                                        <option v-for="k in raks" v-bind:key="k.kd" v-bind:value="k.kd">{{k.kd}} [ {{k.nm}} ]</option>
+                                        <option v-for="k in raks" v-bind:key="k.kd" v-bind:value="k.kd">{{k.nm}}</option>
                                     </select>
                                 </td>
                                 <td>
@@ -441,6 +441,7 @@ export default {
         ubahPoPending(ppending){
             this.listcaricustomer=[];
             this.listCCustomer=[];
+            this.customers=[];
             this.state.no_po='';
             this.state.customer='';
             this.state.tanggal=new Date();
