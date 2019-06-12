@@ -248,9 +248,13 @@ class OrderController extends Controller
                     $detail=$request->input('detail');
 
                     foreach($detail as $key=>$val){
-                        \DB::statement("UPDATE stok SET pcs = pcs+".$val['total']." 
-                        where id='".$val['pivot']['stok_id']."'
-                        ");
+                        $newStok=new \App\Models\Stok;
+                        $newStok->kd_brg=$val['kd'];
+                        $newStok->lokasi_id=$request->input('po')['lokasi_id'];
+                        $newStok->rak_id=$val['pivot']['kd_rak'];
+                        $newStok->tgl=date('Y-m-d');
+                        $newStok->pcs=$val['total'];
+                        $newStok->save();
                     }
                 }
 
