@@ -462,14 +462,14 @@ class PoController extends Controller
     {
         $picking=\App\Models\Picking::select('no_po')->get();
 
-        $po=Po::where('customer_id',$id)
-            ->whereNotIn('no_po',$picking);
+        $po=Po::where('customer_id',$id);
 
         if($request->has('status')){
             $status=$request->input('status');
 
             if($status=="true"){
-                $po=$po->whereNull('no_ref_po');
+                $po=$po->WhereNull('no_ref_po')
+                    ->whereNotIn('no_po',$picking);
             }
 
             if($status=="false"){
