@@ -264,7 +264,6 @@ class CustomerController extends Controller
                 $lis=\DB::select("SELECT a.customer_id, b.nm FROM po a
                     LEFT JOIN customer b ON b.kd=a.customer_id
                     WHERE a.no_ref_po IS NOT NULL
-                    AND a.no_ref_po NOT IN (SELECT no_po FROM picking)
                     GROUP BY a.customer_id");
             }else{
                 $lis=\DB::select("SELECT a.customer_id, b.nm FROM po a
