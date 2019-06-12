@@ -113,34 +113,32 @@ class PickingController extends Controller
 
                     if($statuskurang=="N"){
                         $posekarang=Po::find(request('no_po'));
+                        $posekarang->no_ref_po=request('no_po');
 
-                        $cus=new Po;
-                        $cus->no_po=$this->autonumber_po();
-                        $cus->no_ref_po=request('no_po');
-                        $cus->customer_id=$posekarang->customer_id;
-                        $cus->ket=$posekarang->ket;
-                        $cus->tgl=$posekarang->tgl;
-                        $cus->lokasi_id=$posekarang->lokasi_id;
-                        $cus->perusahaan_id=auth()->user()->perusahaan_id;
-                        $cus->insert_user=auth()->user()->username;
-                        $cus->update_user=auth()->user()->username;
-                        $simpancus=$cus->save();
+                        $simpancus=$posekarang->save();
 
                         if($simpancus){
                             if($request->has('kurang')){
                                 $kurang=request('kurang');
+
+                                \DB::table('rpo')
+                                    ->where('no_po',request('no_po'))
+                                    ->delete();
             
                                 foreach($kurang as $key=>$val){
                                     $cekB=\App\Models\Barang::find($val['kd_brg']);
 
+                                    $kurang_dos=round((int)$val['kurangnya'] / $cekB->pcs);
+                                    $kurang_pcs=round((int)$val['kurangnya'] % $cekB->pcs);
+
                                     \DB::table('rpo')
                                         ->insert(
                                             [
-                                                'no_po'=>$cus->no_po,
+                                                'no_po'=>request('no_po'),
                                                 'kd_brg'=>$val['kd_brg'],
-                                                'dos'=>$val['dos'],
-                                                'pcs'=>$val['kurangnya'],
-                                                'total_pcs'=>($cekB->pcs * $val['dos']) + $val['kurangnya']
+                                                'dos'=>$kurang_dos,
+                                                'pcs'=>$kurang_pcs,
+                                                'total_pcs'=>$val['kurangnya']
                                             ]
                                         );
                                 }
@@ -331,5 +329,18 @@ class PickingController extends Controller
             ->get();
 
         return $po;
+    }
+
+    public function autonumber_po_old()
+    {
+        $sql=Po::select(\DB::Raw("max(no_po) as maxKode"))
+            ->first();
+        $kodeBarang = $sql->maxKode;
+        $noUrut= (int) substr($kodeBarang, 10,10);
+        $noUrut++;
+        $char = "PO-OLD-".date('y')."-";
+        $newId= $char.sprintf("%06s",$noUrut);
+
+        return $newId;
     }
 }

@@ -252,7 +252,7 @@ export default {
     data() {
         return {
             state: {
-                po_pending:'',
+                po_pending:'true',
                 kode:'',
                 no_po:'',
                 customer:'',
@@ -459,6 +459,7 @@ export default {
             this.state.dos=[];
             this.state.pcs=[];
             this.barang=[];
+            this.state.kurang=[];
             // this.$refs.tokocustomer.inputValue = ""
             // this.$refs.namacustomer.inputValue = ""
 
