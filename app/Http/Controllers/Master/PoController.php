@@ -253,6 +253,12 @@ class PoController extends Controller
 
     public function po_by_id(Request $request,$id)
     {
+        //delete barang yang stoknya 0
+        \DB::Table('stok')  
+            ->where('pcs',0)
+            ->delete();
+
+
         $po=Po::with(
             [
                 'detail',
@@ -470,10 +476,11 @@ class PoController extends Controller
             if($status=="true"){
                 $po=$po->WhereNull('no_ref_po')
                     ->whereNotIn('no_po',$picking);
-            }
-
-            if($status=="false"){
+            }else if($status=="false"){
                 $po=$po->whereNotNull('no_ref_po');
+            }else{
+                $po=$po->WhereNull('no_ref_po')
+                    ->whereNotIn('no_po',$picking);
             }
         }
 

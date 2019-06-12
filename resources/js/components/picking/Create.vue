@@ -252,7 +252,7 @@ export default {
     data() {
         return {
             state: {
-                po_pending:'true',
+                po_pending:'',
                 kode:'',
                 no_po:'',
                 customer:'',
@@ -459,11 +459,13 @@ export default {
             this.state.dos=[];
             this.state.pcs=[];
             this.barang=[];
+            this.customers=[];
             this.state.kurang=[];
             // this.$refs.tokocustomer.inputValue = ""
             // this.$refs.namacustomer.inputValue = ""
 
             this.getNoPo(ppending);
+            this.getCustomer()
         },
 
         changePo(){
@@ -545,8 +547,8 @@ export default {
 
         getCustomer(){
             axios.get('/data/customer-not-in-picking',{
-                param:{
-
+                params:{
+                    status:this.state.po_pending
                 }
             })
                 .then(response => {
