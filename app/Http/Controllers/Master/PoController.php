@@ -139,11 +139,21 @@ class PoController extends Controller
                     }
                 }
 
+                $nota=$po=Po::with(
+                    [
+                        'detail',
+                        'customer',
+                        'perusahaan',
+                        'lokasi'
+                    ]
+                )->find($cus->no_po);
+
                 $data=array(
                     'success'=>true,
                     'pesan'=>'Data berhasil disimpan',
                     'errors'=>'',
-                    'adahutang'=>$adahutang
+                    'adahutang'=>$adahutang,
+                    'nota'=>$nota
                 );
             }else{
                 $data=array(
@@ -430,11 +440,11 @@ class PoController extends Controller
             $status=$request->input('status');
 
             if($status=="true"){
-                $dimana.=" and no_ref_po is null";
+                $dimana.=" and po.no_ref_po is null";
             }
 
             if($status=="false"){
-                $dimana.=" and no_ref_po is not null";
+                $dimana.=" and po.no_ref_po is not null";
             }
         }
 
@@ -453,9 +463,20 @@ class PoController extends Controller
         $picking=\App\Models\Picking::select('no_po')->get();
 
         $po=Po::where('customer_id',$id)
-            ->whereNotIn('no_po',$picking)
-            ->get();
+            ->whereNotIn('no_po',$picking);
 
-        return $po;
+        if($request->has('status')){
+            $status=$request->input('status');
+
+            if($status=="true"){
+                $po=$po->whereNull('no_ref_po');
+            }
+
+            if($status=="false"){
+                $po=$po->whereNotNull('no_ref_po');
+            }
+        }
+
+        return $po->get();
     }
 }
