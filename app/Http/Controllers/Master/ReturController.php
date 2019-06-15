@@ -212,12 +212,15 @@ class ReturController extends Controller
     }
 
     public function autonumber_retur(Request $request){
+        $perusahaan=auth()->user()->perusahaan->nama;
+
         $sql=Retur::select(\DB::Raw("max(no_retur) as maxKode"))
+            ->where('no_retur','like','RTR-'.$perusahaan.'%')
             ->first();
         $kodeBarang = $sql->maxKode;
         $noUrut= (int) substr($kodeBarang, 11,11);
         $noUrut++;
-        $char = "RTR-TLG-".date('y')."-";
+        $char = "RTR-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;

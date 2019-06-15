@@ -70,6 +70,11 @@
         </div>
         <div class="card text-white bg-primary py-5 d-md-down-none">
             <div class="card-body text-center">
+                <h3>PPG</h3>
+                <hr>
+                <h3>TLG</h3>
+                <hr>
+                <h3>BLG</h3>
                 {{-- <div>
                     <img src="svg/modulr.svg" class="mb-5" width="150" alt="Modulr Logo">
                     <h2>{{ __('Sign up') }}</h2>

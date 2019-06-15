@@ -51,7 +51,12 @@
                         <td>{{index+1}}</td>
                         <td>{{l.no_order}}</td>
                         <td>{{l.kd_picking}}</td>
-                        <td>{{l.picking.po.customer.nm}}</td>
+                        <td>
+                            <p v-if="l.picking!=null">
+                                {{l.picking.po.customer.nm}}
+                            </p>
+                            <p class="label label-danger" v-else>Picking Not Found</p>
+                        </td>
                         <!-- <td>{{l.perusahaan.nama}}</td> -->
                         <td>{{l.sales.nm}}</td>
                         <td>{{l.kd_trans}}</td>
@@ -70,6 +75,10 @@
                                 <a class="btn btn-danger" v-on:click="hapus(l.no_order, index, l.nm)" v-bind:id="'delete'+l.no_order">
                                     <i class="fa fa-trash text-white"></i>
                                 </a>
+
+                                <a class="btn btn-success" v-on:click="cetak(l.no_order, index, l.nm)" v-bind:id="'cetak'+l.no_order">
+                                    <i class="fa fa-print text-white"></i>
+                                </a>
                             </div>
                         </td>
                     </tr>
@@ -80,6 +89,131 @@
             <div align="right">
                 <pagination :data="listData" :limit="3" @pagination-change-page="showData" :show-disabled="true"></pagination>
             </div>
+
+            <!-- print -->
+            <div id="printMe" style="margin-top:10px;display:none;">
+                <div class="container">
+                    <br><br>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3">
+                            <div class="form-group row" style="margin-top:10px;">
+                                <label for="" class="control-label">{{dataprint.perusahaan}}</label>
+                            </div>
+                            <div class="form-group row" style="margin-top:-20px;">
+                                <label for="" class="control-label">{{dataprint.telp}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <h3 class="text-center">NOTA PENJUALAN</h3>
+                        </div>
+                        <div class="col-lg-3 col-md-3" style="margin-top:10px;">
+                            <div class="form-group row">
+                                <label for="" class="control-label">{{dataprint.sales}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="control-label">Nomor</label>
+                                <div class="col-lg-9 col-md-9">
+                                    : {{dataprint.no_order}}
+                                </div>
+                            </div>
+                            <div class="form-group row" style="margin-top:-20px;">
+                                <label for="" class="control-label">Tanggal</label>
+                                <div class="col-lg-9 col-md-9">
+                                    : {{dataprint.tanggal}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="control-label">Customer</label>
+                                <div class="col-lg-9 col-md-9">
+                                    {{dataprint.customer.nm}}
+                                    <br>
+                                    {{dataprint.customer.nm_toko}}
+                                    <br>
+                                    {{dataprint.customer.alamat}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nama Barang</th>
+                                    <th>Qty</th>
+                                    <th>Harga Disc (%)</th>
+                                    <th>Discount</th>
+                                    <th>Jumlah</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(l,index) in dataprint.detail" v-bind:key="index">
+                                    <td>{{l.nm}}</td>
+                                    <td>{{l.pivot.pcs}}</td>
+                                    <td>{{l.pivot.diskon_persen}}</td>
+                                    <td>{{l.pivot.diskon_rupiah}}</td>
+                                    <td>{{l.jual}}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>{{dataprint.update_at}}</th>
+                                    <th>PM Mira</th>
+                                    <th></th>
+                                    <th>TOTAL</th>
+                                    <th>{{dataprint.total}}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="col-lg-6 col-md-6">
+                            <div class="form-group row">
+                                <label for="" class="control-label">No. HP</label>
+                                <div class="col-lg-9 col-md-9">
+                                    : 082451657777 (WHATSAPP)
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="" class="control-label">Email</label>
+                                <div class="col-lg-9 col-md-9">
+                                    : tunggallarisg@yahoo.com
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="" class="control-label">Penerima</label>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        BKL WAYAN TORUE
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="form-group">
+                                        <label for="" class="control-label">Hormat Kami</label>
+                                        <br>
+                                        <br>
+                                        <br>
+                                        ......................
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
         </div>
     </div>
 </template>
@@ -96,7 +230,25 @@
                 list:[],
                 listData:{},
                 pencarian:'',
-                loading:true
+                loading:true,
+                dataprint:{
+                    update_at:'',
+                    perusahaan:'',
+                    telp:'',
+                    sales:'',
+                    no_order:'',
+                    tanggal:'',
+                    tanggaljt:'',
+                    customer:{},
+                    datail:[],
+                    total:0,
+                    kd_trans:'',
+                    kd_picking:'',
+                    status_pembayaran:'',
+                    detail:[],
+                    total:0,
+                    keterangan:{}
+                },
             }
         },
         mounted() {
@@ -176,6 +328,37 @@
                     }
                 })
             },
+
+            cetak(id,index,name){
+                axios.get('/data/order/'+id)
+                    .then(response => {
+                        this.dataprint={
+                            perusahaan:response.data.perusahaan.nama,
+                            telp:response.data.picking.po.customer.telp,
+                            sales:response.data.sales.nm,
+                            no_order:response.data.no_order,
+                            tanggal:response.data.tgl,
+                            tanggaljt:response.data.tgljt,
+                            customer:response.data.picking.po.customer,
+                            datail:response.data.detail,
+                            total:response.data.total,
+                            kd_trans:response.data.kd_trans,
+                            kd_picking:response.data.kd_picking,
+                            status_pembayaran:response.data.status_pembayaran,
+                            keterangan:response.data.ket,
+                            total:response.data.total,
+                            update_at: response.data.updated_at,
+                        }
+                        // this.print();
+
+                        this.$nextTick(() => {
+                            this.$htmlToPaper('printMe');
+                        });
+                    })
+                    .catch( error => {
+                        alert('data tidak dapat di load');
+                    })
+            }
         }
     }
 </script>

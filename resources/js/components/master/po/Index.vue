@@ -60,6 +60,10 @@
                                 <a class="btn btn-danger" v-on:click="hapus(l.no_po, index, l.nm)" v-bind:id="'delete'+l.no_po">
                                     <i class="fa fa-trash text-white"></i>
                                 </a>
+
+                                <a class="btn btn-success" v-on:click="cetak(l.no_po, index, l.nm)" v-bind:id="'cetak'+l.no_po">
+                                    <i class="fa fa-print text-white"></i>
+                                </a>
                             </div>
                         </td>
                     </tr>
@@ -70,6 +74,57 @@
             <div align="right">
                 <pagination :data="listData" :limit="3" @pagination-change-page="showData" :show-disabled="true"></pagination>
             </div>
+
+            <!-- print -->
+            <div id="printMe" style="margin-top:10px;display:none;">
+                <br>
+                <table>
+                    <tr>
+                        <td>No. PO</td>
+                        <td> : </td>
+                        <td>{{dataprint.no_po}}</td>
+                    </tr>
+                    <tr>
+                        <td>Tanggal</td>
+                        <td> : </td>
+                        <td>{{dataprint.tanggal}}</td>
+                    </tr>
+                    <tr>
+                        <td>Customer</td>
+                        <td> : </td>
+                        <td>{{dataprint.customer}}</td>
+                    </tr>
+                    <tr>
+                        <td>Lokasi</td>
+                        <td> : </td>
+                        <td>{{dataprint.lokasi}}</td>
+                    </tr>
+                    <tr>
+                        <td>Keterangan</td>
+                        <td> : </td>
+                        <td>{{dataprint.keterangan}}</td>
+                    </tr>
+                </table>
+                <hr>
+                <div v-for="(l,index) in dataprint.detail" v-bind:key="index">
+                    <table width="100%">
+                        <thead>
+                            <tr>
+                                <th rowspan="3">{{l.nm}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{l.nama_rak}}</td>
+                                <td>{{l.pivot.dos}} Dos</td>
+                                <td>{{l.pivot.pcs}} Pcs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
         </div>
     </div>
 </template>
@@ -86,7 +141,15 @@
                 list:[],
                 listData:{},
                 pencarian:'',
-                loading:true
+                loading:true,
+                dataprint:{
+                    no_po:'',
+                    tanggal:'',
+                    customer:'',
+                    lokasi:'',
+                    keterangan:'',
+                    detail:[]
+                },
             }
         },
         mounted() {
@@ -166,6 +229,28 @@
                     }
                 })
             },
+
+            cetak(id,index,name){
+                axios.get('/data/po/'+id)
+                    .then(response => {
+                        this.dataprint={
+                            perusahaan:response.data.po.perusahaan.nama,
+                            no_po:response.data.po.no_po,
+                            tanggal:response.data.po.tgl,
+                            customer:response.data.po.customer.nm,
+                            lokasi:response.data.po.lokasi.nm,
+                            keterangan:response.data.po.ket,
+                            detail:response.data.po.detail
+                        }
+
+                        this.$nextTick(() => {
+                            this.$htmlToPaper('printMe');
+                        });
+                    })
+                    .catch( error => {
+                        alert('data tidak dapat di load');
+                    })
+            }
         }
     }
 </script>

@@ -227,12 +227,15 @@ class MutasiController extends Controller
 
     public function autonumber_mutasi(Request $request)
     {
+        $perusahaan=auth()->user()->perusahaan->nama;
+
         $sql=Mutasi::select(\DB::Raw("max(no_mutasi) as maxKode"))
+            ->where('no_mutasi','like','MTS-'.$perusahaan.'%')
             ->first();
         $kodeBarang = $sql->maxKode;
         $noUrut= (int) substr($kodeBarang, 11,11);
         $noUrut++;
-        $char = "MTS-TLG-".date('y')."-";
+        $char = "MTS-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;

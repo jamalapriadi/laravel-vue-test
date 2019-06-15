@@ -682,6 +682,7 @@ export default {
         },
 
         saveBarang(){
+            console.log(this.state.lokasi)
             if(this.barang.kode==""){
                 alert('Barang harus diisi');
 
@@ -696,6 +697,12 @@ export default {
 
             if(this.state.customer==""){
                 alert('Pilih Customer lebih dahulu')
+
+                return false;
+            }
+
+            if(this.state.lokasi=="" || this.state.lokasi == undefined){
+                alert('Lokasi harus diisi');
 
                 return false;
             }
@@ -877,6 +884,12 @@ export default {
 
             if(this.state.perusahaan==""){
                 alert('Perusahaan Barang harus diisi');
+
+                return false;
+            }
+
+            if(this.state.lokasi==""){
+                alert('Lokasi harus diisi');
 
                 return false;
             }

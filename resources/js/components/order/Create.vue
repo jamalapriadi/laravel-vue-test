@@ -34,7 +34,7 @@
                         <label for="" class="control-label">Kd. Picking</label>
                         <select name="kd_picking" id="kd_picking" class="form-control" v-model="state.kd_picking" @change="ubahPicking">
                             <option value="" disabled selected>--Pilih Kode Picking--</option>
-                            <option v-for="(l,index) in pickings" v-bind:key="index" v-bind:value="l.kd_picking">{{l.kd_picking}}</option>
+                            <option v-for="(l,index) in pickings" v-bind:key="index" v-bind:value="l.kd_picking">{{l.kd_picking}} - {{l.nm_toko}}</option>
                         </select>
                     </div>
 
@@ -700,13 +700,15 @@ export default {
             var s=0;
             var subtotalnya=0;
             var diskon_tambahan=this.state.diskon_tambahan;
+            this.subtotal=0;
             for(var i=0; i<this.state.subtotal.length; i++){
-                subtotalnya=parseFloat(subtotalnya)+parseFloat(this.state.subtotal[i]);
+                subtotalnya+=parseFloat(subtotalnya)+parseFloat(this.state.subtotal[i]);
             }
 
-            var hasil_diskon_tambahan=subtotalnya * diskon_tambahan / 100;
+            // var hasil_diskon_tambahan=subtotalnya * diskon_tambahan / 100;
+            var hasil_diskon_tambahan=subtotalnya - diskon_tambahan;
             this.subtotal=subtotalnya;
-            this.state.total=parseFloat(subtotalnya - hasil_diskon_tambahan);
+            this.state.total=subtotalnya + hasil_diskon_tambahan;
         },
 
         subtotalnya(){

@@ -271,11 +271,13 @@ class PoController extends Controller
         
         $list=array();
         $kurangnya=array();
+        $status_stok=array();
 
         foreach($po->detail as $row){
             //cek semua stok barang di tabel stok
             $cekStok=\DB::select("SELECT SUM(a.pcs) AS jumlah_stok FROM stok a
                 WHERE a.kd_brg='$row->kd'
+                AND a.lokasi_id='$po->lokasi_id'
                 AND a.pcs>0
                 GROUP BY a.kd_brg");
 
@@ -338,6 +340,16 @@ class PoController extends Controller
                     'default_jml_yg_diminta'=>0,
                     'jumlah_yg_diminta'=>0
                 );
+
+                $status_stok[]=array(
+                    'lokasi_id'=>$po->lokasi_id,
+                    'kd_brg'=>$row->kd,
+                    'nm'=>$row->nm,
+                    'status'=>'Tidak ada dalam stok',
+                    'dos'=>$row->pivot->dos,
+                    'pcs'=>$row->pivot->pcs,
+                    'total_pcs'=>$row->pivot->total_pcs
+                );
             }
         }
 
@@ -356,6 +368,7 @@ class PoController extends Controller
                     FROM stok a
                     LEFT JOIN brg b ON b.kd=a.kd_brg
                     WHERE a.kd_brg IN (SELECT a.kd_brg FROM rpo a WHERE a.no_po='$id')
+                    AND a.lokasi_id='$po->lokasi_id'
                     GROUP BY a.kd_brg
                 ) AS semua
                 WHERE semua.sisa < 0");
@@ -364,7 +377,8 @@ class PoController extends Controller
         return array(
             'po'=>$po,
             'list'=>$list,
-            'kurang'=>$barang_sisa
+            'kurang'=>$barang_sisa,
+            'status_stok'=>$status_stok
         );
     }
 
@@ -427,12 +441,15 @@ class PoController extends Controller
 
     public function autonumber_po()
     {
+        $perusahaan=auth()->user()->perusahaan->nama;
+
         $sql=Po::select(\DB::Raw("max(no_po) as maxKode"))
+            ->where('no_po','like','PO-'.$perusahaan.'%')
             ->first();
         $kodeBarang = $sql->maxKode;
         $noUrut= (int) substr($kodeBarang, 10,10);
         $noUrut++;
-        $char = "PO-TLG-".date('y')."-";
+        $char = "PO-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;
