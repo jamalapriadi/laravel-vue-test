@@ -107,7 +107,7 @@
                 </table>
                 <hr>
                 <div v-for="(l,index) in dataprint.detail" v-bind:key="index">
-                    <table width="100%">
+                    <table width="75%">
                         <thead>
                             <tr>
                                 <th rowspan="3">{{l.nm}}</th>
@@ -115,9 +115,13 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{l.nama_rak}}</td>
-                                <td>{{l.pivot.dos}} Dos</td>
-                                <td>{{l.pivot.pcs}} Pcs</td>
+                                <td> Rak :
+                                    <ul>
+                                        <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}} - {{k.diambil}}</li>
+                                    </ul>
+                                </td>
+                                <td>{{l.dos}} Dos</td>
+                                <td>{{l.pcs}} Pcs</td>
                             </tr>
                         </tbody>
                     </table>
@@ -240,7 +244,7 @@
                             customer:response.data.po.customer.nm,
                             lokasi:response.data.po.lokasi.nm,
                             keterangan:response.data.po.ket,
-                            detail:response.data.po.detail
+                            detail:response.data.detail
                         }
 
                         this.$nextTick(() => {

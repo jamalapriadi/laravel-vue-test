@@ -148,12 +148,75 @@ class PoController extends Controller
                     ]
                 )->find($cus->no_po);
 
+                //cek stok barangnya
+                $list=array();
+                foreach($nota->detail as $detail){
+                    $barang=\App\Models\Barang::find($detail->kd);            
+
+                    $pcs=$detail->pivot->pcs;
+                    $dos=$detail->pivot->dos;
+                    $kurangnya=$barang->pcs*$dos+$pcs;
+                    $sudahdiambil=$barang->pcs*$dos+$pcs;
+
+                    $stokbarang=\DB::table('stok')
+                        ->leftJoin('rak','rak.kd','=','stok.rak_id')
+                        ->where('kd_brg',$detail->kd)
+                        ->select('rak.nm as nama_rak','stok.*')
+                        ->get();
+
+                    $rak=array();
+                    $sisa=0;
+
+                    foreach($stokbarang as $row){
+                        if($kurangnya > 0){
+                            // if($row->pcs > $kurangnya){
+                            //     $diambil = $row->pcs;
+                            // }else{
+                            //     $diambil = $row->pcs;
+                            // }
+                            
+                            //jika stok barang lebih dari jumlah kurangnya, maka diambil semua kurang nya
+                            if($kurangnya > $row->pcs){
+                                $diambil=$row->pcs;
+                            }else{
+                                //jika stok barang kurang dari  barang yang ingin diambil
+                                if($row->pcs > $kurangnya){
+                                    $diambil=$kurangnya;
+                                }else{
+                                    $diambil=$row->pcs;
+                                }
+                            }
+                            
+
+                            $rak[]=array(
+                                'rak'=>$row->nama_rak,
+                                'pcs'=>$row->pcs,
+                                'stok'=>$row->pcs,
+                                'kurangnya'=>$kurangnya,
+                                'sisa'=>$kurangnya - $row->pcs,
+                                'diambil'=>$diambil
+                            );
+
+                            $kurangnya=round($kurangnya-$row->pcs);
+                        }
+                    }
+
+                    $list[]=array(
+                        'kd'=>$detail->kd,
+                        'nm'=>$detail->nm,
+                        'dos'=>$detail->pivot->dos,
+                        'pcs'=>$detail->pivot->pcs,
+                        'rak'=>$rak
+                    );
+                }
+
                 $data=array(
                     'success'=>true,
                     'pesan'=>'Data berhasil disimpan',
                     'errors'=>'',
                     'adahutang'=>$adahutang,
-                    'nota'=>$nota
+                    'nota'=>$nota,
+                    'detail'=>$list
                 );
             }else{
                 $data=array(
@@ -285,24 +348,82 @@ class PoController extends Controller
                 $jumlah_stok=$cekStok[0]->jumlah_stok;
                 $jumlah_yang_diminta=$row->pivot->total_pcs;
                 $default_jumlah_yg_diminta=$row->pivot->total_pcs;
+                $yang_sudah_diambil=0;
 
                 //ambil di stok berdasarkan barang yang diminta, di order berdasarkan tanggal
-                $ambilStok=\DB::select("select a.* from stok a where a.kd_brg='$row->kd' order by a.tgl");
+                $ambilStok=\DB::select("select a.*, b.pcs as pcs_brg,
+                    CEIL(a.pcs / b.pcs) as realisasi_dos,
+                    CEIL(a.pcs % b.pcs) as realisasi_pcs 
+                    from stok a 
+                    left join brg b on b.kd=a.kd_brg
+                    where a.kd_brg='$row->kd' order by a.tgl");
 
-                foreach($ambilStok as $row2){
-                    if($jumlah_yang_diminta > 0){
-                        if($row2->pcs > $jumlah_yang_diminta){
-                            $jumlah_yang_diminta=0;
-                            $status='terpenuhi';
-                            $dos=$row->pivot->dos;
-                            $pcs=$row->pivot->pcs;
-                        }else{
-                            $status='kurang';
-                            $jumlah_yang_diminta=$jumlah_yang_diminta - $row2->pcs;
-                            $dos=FLOOR($row2->pcs/$row->pcs);
-                            $pcs=FLOOR($row2->pcs % $row->pcs);
+                //cek dulu apakah total stok melebihi dari jumlah yang diminta
+                if($jumlah_stok >= $jumlah_yang_diminta)
+                {
+                    foreach($ambilStok as $row2)
+                    {
+                        if($jumlah_yang_diminta >= 0){
+                            if($row2->pcs >= $jumlah_yang_diminta){
+                                $status='terpenuhi';
+                                if($row->pivot->dos > 0)
+                                {
+                                    $dos=FLOOR($jumlah_yang_diminta/$row->pcs);
+                                    $pcs=FLOOR($jumlah_yang_diminta % $row->pcs);   
+                                }else{
+                                    $dos=$row->pivot->dos;
+                                    $pcs=$row->pivot->pcs;    
+                                }
+                                
+                                $list[]=array(
+                                    'idstok'=>$row2->id,
+                                    'kd'=>$row->kd,
+                                    'nm'=>$row->nm,
+                                    'jual'=>$row->jual,
+                                    'dos'=>$row->pivot->dos,
+                                    'pcs'=>$row->pivot->pcs,
+                                    'pcs_per_dos'=>$row->pcs,
+                                    'lokasi_id'=>$row2->lokasi_id,
+                                    'rak_id'=>$row2->rak_id,
+                                    'jumlah_stok'=>$row2->pcs,
+                                    'status'=>$status,
+                                    'realisasi_dosnya'=>$dos,
+                                    'realisasi_pcsnya'=>$pcs,
+                                    'default_jml_yg_diminta'=>$default_jumlah_yg_diminta,
+                                    'jumlah_yg_diminta'=>$jumlah_yang_diminta
+                                );
+                            }else{
+                                $status='kurang';
+                                $dos=FLOOR($row2->pcs/$row->pcs);
+                                $pcs=FLOOR($row2->pcs % $row->pcs);
+                                
+                                $list[]=array(
+                                    'idstok'=>$row2->id,
+                                    'kd'=>$row->kd,
+                                    'nm'=>$row->nm,
+                                    'jual'=>$row->jual,
+                                    'dos'=>$row->pivot->dos,
+                                    'pcs'=>$row->pivot->pcs,
+                                    'pcs_per_dos'=>$row->pcs,
+                                    'lokasi_id'=>$row2->lokasi_id,
+                                    'rak_id'=>$row2->rak_id,
+                                    'jumlah_stok'=>$row2->pcs,
+                                    'status'=>$status,
+                                    'realisasi_dosnya'=>$dos,
+                                    'realisasi_pcsnya'=>$pcs,
+                                    'default_jml_yg_diminta'=>$default_jumlah_yg_diminta,
+                                    'jumlah_yg_diminta'=>$jumlah_yang_diminta
+                                );
+                            }
                         }
-    
+                        
+                        $jumlah_yang_diminta=(int)$jumlah_yang_diminta - (int)$row2->pcs;
+                    }
+
+                }else{
+                    //jumlah stok tidak mencukupi
+                    foreach($ambilStok as $row2)
+                    {
                         $list[]=array(
                             'idstok'=>$row2->id,
                             'kd'=>$row->kd,
@@ -314,9 +435,9 @@ class PoController extends Controller
                             'lokasi_id'=>$row2->lokasi_id,
                             'rak_id'=>$row2->rak_id,
                             'jumlah_stok'=>$row2->pcs,
-                            'status'=>$status,
-                            'realisasi_dosnya'=>$dos,
-                            'realisasi_pcsnya'=>$pcs,
+                            'status'=>'kurang',
+                            'realisasi_dosnya'=>$row2->realisasi_dos,
+                            'realisasi_pcsnya'=>$row2->realisasi_pcs,
                             'default_jml_yg_diminta'=>$default_jumlah_yg_diminta,
                             'jumlah_yg_diminta'=>$jumlah_yang_diminta
                         );
