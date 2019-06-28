@@ -223,12 +223,15 @@ class ProgramController extends Controller
 
     public function autonumber_program()
     {
+        $perusahaan=auth()->user()->perusahaan->nama;
+
         $sql=Program::select(\DB::Raw("max(nmr) as maxKode"))
+            ->where('nmr','like','PRG-'.$perusahaan.'%')
             ->first();
         $kodeBarang = $sql->maxKode;
         $noUrut= (int) substr($kodeBarang, 11,11);
         $noUrut++;
-        $char = "PRG-TLG-".date('y')."-";
+        $char = "PRG-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;

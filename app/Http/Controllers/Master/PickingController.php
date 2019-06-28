@@ -107,44 +107,75 @@ class PickingController extends Controller
             $simpan=$p->save();
 
             if($simpan){
-
+                
                 if($request->has('status_kurang')){
                     $statuskurang=$request->input('status_kurang');
+                    $tambahan=array();
 
                     if($statuskurang=="N"){
+                        if($request->has('kurang')){
+                            $kurang=request('kurang');
+        
+                            foreach($kurang as $key=>$val){
+                                $cekB=\App\Models\Barang::find($val['kd_brg']);
+
+                                $kurang_dos=round((int)$val['kurangnya'] / $cekB->pcs);
+                                $kurang_pcs=round((int)$val['kurangnya'] % $cekB->pcs);
+
+                                $tambahan[]=array(
+                                    'kd_brg'=>$val['kd_brg'],
+                                    'dos'=>$kurang_dos,
+                                    'pcs'=>$kurang_pcs,
+                                    'total_pcs'=>$val['kurangnya']
+                                );
+                            }
+                        }
+                    }
+
+
+                    if($request->has('tidakdistok')){
+                        $tidakdistok=request('tidakdistok');
+    
+                        if(count($tidakdistok) > 0){
+                            foreach($tidakdistok as $key=>$val){
+                                $tambahan[]=array(
+                                    'kd_brg'=>$val['kd_brg'],
+                                    'dos'=>$val['dos'],
+                                    'pcs'=>$val['pcs'],
+                                    'total_pcs'=>$val['total_pcs']
+                                );
+                            }   
+                        }
+                    }
+
+                    if(count($tambahan)>0){
                         $posekarang=Po::find(request('no_po'));
                         $posekarang->no_ref_po=request('no_po');
 
                         $simpancus=$posekarang->save();
 
                         if($simpancus){
-                            if($request->has('kurang')){
-                                $kurang=request('kurang');
+                            \DB::table('rpo')
+                                ->where('no_po',request('no_po'))
+                                ->delete();
 
+
+                            foreach($tambahan as $key=>$val){
                                 \DB::table('rpo')
-                                    ->where('no_po',request('no_po'))
-                                    ->delete();
-            
-                                foreach($kurang as $key=>$val){
-                                    $cekB=\App\Models\Barang::find($val['kd_brg']);
-
-                                    $kurang_dos=round((int)$val['kurangnya'] / $cekB->pcs);
-                                    $kurang_pcs=round((int)$val['kurangnya'] % $cekB->pcs);
-
-                                    \DB::table('rpo')
-                                        ->insert(
-                                            [
-                                                'no_po'=>request('no_po'),
-                                                'kd_brg'=>$val['kd_brg'],
-                                                'dos'=>$kurang_dos,
-                                                'pcs'=>$kurang_pcs,
-                                                'total_pcs'=>$val['kurangnya']
-                                            ]
-                                        );
-                                }
+                                    ->insert(
+                                        [
+                                            'no_po'=>request('no_po'),
+                                            'kd_brg'=>$val['kd_brg'],
+                                            'dos'=>$val['dos'],
+                                            'pcs'=>$val['pcs'],
+                                            'total_pcs'=>$val['total_pcs']
+                                        ]
+                                    );
                             }
                         }
                     }
+
+
                 }
 
                 if($request->has('kodes')){
@@ -169,12 +200,14 @@ class PickingController extends Controller
                             );
 
                         $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
-                        if($cksstok->pcs > $totalpcnya){
-                            \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
-                                where id='".$request->input('idstok')[$key]."'");
-                        }else{
-                            $cksstok->pcs=0;
-                            $cksstok->save();
+                        if($cksstok!=null){
+                            if($cksstok->pcs > $totalpcnya){
+                                \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
+                                    where id='".$request->input('idstok')[$key]."'");
+                            }else{
+                                $cksstok->pcs=0;
+                                $cksstok->save();
+                            }
                         }
                     }
                 }
@@ -304,12 +337,15 @@ class PickingController extends Controller
 
     public function autonumber_picking()
     {
+        $perusahaan=auth()->user()->perusahaan->nama;
+
         $sql=Picking::select(\DB::Raw("max(kd_picking) as maxKode"))
+            ->where('kd_picking','like','PCK-'.$perusahaan.'%')
             ->first();
         $kodeBarang = $sql->maxKode;
         $noUrut= (int) substr($kodeBarang, 11,11);
         $noUrut++;
-        $char = "PCK-TLG-".date('y')."-";
+        $char = "PCK-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;
@@ -330,8 +366,11 @@ class PickingController extends Controller
 
     public function list_picking_not_in_order(Request $request)
     {
-        $po=\DB::table('picking')
+        $po=\DB::table('picking as a')
+            ->leftJoin('po as b','b.no_po','=','a.no_po')
+            ->leftJoin('customer as c','b.customer_id','=','c.kd')
             ->whereRaw("kd_picking not in (select kd_picking from orders)")
+            ->select('a.*','c.nm','c.nm_toko')
             ->get();
 
         return $po;

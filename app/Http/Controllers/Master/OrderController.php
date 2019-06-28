@@ -359,12 +359,15 @@ class OrderController extends Controller
 
     public function autonumber_order()
     {
+        $perusahaan=auth()->user()->perusahaan->nama;
+
         $sql=Order::select(\DB::Raw("max(no_order) as maxKode"))
+            ->where('no_order','like','ODR-'.$perusahaan.'%')
             ->first();
         $kodeOrder = $sql->maxKode;
         $noUrut= (int) substr($kodeOrder, 10,10);
         $noUrut++;
-        $char = "ODR-TLG-".date('y')."-";
+        $char = "ODR-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;

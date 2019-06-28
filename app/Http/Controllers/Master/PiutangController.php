@@ -277,12 +277,15 @@ class PiutangController extends Controller
     }
 
     public function autonumber_piutang(){
+        $perusahaan=auth()->user()->perusahaan->nama;
+
         $sql=Piutang::select(\DB::Raw("max(no_piutang) as maxKode"))
+            ->where('no_piutang','like','PTG-'.$perusahaan.'%')
             ->first();
         $kodeOrder = $sql->maxKode;
-        $noUrut= (int) substr($kodeOrder, 6,6);
+        $noUrut= (int) substr($kodeOrder, 11,11);
         $noUrut++;
-        $char = date('y')."-";
+        $char = "PTG-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;

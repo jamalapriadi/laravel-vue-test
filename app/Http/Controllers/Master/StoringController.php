@@ -234,12 +234,15 @@ class StoringController extends Controller
 
     public function autonumber_storing()
     {
+        $perusahaan=auth()->user()->perusahaan->nama;
+
         $sql=Storing::select(\DB::Raw("max(no_storing) as maxKode"))
+            ->where('no_storing','like','STR-'.$perusahaan.'%')
             ->first();
         $kodeBarang = $sql->maxKode;
         $noUrut= (int) substr($kodeBarang, 11,11);
         $noUrut++;
-        $char = "STR-TLG-".date('y')."-";
+        $char = "STR-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;

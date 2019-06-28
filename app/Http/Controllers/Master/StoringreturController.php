@@ -160,12 +160,15 @@ class StoringreturController extends Controller
 
     public function autonumber_storing_retur(Request $request)
     {
+        $perusahaan=auth()->user()->perusahaan->nama;
+
         $sql=Storingretur::select(\DB::Raw("max(no_storing) as maxKode"))
+            ->where('no_storing','like','SRR-'.$perusahaan.'%')
             ->first();
         $kodeBarang = $sql->maxKode;
         $noUrut= (int) substr($kodeBarang, 11,11);
         $noUrut++;
-        $char = "SRR-TLG-".date('y')."-";
+        $char = "SRR-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;

@@ -155,6 +155,12 @@
                         </ol>
                     </div>
 
+                    <div class="alert alert-info" v-show="state.tidakdistok.length>0">
+                        <ol>
+                            <li v-for="(l,index) in state.tidakdistok" v-bind:key="index">Barang <strong>{{l.nm}}</strong> Tidak ada dalam stok</li>
+                        </ol>
+                    </div>
+
                     <hr>
             
                     <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading> 
@@ -274,6 +280,7 @@ export default {
                 idstok:[],
                 kurang:[],
                 status_kurang:'Y',
+                tidakdistok:[],
                 tampil:[]
             },
             date: new Date(),
@@ -481,12 +488,17 @@ export default {
 
                     this.barang=response.data.list;
                     this.state.kurang=response.data.kurang;
+                    this.state.tidakdistok= response.data.status_stok;
                     this.adahutang=false;
 
-                    if(this.state.kurang.length>0){
-                        this.state.status_kurang='N';
-                    }else{
+                    if(this.state.tidakdistok.length > 0){
                         this.state.status_kurang='Y';
+                    }else{
+                        if(this.state.kurang.length>0){
+                            this.state.status_kurang='Y';
+                        }else{
+                            this.state.status_kurang='N';
+                        }
                     }
 
                     for (var i = 0; i < this.barang.length; i++) {
