@@ -193,6 +193,11 @@ const routes = [
     { path: '/add-new-stok-opname', name:'StopOpnameCreate', component: require('./components/stok/create-stok-opname.vue').default},
     { path: '/stok-opname-detail/:id', name:'stopopnameDetail', component: require('./components/stok/detail-stok-opname.vue').default},
     { path: '/keterangan', name:'KeteranganIndex', component: require('./components/keterangan.vue').default},
+
+    /* LAPORAN */
+    { path: '/laporan/penjualan', name:'laporanPenjualan', component: require('./components/laporan/penjualan.vue').default},
+    { path: '/laporan/sales', name:'laporanSalesPenjualan', component: require('./components/laporan/sales.vue').default},
+    { path: '/laporan/stok', name:'laporanStokPenjualan', component: require('./components/laporan/stok.vue').default},
 ]
 
 const router = new VueRouter({ routes });

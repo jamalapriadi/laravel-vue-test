@@ -127,4 +127,10 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('po-by-customer/{id}','Master\PoController@po_by_customer');
     Route::resource('jenis-customer','Master\JeniscustomerController');
     Route::get('list-jenis-customer','Master\JeniscustomerController@list_jenis_customer');
+
+    Route::group(['prefix'=>'laporan'],function(){
+        Route::get('penjualan','Master\LaporanController@laporan_penjualan');
+        Route::get('per-sales','Master\LaporanController@laporan_penjualan_per_sales');
+        Route::get('stok','Master\LaporanController@laporan_stok');
+    });
 });

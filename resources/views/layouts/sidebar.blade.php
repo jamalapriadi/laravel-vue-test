@@ -272,6 +272,21 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item">
+                        <router-link to="/laporan/penjualan" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i>Penjualan
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/laporan/sales" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i>Sales
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link to="/laporan/stok" class="nav-link" active-class="active">
+                            <i class="nav-icon icon-bank"></i>Stok
+                        </router-link>
+                    </li>
+                    {{-- <li class="nav-item">
                         <router-link to="/laporan-penerimaan" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i>Penerimaan
                         </router-link>
@@ -300,7 +315,7 @@
                         <router-link to="/laporan-create-file-pajak" class="nav-link" active-class="active">
                             <i class="nav-icon icon-bank"></i> Create File Pajak
                         </router-link>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
 
