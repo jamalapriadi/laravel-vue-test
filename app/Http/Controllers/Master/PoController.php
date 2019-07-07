@@ -148,12 +148,75 @@ class PoController extends Controller
                     ]
                 )->find($cus->no_po);
 
+                //cek stok barangnya
+                $list=array();
+                foreach($nota->detail as $detail){
+                    $barang=\App\Models\Barang::find($detail->kd);            
+
+                    $pcs=$detail->pivot->pcs;
+                    $dos=$detail->pivot->dos;
+                    $kurangnya=$barang->pcs*$dos+$pcs;
+                    $sudahdiambil=$barang->pcs*$dos+$pcs;
+
+                    $stokbarang=\DB::table('stok')
+                        ->leftJoin('rak','rak.kd','=','stok.rak_id')
+                        ->where('kd_brg',$detail->kd)
+                        ->select('rak.nm as nama_rak','stok.*')
+                        ->get();
+
+                    $rak=array();
+                    $sisa=0;
+
+                    foreach($stokbarang as $row){
+                        if($kurangnya > 0){
+                            // if($row->pcs > $kurangnya){
+                            //     $diambil = $row->pcs;
+                            // }else{
+                            //     $diambil = $row->pcs;
+                            // }
+                            
+                            //jika stok barang lebih dari jumlah kurangnya, maka diambil semua kurang nya
+                            if($kurangnya > $row->pcs){
+                                $diambil=$row->pcs;
+                            }else{
+                                //jika stok barang kurang dari  barang yang ingin diambil
+                                if($row->pcs > $kurangnya){
+                                    $diambil=$kurangnya;
+                                }else{
+                                    $diambil=$row->pcs;
+                                }
+                            }
+                            
+
+                            $rak[]=array(
+                                'rak'=>$row->nama_rak,
+                                'pcs'=>$row->pcs,
+                                'stok'=>$row->pcs,
+                                'kurangnya'=>$kurangnya,
+                                'sisa'=>$kurangnya - $row->pcs,
+                                'diambil'=>$diambil
+                            );
+
+                            $kurangnya=round($kurangnya-$row->pcs);
+                        }
+                    }
+
+                    $list[]=array(
+                        'kd'=>$detail->kd,
+                        'nm'=>$detail->nm,
+                        'dos'=>$detail->pivot->dos,
+                        'pcs'=>$detail->pivot->pcs,
+                        'rak'=>$rak
+                    );
+                }
+
                 $data=array(
                     'success'=>true,
                     'pesan'=>'Data berhasil disimpan',
                     'errors'=>'',
                     'adahutang'=>$adahutang,
-                    'nota'=>$nota
+                    'nota'=>$nota,
+                    'detail'=>$list
                 );
             }else{
                 $data=array(
