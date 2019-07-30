@@ -360,7 +360,7 @@ class PoController extends Controller
                             if($qty > 0){
                                 $dos=FLOOR($row3->pcs/$row->pcs);
                                 $pcs=FLOOR($row3->pcs % $row->pcs); 
-                                $status='kurang';
+                                $status='terpenuhi';
 
                             }else{
                                 $dos=FLOOR($temp/$row->pcs);
@@ -376,14 +376,36 @@ class PoController extends Controller
                                 'dos'=>$row->pivot->dos,
                                 'pcs'=>$row->pivot->pcs,
                                 'pcs_per_dos'=>$row->pcs,
-                                'lokasi_id'=>$row2->lokasi_id,
-                                'rak_id'=>$row2->rak_id,
-                                'jumlah_stok'=>$row2->pcs,
+                                'lokasi_id'=>$row3->lokasi_id,
+                                'rak_id'=>$row3->rak_id,
+                                'jumlah_stok'=>$row3->pcs,
                                 'status'=>$status,
                                 'realisasi_dosnya'=>$dos,
                                 'realisasi_pcsnya'=>$pcs
                             );
                         }
+                    }
+                }else{
+                    foreach($row->stok as $row3){
+                        $dos=FLOOR($row3->pcs/$row->pcs);
+                        $pcs=FLOOR($row3->pcs % $row->pcs); 
+                        $status='terpenuhi';
+
+                        $list[]=array(
+                            'idstok'=>$row3->id,
+                            'kd'=>$row->kd,
+                            'nm'=>$row->nm,
+                            'jual'=>$row->jual,
+                            'dos'=>$row->pivot->dos,
+                            'pcs'=>$row->pivot->pcs,
+                            'pcs_per_dos'=>$row->pcs,
+                            'lokasi_id'=>$row3->lokasi_id,
+                            'rak_id'=>$row3->rak_id,
+                            'jumlah_stok'=>$row3->pcs,
+                            'status'=>$status,
+                            'realisasi_dosnya'=>$dos,
+                            'realisasi_pcsnya'=>$pcs
+                        );
                     }
                 }
 
