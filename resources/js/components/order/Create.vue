@@ -111,7 +111,7 @@
                                 <td>{{l.kd_brg}} / {{l.nm}}</td>
                                 <td>{{l.dos}} / {{l.pcs}}</td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="state.jualhit[index]">
+                                    <input type="text" class="form-control" v-model="state.jualhit[index]"  @input="hitungJualHit($event,index)">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="state.jumlahhit[index]" readonly>
@@ -627,6 +627,25 @@ export default {
             // this.diskonnya();
         },
 
+        hitungJualHit(event,index){
+            var jumlah=parseFloat(this.state.jumlahhit[index]);
+            var harga=parseFloat(this.state.jualhit[index])
+            var subtotal=harga * jumlah;
+            var diskon_pertama=parseFloat(this.state.diskon_persen[index]);
+            var diskon_kedua=parseFloat(this.state.diskon_rupiah[index]);
+            var nilai_diskon_pertama=parseFloat(subtotal * diskon_pertama / 100);
+            var hasil_hitung_diskon_pertama=parseFloat(subtotal - nilai_diskon_pertama);
+            var hasil_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama * diskon_kedua / 100);
+            var hasil_hitung_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama - hasil_diskon_kedua);
+            var hasil_akhir=parseFloat(hasil_hitung_diskon_kedua);
+
+            
+            
+            this.state.subtotal[index]=parseInt(hasil_hitung_diskon_kedua);
+
+            this.total();
+        },
+
         hitungTotalRupiah(event, index){
             var jumlah=parseFloat(this.state.jumlahhit[index]);
             var harga=parseFloat(this.state.jualhit[index])
@@ -708,7 +727,7 @@ export default {
             // var hasil_diskon_tambahan=subtotalnya * diskon_tambahan / 100;
             var hasil_diskon_tambahan=subtotalnya - diskon_tambahan;
             this.subtotal=subtotalnya;
-            this.state.total=subtotalnya + hasil_diskon_tambahan;
+            this.state.total=hasil_diskon_tambahan;
         },
 
         subtotalnya(){
