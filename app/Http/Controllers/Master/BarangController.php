@@ -223,10 +223,10 @@ class BarangController extends Controller
         $sql=Barang::select(\DB::Raw("max(kd) as maxKode"))
             ->first();
         $kodeBarang = $sql->maxKode;
-        $noUrut= (int) substr($kodeBarang, 3,3);
+        $noUrut= (int) substr($kodeBarang, 5,5);
         $noUrut++;
         $char = "BRG";
-        $newId= $char.sprintf("%03s",$noUrut);
+        $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;
     }
