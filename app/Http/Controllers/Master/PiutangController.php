@@ -58,12 +58,15 @@ class PiutangController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
+            $kode=$this->autonumber_piutang();
+
             $p=new Piutang;
-            $p->no_piutang=request('kode');
+            $p->no_piutang=$kode;
             $p->tgl_pembayaran=date('Y-m-d',strtotime(request('tanggal')));
             $p->customer_id=request('customer');
             // $p->jenis=request('jenis');
             $p->total_bayar=request('nominal');
+            $p->keterangan=request('keterangan');
             $p->insert_user=auth()->user()->username;
             $p->update_user=auth()->user()->username;
 
@@ -89,6 +92,7 @@ class PiutangController extends Controller
                                     'no_order'=>$val['no_order'],
                                     'tgl_jt_transfer'=>date('Y-m-d',strtotime($val['tgl_jt'])),
                                     'nominal'=>$val['nominal'],
+                                    'keterangan'=>$val['keterangan'],
                                     'created_at'=>date('Y-m-d'),
                                     'updated_at'=>date('Y-m-d')
                                 ]

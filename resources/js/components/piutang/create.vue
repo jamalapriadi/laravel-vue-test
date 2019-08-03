@@ -11,9 +11,9 @@
                                 <label for="" class="control-label col-lg-3">No. Pembayaran</label>
                                 <div class="col-lg-9">
                                     <div class="row">
-                                        <div class="col-lg-6">
+                                        <!-- <div class="col-lg-6">
                                             <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
-                                        </div>
+                                        </div> -->
 
                                         <div class="col-lg-6">
                                             <div class="form-group row">
@@ -62,6 +62,13 @@
                                 <label for="" class="control-label col-lg-3">Total Piutang</label>
                                 <div class="col-lg-9">
                                     <input type="text" class="form-control" v-model="state.total_piutang_rupiah" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Keterangan</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" v-model="state.keterangan">
                                 </div>
                             </div>
                         </div>
@@ -138,6 +145,12 @@
                             <label for="" class="control-label">Tgl. JT / Transfer</label>
                             <date-picker v-model="detail.tgl_jt" :config="options"></date-picker>
                         </div>
+                        <div class="col-lg-3">
+                            <div class="form-group row">
+                                <label for="" class="control-label">Keterangan</label>
+                                <input type="text" class="form-control" v-model="detail.keterangan">
+                            </div>
+                        </div>
                         <div class="form-group col-md-1">
                             <div class="btn-group">
                                 <button v-on:click="saveBarang()" class="btn btn-primary" style="margin-top:25px;">
@@ -161,6 +174,7 @@
                                 <th>Tgl. JT / Transfer</th>
                                 <th>Jumlah Tagihan</th>
                                 <th>Bayar</th>
+                                <th>Keterangan</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -174,6 +188,7 @@
                                 <td>{{format_date(l.tgl_jt)}}</td>
                                 <td>Rp. {{rupiah(l.tagihan)}}</td>
                                 <td>Rp. {{rupiah(l.nominal)}}</td>
+                                <td>{{l.keterangan}}</td>
                                 <td>
                                     <a @click="deleteBarang(index)" class="btn btn-danger text-white">
                                         <i class="fa fa-trash"></i>
@@ -185,17 +200,17 @@
                             <tr>
                                 <th colspan='7'>Total</th>
                                 <th>Rp. {{rupiah(state.total)}}</th>
-                                <th></th>
+                                <th colspan="2"></th>
                             </tr>
                             <tr>
                                 <th colspan='7'>Jumlah Bayar</th>
                                 <th>Rp. {{rupiah(state.nominal)}}</th>
-                                <th></th>
+                                <th colspan="2"></th>
                             </tr>
                             <tr v-if="state.nominal - state.total > 0">
                                 <th colspan='7'>Kembali</th>
                                 <th>Rp. {{rupiah(state.nominal - state.total)}}</th>
-                                <th></th>
+                                <th colspan="2"></th>
                             </tr>
                         </tfoot>
                     </table>
@@ -252,6 +267,7 @@ export default {
                 customer:'',
                 total_piutang:0,
                 total_piutang_rupiah:0,
+                keterangan:'',
                 total:0,
                 nominal:0,
                 tanggal:new Date(),
@@ -274,7 +290,8 @@ export default {
                 total:0,
                 total_rupiah:0,
                 tgl_jt:new Date(),
-                nominal:0
+                nominal:0,
+                keterangan:''
             },
             carinamacustomer:'',
             caritokocustomer:'',
@@ -498,6 +515,7 @@ export default {
             this.detail.bank=''
             this.detail.no_cek_bg=''
             this.detail.no_order=''
+            this.detail.keterangan=''
             this.detail.total=0
             this.detail.total_rupiah=0;
             this.detail.tgl_jt=new Date()
@@ -547,6 +565,7 @@ export default {
                     tgl_jt:this.detail.tgl_jt,
                     tagihan:this.detail.total,
                     nominal:bayar,
+                    keterangan:this.detail.keterangan
                 }
             )
 
@@ -625,6 +644,7 @@ export default {
                         this.state.kode='';
                         this.state.saldo=0;
                         this.state.customer='';
+                        this.state.keterangan='';
                         this.state.total_piutang=0;
                         this.state.total_piutang_rupiah=0;
                         this.state.nominal=0;

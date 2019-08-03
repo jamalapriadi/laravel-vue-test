@@ -12,12 +12,12 @@
             <form @submit.prevent="store" action="/data/program" method="post">
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="form-group row">
+                        <!-- <div class="form-group row">
                             <label for="" class="control-label col-lg-3">Nomor Storing</label>
                             <div class="col-lg-9">
                                 <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-group row">
                             <label for="" class="control-label col-lg-3">No. Ref</label>

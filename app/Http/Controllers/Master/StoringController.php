@@ -67,8 +67,10 @@ class StoringController extends Controller
                 'error'=>$validasi->errors()->all()
             );
         }else{
+            $kode=$this->autonumber_storing();
+
             $s=new Storing;
-            $s->no_storing=request('kode');
+            $s->no_storing=$kode;
             $s->no_ref=request('no_ref');
             $s->tgl=date('Y-m-d',strtotime(request('tanggal')));
             $s->no_surat_jalan=request('no_surat_jalan');
@@ -84,7 +86,7 @@ class StoringController extends Controller
                         \DB::table('rstoring')
                             ->insert(
                                 [
-                                    'no_storing'=>request('kode'),
+                                    'no_storing'=>$kode,
                                     'kd_brg'=>$val['kd_barang'],
                                     'rak_id'=>$val['rak'],
                                     'dos'=>$val['dos'],

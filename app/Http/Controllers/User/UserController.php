@@ -356,4 +356,8 @@ class UserController extends Controller
     public function notifications(){
         return auth()->user()->unreadNotification()->limit(5)->aget()->toArray();
     }
+
+    public function login_info(){
+        return auth()->user();
+    }
 }

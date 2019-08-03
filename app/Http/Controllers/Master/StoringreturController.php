@@ -46,8 +46,10 @@ class StoringreturController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
+            $kode=$this->autonumber_storing_retur();
+
             $s=new Storingretur;
-            $s->no_storing=request('kode');
+            $s->no_storing=$kode;
             $s->no_retur=request('no_retur');
             $s->tgl=date('Y-m-d',strtotime(request('tanggal')));
             $s->lokasi_id=request('lokasi');
@@ -67,7 +69,7 @@ class StoringreturController extends Controller
                         \DB::table('rstoring_retur')
                             ->insert(
                                 [
-                                    'no_storing_retur'=>request('kode'),
+                                    'no_storing_retur'=>$kode,
                                     'kd_brg'=>$val['kd'],
                                     'rak_id'=>$rak[$key],
                                     'dos'=>$val['dos'],

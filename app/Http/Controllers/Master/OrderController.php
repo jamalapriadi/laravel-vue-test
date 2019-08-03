@@ -74,8 +74,10 @@ class OrderController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
+            $kode=$this->autonumber_order();
+
             $cus=new Order;
-            $cus->no_order=request('kode');
+            $cus->no_order=$kode;
             $cus->kd_picking=request('kd_picking');
             $cus->kd_trans=request('kd_trans');
             $cus->tgl=date('Y-m-d',strtotime(request('tanggal')));
@@ -117,7 +119,7 @@ class OrderController extends Controller
                         \DB::table('rorder')
                             ->insert(
                                 [
-                                    'no_order'=>request('kode'),
+                                    'no_order'=>$kode,
                                     'kd_brg'=>$val,
                                     'dos'=>$request->input('doshit')[$key],
                                     'pcs'=>$request->input('pcshit')[$key],
@@ -172,7 +174,7 @@ class OrderController extends Controller
                 //         \DB::table('rorder')
                 //             ->insert(
                 //                 [
-                //                     'no_order'=>request('kode'),
+                //                     'no_order'=>$kode,
                 //                     'kd_brg'=>$val['kd_barang'],
                 //                     'dos'=>$val['dos'],
                 //                     'pcs'=>$val['pcs'],
@@ -194,7 +196,7 @@ class OrderController extends Controller
                         'perusahaan',
                         'sales'
                     ]
-                )->find(request('kode'));
+                )->find($kode);
 
                 $keterangan=\App\Models\Ket::where('perusahaan_id',auth()->user()->perusahaan_id)->first();
 
