@@ -11,12 +11,12 @@
 
 
             <div class="row">
-                <div class="col-lg-6">
+                <!-- <div class="col-lg-6">
                     <div class="form-group">
                         <label for="" class="control-label">Nomor Order</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="col-lg-6">
                     <div class="form-group">
@@ -210,7 +210,7 @@
                         </div>
                         <div class="col-lg-3 col-md-3" style="margin-top:10px;">
                             <div class="form-group row">
-                                <label for="" class="control-label">{{dataprint.sales}}</label>
+                                <label for="" class="control-label">Sales : {{dataprint.sales}}</label>
                             </div>
                         </div>
                     </div>
@@ -266,7 +266,7 @@
                             <tfoot>
                                 <tr>
                                     <th>{{dataprint.update_at}}</th>
-                                    <th>PM Mira</th>
+                                    <th>{{user.username}}</th>
                                     <th></th>
                                     <th>TOTAL</th>
                                     <th>{{dataprint.total}}</th>
@@ -296,7 +296,7 @@
                                         <br>
                                         <br>
                                         <br>
-                                        BKL WAYAN TORUE
+                                        {{dataprint.customer.nm}}
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6">
@@ -441,8 +441,19 @@ export default {
                 total:0,
                 keterangan:{}
             },
-            output:null
+            output:null,
+            user:{
+                username:''
+            },
         }
+    },
+    created(){
+        axios.get('/data/user')
+            .then(response => {
+                this.user={
+                    username: response.data.username
+                }
+            })
     },
     watch: {
         pencarian: function(q) {

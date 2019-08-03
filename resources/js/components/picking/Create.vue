@@ -6,10 +6,10 @@
                     Picking
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="" class="control-label">Kode Picking</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                         <label for="" class="control-label">Tanggal</label>
@@ -221,7 +221,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{l.nama_rak}}</td>
+                            <td width='50%'>{{l.nama_rak}}</td>
                             <td>{{l.pivot.dos}} Dos</td>
                             <td>{{l.pivot.pcs}} Pcs</td>
                         </tr>

@@ -68,8 +68,10 @@ class MutasiController extends Controller
                 'error'=>$validasi->errors()->all()
             );
         }else{
+            $kode=$this->autonumber_mutasi();
+
             $s=new Mutasi;
-            $s->no_mutasi=request('kode');
+            $s->no_mutasi=$kode;
             $s->lokasil=request('gudang_lama')['id'];
             $s->lokasib=request('gudang_baru')['id'];
             $s->tgl=date('Y-m-d',strtotime(request('tanggal')));
@@ -87,7 +89,7 @@ class MutasiController extends Controller
                         \DB::table('rmutasi')
                                 ->insert(
                                     [
-                                        'no_mutasi'=>request('kode'),
+                                        'no_mutasi'=>$kode,
                                         'kd_brg'=>$val['kd_barang'],
                                         'rakl'=>$val['rak_lama_id'],
                                         'rakb'=>$val['rak_baru_id'],

@@ -16,12 +16,12 @@
             <form @submit.prevent="store" action="/data/program" method="post">
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="form-group row">
+                        <!-- <div class="form-group row">
                             <label for="" class="control-label col-lg-3">Nomor PO</label>
                             <div class="col-lg-9">
                                 <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-group row">
                             <label for="" class="control-label col-lg-3">Tanggal</label>
@@ -157,14 +157,13 @@
                         </td>
                     </tr>
                 </tbody>
-                <!-- <tfoot>
+                <tfoot>
                     <tr>
-                        <td colspan="3"> Total</td>
-                        <td>{{totalQty}}</td>
-                        <td></td>
-                        <td></td>
+                        <th colspan="6">Total PCS</th>
+                        <th>{{total_barang}}</th>
+                        <th></th>
                     </tr>
-                </tfoot> -->
+                </tfoot>
             </table>
 
             
@@ -279,7 +278,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td> Rak :
+                            <td width='50%'> Rak :
                                 <ul>
                                     <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}} - {{k.diambil}}</li>
                                 </ul>
@@ -335,9 +334,10 @@ export default {
                 bolehhutang:'Y',
                 plafon:0,
                 totalharga:0,
-                statuskonfirmasi:'Accept'
+                statuskonfirmasi:'Accept',
             },
             date: new Date(),
+            total_barang:0,
             options: {
                 format: 'DD/MM/YYYY',
                 useCurrent: false,
@@ -686,7 +686,6 @@ export default {
         },
 
         saveBarang(){
-            console.log(this.state.lokasi)
             if(this.barang.kode==""){
                 alert('Barang harus diisi');
 
@@ -711,18 +710,6 @@ export default {
                 return false;
             }
 
-            // if(this.barang.dos==""){
-            //     alert('Dos barang harus diisi');
-
-            //     return false;
-            // }
-
-            // if(this.barang.pcs==""){
-            //     alert('PCS harus diisi');
-
-            //     return false;
-            // }
-
             axios.get('/data/get-rak-by-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs)
                 .then(response => {
                     if(response.data.success==true){
@@ -739,19 +726,21 @@ export default {
                             }
                         );
 
-                        console.log(this.state.listBarang);
+                        this.state.totalharga=0;
+                        this.total_barang=0;
+
+                        for(var a=0; a < this.state.listBarang.length; a++){
+                            this.state.totalharga+=this.state.listBarang[a].harga;
+                            this.total_barang+=parseInt(this.state.listBarang[a].total_pcs);
+                        }
+                        // console.log(this.state.total_barang);
+                        this.hitunghutang();
+
+                        this.kosongBarang();
                     }else{
                         alert('silahkan lengkapi data');
                     }
                 })
-
-            this.state.totalharga=0;
-            for(var a=0; a<this.state.listBarang.length; a++){
-                this.state.totalharga+=this.state.listBarang[a].harga;
-            }
-            this.hitunghutang();
-
-            this.kosongBarang();
         },
 
         kosongBarang(){
@@ -909,6 +898,8 @@ export default {
                         this.state.tanggal=new Date();
                         // this.state.perusahaan='';
                         this.state.keterangan='';
+                        this.state.total_barang=0;
+                        this.total_barang=0;
                         this.$refs.kodecustomer.inputValue = '';
                         this.$refs.namacustomer.inputValue = '';
                         this.state.listBarang=[];

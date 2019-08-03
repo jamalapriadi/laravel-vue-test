@@ -6,10 +6,10 @@
                     Retur
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="" class="control-label">No. Retur</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                         <label for="" class="control-label">Tanggal</label>
@@ -91,6 +91,14 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <div class="form-group row">
+                                <label for="" class="control-label col-lg-3">Keterangan</label>
+                                <div class="col-lg-9">
+                                    <input type="text" class="form-control" :class="{ 'is-invalid': errors.keterangan }" v-model="state.keterangan">
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -123,19 +131,19 @@
                                     <input type="text" class="form-control" v-model="form.nama" readonly>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-1">
                                 <div class="form-group">
                                     <label for="" class="control-label">Dos</label>
                                     <input type="text" class="form-control" name="dos" v-model="form.dos" readonly>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-1">
                                 <div class="form-group">
                                     <label for="" class="control-label">Pcs</label>
                                     <input type="text" class="form-control" name="pcs" v-model="form.pcs" readonly>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-lg-1">
                                 <div class="form-grou">
                                     <label for="harga" class="control-label">Harga</label>
                                     <input type="text" class="form-control" v-model="form.harga" readonly>
@@ -151,6 +159,12 @@
                                 <div class="form-group">
                                     <label for="" class="control-label">Diskon ( Rp. )</label>
                                     <input type="text" class="form-control" v-model="form.diskon_rupiah" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-group">
+                                    <label for="" class="control-label">Keterangan</label>
+                                    <input type="text" class="form-control" name="dos" v-model="form.keterangan">
                                 </div>
                             </div>
                         </div>
@@ -193,6 +207,7 @@
                                 <th>Diskon (Rp.)</th>
                                 <th>Return Dos</th>
                                 <th>Return PCS</th>
+                                <th>Keterangan</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -207,6 +222,7 @@
                                 <td>{{l.diskon_rupiah}}</td>
                                 <td>{{l.return_dos}}</td>
                                 <td>{{l.return_pcs}}</td>
+                                <td>{{l.keterangan}}</td>
                                 <td>
                                     <!-- <div v-if="tampilTambah[index]==true">
                                         <a class="btn btn-info text-white" v-on:click="tambahBarang(l)">Pilih Dari Rak Lain</a>
@@ -272,6 +288,7 @@ export default {
                 kode:'',
                 tanggal:new Date(),
                 customer:'',
+                keterangan:'',
                 lokasi:'',
                 kd_trans:'Tunai',
                 barang:[]
@@ -294,7 +311,8 @@ export default {
                 return_dos:0,
                 return_pcs:0,
                 total_pcs:0,
-                pcs_barang:0
+                pcs_barang:0,
+                keterangan:''
             },
             pos:[],
             barang:[],
@@ -595,7 +613,8 @@ export default {
                         return_pcs:this.form.return_pcs,
                         jumlah:this.form.jumlah,
                         statusnya:statusnya,
-                        pcs_barang:this.form.pcs_barang
+                        pcs_barang:this.form.pcs_barang,
+                        keterangan:this.form.keterangan
                     }
                 );
             }

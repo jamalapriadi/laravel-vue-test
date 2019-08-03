@@ -70,8 +70,10 @@ class PoController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
+            $kode=$this->autonumber_po();
+
             $cus=new Po;
-            $cus->no_po=request('kode');
+            $cus->no_po=$kode;
             $cus->customer_id=request('customer');
             $cus->ket=request('keterangan');
             $cus->tgl=date('Y-m-d',strtotime(request('tanggal')));
@@ -129,7 +131,7 @@ class PoController extends Controller
                         \DB::table('rpo')
                             ->insert(
                                 [
-                                    'no_po'=>request('kode'),
+                                    'no_po'=>$kode,
                                     'kd_brg'=>$val['kd_barang'],
                                     'dos'=>$val['dos'],
                                     'pcs'=>$val['pcs'],

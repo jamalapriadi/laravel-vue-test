@@ -68,34 +68,11 @@ class PickingController extends Controller
                 'adahutang'=>false
             );
         }else{
-            // $po=\App\Models\Po::find($request->input('no_po'));
-            // $customer=$po->customer_id;
-
-            // $lis=\DB::select("select a.*, d.nm,DATEDIFF(a.tgljt,CURDATE()) as minus_hari
-            //     from orders a
-            //     left join picking b on b.kd_picking=a.kd_picking
-            //     left join po c on c.no_po=b.no_po 
-            //     left join customer d on d.kd=c.customer_id
-            //     where a.kd_trans='Kredit'
-            //     and c.customer_id='$customer'
-            //     AND CASE
-            //         WHEN DATEDIFF(a.tgljt,CURDATE())>0 THEN 'BELUM'
-            //         ELSE 'TELAT'
-            //     END ='TELAT'");
-
-            // if(count($lis)>0){
-            //     $data=array(
-            //         'success'=>false,
-            //         'pesan'=>'Customer ini masih memiliki order yang jatuh tempo',
-            //         'errors'=>array(),
-            //         'adahutang'=>true
-            //     );
-            // }else{
-                
-            // }
+            
+            $kode=$this->autonumber_picking();
 
             $p=new Picking;
-            $p->kd_picking=request('kode');
+            $p->kd_picking=$kode;
             $p->no_po=request('no_po');
             $p->ket=request('keterangan');
             $p->tgl=date('Y-m-d',strtotime(request('tanggal')));
@@ -188,7 +165,7 @@ class PickingController extends Controller
                         \DB::table('rpicking')
                             ->insert(
                                 [
-                                    'kd_picking'=>request('kode'),
+                                    'kd_picking'=>$kode,
                                     'kd_brg'=>$val,
                                     'kd_rak'=>$request->input('rak')[$key],
                                     'pdos'=>$request->input('pdos')[$key],
@@ -220,7 +197,7 @@ class PickingController extends Controller
                         'po.lokasi',
                         'perusahaan'
                     ]
-                )->find(request('kode'));
+                )->find($kode);
 
                 $data=array(
                     'success'=>true,

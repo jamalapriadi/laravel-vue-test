@@ -39,8 +39,10 @@ class ReturController extends Controller
                 'pesan'=>'Validasi error'
             );
         }else{
+            $kode=$this->autonumber_retur();
+
             $r= new Retur;
-            $r->no_retur=request('kode');
+            $r->no_retur=$kode;
             $r->tgl_retur=date('Y-m-d',strtotime(request('tanggal')));
             if(request('full_nota')==true){
                 $r->full_nota='Y';    
@@ -51,6 +53,7 @@ class ReturController extends Controller
             $r->kd_trans=request('kd_trans');
             $r->customer_id=request('customer');
             $r->lokasi_id=request('lokasi');
+            $r->keterangan=request('keterangan');
             $r->insert_user=auth()->user()->username;
             $r->update_user=auth()->user()->username;
             
@@ -102,11 +105,12 @@ class ReturController extends Controller
                         \DB::table('rretur')
                             ->insert(
                                 [
-                                    'no_retur'=>request('kode'),
+                                    'no_retur'=>$kode,
                                     'no_order'=>$val['no_order'],
                                     'kd_brg'=>$val['kd_barang'],
                                     'dos'=>$val['return_dos'],
                                     'pcs'=>$val['return_pcs'],
+                                    'keterangan'=>$val['keterangan'],
                                     'total_pcs'=>($brg->pcs * $val['return_dos']) + $val['return_pcs']
                                 ]
                             );

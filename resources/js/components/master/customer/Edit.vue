@@ -20,6 +20,7 @@
                     <div class="form-group">
                         <label for="" class="control-label">Nama Toko</label>
                         <input type="text" class="form-control" :class="{ 'is-invalid': errors.toko }" v-model="state.toko">
+                        <p style="color:red"><small>Nama - Wilayah</small></p>
                     </div>
                     <div class="form-group">
                         <label for="" class="control-label">Nama Pemilik</label>

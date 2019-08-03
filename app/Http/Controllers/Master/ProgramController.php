@@ -60,8 +60,10 @@ class ProgramController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
+            $kode=$this->autonumber_program();
+
             $cus=new Program;
-            $cus->nmr=request('kode');
+            $cus->nmr=$kode;
             $cus->nm=request('nama');
             $cus->awprriod=date('Y-m-d',strtotime(request('start')));
             $cus->akpriod=date('Y-m-d',strtotime(request('end')));
@@ -77,7 +79,7 @@ class ProgramController extends Controller
                         \DB::table('rprogram')
                             ->insert(
                                 [
-                                    'nmr_program'=>request('kode'),
+                                    'nmr_program'=>$kode,
                                     'kd_brg'=>$val['kd_barang'],
                                     'qty'=>$val['qty'],
                                     'point'=>$val['point']

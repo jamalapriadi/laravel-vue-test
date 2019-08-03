@@ -55,6 +55,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('retur','Master\ReturController');
 
     /* user */
+    Route::get('user','User\UserController@login_info');
     Route::resource('users','User\UserController');
     Route::post('update-foto','User\UserController@update_foto');
     Route::post('update-info','User\UserController@update_info');
