@@ -164,7 +164,7 @@
                             <tfoot>
                                 <tr>
                                     <th>{{dataprint.update_at}}</th>
-                                    <th>PM Mira</th>
+                                    <th>PM </th>
                                     <th></th>
                                     <th>TOTAL</th>
                                     <th>{{dataprint.total}}</th>
