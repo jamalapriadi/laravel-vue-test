@@ -335,8 +335,8 @@ export default {
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         },
 
-        getOrderBelumLunasCostomer(){
-            axios.get('/data/order-belum-lunas?customer='+this.state.customer)
+        getOrderBelumLunasCostomer(nama){
+            axios.get('/data/order-belum-lunas?customer='+nama)
                 .then(response => {
                     if(response.data.success==true){
                         this.pos= response.data.data
@@ -450,7 +450,7 @@ export default {
             this.$refs.tokocustomer.inputValue = toko
             this.state.customer=nama;
             this.state.saldo=saldo;
-            this.getOrderBelumLunasCostomer();
+            this.getOrderBelumLunasCostomer(nama);
             this.getTotalHutangCustomer();
         },
 
@@ -470,7 +470,7 @@ export default {
             this.$refs.namacustomer.inputValue = nama
             this.state.customer=kode;
             this.state.saldo=saldo;
-            this.getOrderBelumLunasCostomer();
+            this.getOrderBelumLunasCostomer(kode);
             this.getTotalHutangCustomer();
         },
 
@@ -497,7 +497,7 @@ export default {
             this.state.customer=customer_id;
             this.state.saldo=saldo;
             this.detail.no_order=no_order;
-            this.getOrderBelumLunasCostomer();
+            this.getOrderBelumLunasCostomer(customer_id);
             this.getTotalHutangCustomer();
             this.changeOrder();
         },
@@ -606,7 +606,7 @@ export default {
 
         deleteBarang: function(index) {
             this.state.detail.splice(index, 1);
-            this.getOrderBelumLunasCostomer();
+            this.getOrderBelumLunasCostomer(this.state.customer);
 
             var newpos=[];
             for(var a=0; a<this.state.detail.length; a++){
