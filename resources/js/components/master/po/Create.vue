@@ -710,7 +710,7 @@ export default {
                 return false;
             }
 
-            axios.get('/data/get-rak-by-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs)
+            axios.get('/data/get-rak-by-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs+'&lokasi='+this.state.lokasi)
                 .then(response => {
                     if(response.data.success==true){
                         this.state.listBarang.push(

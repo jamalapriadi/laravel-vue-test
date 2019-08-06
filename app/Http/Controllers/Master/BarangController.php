@@ -359,7 +359,8 @@ class BarangController extends Controller
     {
         $rules=[
             'dos'=>'required',
-            'pcs'=>'required'
+            'pcs'=>'required',
+            'lokasi'=>'required'
         ];
 
         $validasi=\Validator::make($request->all(),$rules);
@@ -376,6 +377,7 @@ class BarangController extends Controller
 
             $pcs=$request->input('pcs');
             $dos=$request->input('dos');
+            $lokasi=$request->input('lokasi');
             $kurangnya=$barang->pcs*$dos+$pcs;
 
             //hapus barang di tabel stok yang pcs nya 0
@@ -387,6 +389,7 @@ class BarangController extends Controller
             $stokbarang=\DB::table('stok')
                 ->leftJoin('rak','rak.kd','=','stok.rak_id')
                 ->where('kd_brg',$id)
+                ->where('lokasi_id',$lokasi)
                 ->select('rak.nm as nama_rak','stok.*')
                 ->get();
 
