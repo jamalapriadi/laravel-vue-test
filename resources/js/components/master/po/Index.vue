@@ -107,7 +107,7 @@
                 </table>
                 <hr>
                 <div v-for="(l,index) in dataprint.detail" v-bind:key="index">
-                    <table width="75%">
+                    <table width="45%">
                         <thead>
                             <tr>
                                 <th rowspan="3">{{l.nm}}</th>

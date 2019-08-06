@@ -16,9 +16,15 @@ class RakController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rak=Rak::with('lokasi')->paginate(25);
+        $rak=Rak::with('lokasi');
+
+        if($request->has('q')){
+            $rak=$rak->where('nm','like','%'.$request->input('q').'%');
+        }
+        
+        $rak=$rak->paginate(25);
 
         return $rak;
     }
