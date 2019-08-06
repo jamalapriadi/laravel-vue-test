@@ -378,6 +378,11 @@ class BarangController extends Controller
             $dos=$request->input('dos');
             $kurangnya=$barang->pcs*$dos+$pcs;
 
+            //hapus barang di tabel stok yang pcs nya 0
+            \DB::Table('stok')
+                ->where('pcs',0)
+                ->delete();
+
             //cek stok barangnya
             $stokbarang=\DB::table('stok')
                 ->leftJoin('rak','rak.kd','=','stok.rak_id')
