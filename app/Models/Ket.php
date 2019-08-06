@@ -12,6 +12,7 @@ class Ket extends Model
     protected $table="ket";
     protected $primaryKey="no_hp";
 
+    public $incrementing=false;
     // protected $dates=['deleted_at'];
 
 }

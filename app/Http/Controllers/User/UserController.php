@@ -358,6 +358,15 @@ class UserController extends Controller
     }
 
     public function login_info(){
-        return auth()->user();
+        $id=auth()->user()->id;
+
+        $user=\App\User::with(
+            [
+                'perusahaan',
+                'perusahaan.ket'
+            ]
+        )->find($id);
+
+        return $user;
     }
 }

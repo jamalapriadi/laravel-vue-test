@@ -333,7 +333,16 @@ class BarangController extends Controller
 
     public function cari_barang_by_nama(Request $request)
     {
-        $barang=Barang::select('kd','nm','pcs','jual','merk_id');
+        if($request->has('lokasi')){
+            $lokasi=request('lokasi');
+
+            $barang=Barang::select('kd','nm','pcs','jual','merk_id',\DB::raw("IFNULL((SELECT SUM(a.pcs) AS stok FROM stok a
+                WHERE a.lokasi_id=$lokasi
+                AND a.kd_brg=kd
+                GROUP BY a.kd_brg, a.lokasi_id),0) as stok"));
+        }else{
+            $barang=Barang::select('kd','nm','pcs','jual','merk_id',\DB::raw("'0' as stok"));
+        }
 
         if($request->has('q')){
             $barang=$barang->where('nm','like','%'.request('q').'%');
