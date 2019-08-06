@@ -13,4 +13,8 @@ class Perusahaan extends Model
 
     // protected $dates=['deleted_at'];
 
+    public function ket(){
+        return $this->hasOne('App\Models\Ket','perusahaan_id','id');
+    }
+
 }

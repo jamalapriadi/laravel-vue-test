@@ -45,7 +45,7 @@
                             <div class="form-group row">
                                 <label class="control-label col-lg-3">No. Nota</label>
                                 <div class="col-lg-9">
-                                    <vue-bootstrap-typeahead v-model="carinonota" :data="listnonota" placeholder="Nama Toko" @hit="getNoNota($event)" ref="nonota"/>
+                                    <vue-bootstrap-typeahead v-model="carinonota" :data="listnonota" placeholder="No. Nota" @hit="getNoNota($event)" ref="nonota"/>
                                 </div>
                             </div>
                         </div>
@@ -349,6 +349,9 @@ export default {
             }
         },
         getTotalHutangCustomer(){
+            this.state.saldo=0;
+            this.state.total_piutang_rupiah=0;
+
             axios.get('/data/tampil-hutang-customer?customer='+this.state.customer)
                 .then(response => {
                     if(response.data.success==true){

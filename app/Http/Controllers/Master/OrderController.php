@@ -367,7 +367,7 @@ class OrderController extends Controller
             ->where('no_order','like','ODR-'.$perusahaan.'%')
             ->first();
         $kodeOrder = $sql->maxKode;
-        $noUrut= (int) substr($kodeOrder, 10,10);
+        $noUrut= (int) substr($kodeOrder, 11,11);
         $noUrut++;
         $char = "ODR-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);

@@ -97,10 +97,10 @@
                     <div class="row">
                         <div class="col-lg-3 col-md-3">
                             <div class="form-group row" style="margin-top:10px;">
-                                <label for="" class="control-label">{{dataprint.perusahaan}}</label>
+                                <label for="" class="control-label">{{user.perusahaan.nama}}</label>
                             </div>
                             <div class="form-group row" style="margin-top:-20px;">
-                                <label for="" class="control-label">{{dataprint.telp}}</label>
+                                <label for="" class="control-label">{{user.perusahaan.ket.no_hp}}</label>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6">
@@ -176,13 +176,13 @@
                             <div class="form-group row">
                                 <label for="" class="control-label">No. HP</label>
                                 <div class="col-lg-9 col-md-9">
-                                    : 082451657777 (WHATSAPP)
+                                    : {{user.perusahaan.ket.no_hp}} (WHATSAPP)
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="" class="control-label">Email</label>
                                 <div class="col-lg-9 col-md-9">
-                                    : tunggallarisg@yahoo.com
+                                    : {{user.perusahaan.ket.email}}
                                 </div>
                             </div>
                         </div>
@@ -250,7 +250,13 @@
                     keterangan:{}
                 },
                 user:{
-                    username:''
+                    username:'',
+                    perusahaan:{
+                    ket:{
+                        no_hp:'',
+                        email:''
+                    }
+                }
                 },
             }
         },
@@ -258,7 +264,8 @@
             axios.get('/data/user')
                 .then(response => {
                     this.user={
-                        username: response.data.username
+                        username: response.data.username,
+                        perusahaan: response.data.perusahaan
                     }
                 })
         },
