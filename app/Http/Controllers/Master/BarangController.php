@@ -389,7 +389,7 @@ class BarangController extends Controller
             $stokbarang=\DB::table('stok')
                 ->leftJoin('rak','rak.kd','=','stok.rak_id')
                 ->where('kd_brg',$id)
-                ->where('lokasi_id',$lokasi)
+                ->where('stok.lokasi_id',$lokasi)
                 ->select('rak.nm as nama_rak','stok.*')
                 ->get();
 
