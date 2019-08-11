@@ -9,6 +9,7 @@
                 <div v-if="message" class="alert alert-success">
                     {{ message }}
                 </div>
+                
 
                 <form @submit.prevent="store" action="/data/keterangan" method="post">
                     <div class="form-group">
@@ -29,6 +30,9 @@
                         <label for="" class="control-label">NPWP</label>
                         <input type="text" class="form-control" v-model="state.npwp">
                     </div>
+
+                    <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
+
                     <hr>
                     <div class="form-group">
                         <router-link to="/bank" class="btn btn-default">
@@ -47,7 +51,12 @@
 </template>
 
 <script>
+import { VueLoading } from 'vue-loading-template'
+
 export default {
+    components: {
+        VueLoading
+    },
     data() {
         return {
             state: {
@@ -57,7 +66,7 @@ export default {
                 npwp:''
             },
             message:'',
-
+            loading:false,
             // submitted: false,
 
             // array to hold form errors
@@ -66,7 +75,11 @@ export default {
     },
     methods: {
         store(e) {
+            this.message=''
+            this.loading=true
+
             axios.post(e.target.action, this.state).then(response => {
+                this.loading = false
                 if(response.data.success==true){
                     this.errors = [];
                     this.state = {
