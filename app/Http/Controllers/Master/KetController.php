@@ -59,6 +59,7 @@ class KetController extends Controller
             $ket->email=request('email');
             $ket->no_rekening=request('no_rekening');
             $ket->npwp=request('npwp');
+            $ket->perusahaan_id=auth()->user()->perusahaan_id;
             $ket->save();
 
             $data=array(
@@ -123,6 +124,7 @@ class KetController extends Controller
             $ket->email=request('email');
             $ket->no_rekening=request('no_rekening');
             $ket->npwp=request('npwp');
+            $ket->perusahaan_id=auth()->user()->perusahaan_id;
             $ket->save();
 
             $data=array(
