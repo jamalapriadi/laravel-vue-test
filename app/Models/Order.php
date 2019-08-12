@@ -27,6 +27,7 @@ class Order extends Model
                     'diskon_rupiah',
                     'diskon_persen',
                     'diskon_persen_2',
+                    'subtotal',
                     'jumlah',
                     'status_retur'
                 ]

@@ -248,27 +248,36 @@
                             <thead>
                                 <tr>
                                     <th>Nama Barang</th>
-                                    <th>Qty</th>
-                                    <th>Harga Disc (%)</th>
-                                    <th>Discount</th>
-                                    <th>Jumlah</th>
+                                    <th>Dos</th>
+                                    <th>PCS</th>
+                                    <th>Harga</th>
+                                    <th>Diskon 1 (%)</th>
+                                    <th>Diskon 2 (%)</th>
+                                    <!-- <th>Discount</th> -->
+                                    <th>Subtotal</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(l,index) in dataprint.detail" v-bind:key="index">
                                     <td>{{l.nm}}</td>
+                                    <td>{{l.pivot.dos}}</td>
                                     <td>{{l.pivot.pcs}}</td>
-                                    <td>{{l.pivot.diskon_persen}}</td>
-                                    <td>{{l.pivot.diskon_rupiah}}</td>
-                                    <td>{{l.jual}}</td>
+                                    <td>{{l.pivot.hrg}}</td>
+                                    <td>{{l.pivot.diskon_persen}} %</td>
+                                    <td>{{l.pivot.diskon_persen_2}} %</td>
+                                    <!-- <td>{{l.pivot.diskon_rupiah}}</td> -->
+                                    <td>{{l.pivot.subtotal}}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th>{{dataprint.update_at}}</th>
-                                    <th>{{user.username}}</th>
-                                    <th></th>
-                                    <th>TOTAL</th>
+                                    <th rowspan="2">{{dataprint.update_at}}</th>
+                                    <th rowspan="2">{{user.username}}</th>
+                                    <th colspan="4">DISKON TAMBAHAN</th>
+                                    <th>{{dataprint.diskon_rupiah}}</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="4">TOTAL</th>
                                     <th>{{dataprint.total}}</th>
                                 </tr>
                             </tfoot>
@@ -433,6 +442,7 @@ export default {
                 tanggaljt:'',
                 customer:{},
                 datail:[],
+                diskon_rupiah:0,
                 total:0,
                 kd_trans:'',
                 kd_picking:'',
@@ -1062,16 +1072,18 @@ export default {
                             tanggal:response.data.nota.tgl,
                             tanggaljt:response.data.nota.tgljt,
                             customer:response.data.nota.picking.po.customer,
+                            diskon_rupiah:response.data.nota.diskon_rupiah,
                             total:response.data.nota.total,
                             kd_trans:response.data.nota.kd_trans,
                             kd_picking:response.data.nota.kd_picking,
                             status_pembayaran:response.data.nota.status_pembayaran,
-                            detail:response.data.nota.detail,
+                            // detail:response.data.nota.detail,
                             keterangan:response.data.keterangan,
                             total:response.data.nota.total,
                             update_at: response.data.nota.updated_at,
                         }
-                        this.dataprint.detail = response.data.detail;
+                        
+                        this.dataprint.detail = response.data.nota.detail;
                         // this.print();
 
                         this.$nextTick(() => {

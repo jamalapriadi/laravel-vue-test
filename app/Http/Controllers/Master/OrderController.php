@@ -83,6 +83,7 @@ class OrderController extends Controller
             $cus->tgl=date('Y-m-d',strtotime(request('tanggal')));
             $cus->ket=request('keterangan');
             $cus->sales_id=request('sales');
+            $cus->diskon_rupiah=request('diskon_tambahan');
             $cus->total=request('total');
             $cus->perusahaan_id=auth()->user()->perusahaan_id;
             $cus->insert_user=auth()->user()->username;
@@ -125,7 +126,8 @@ class OrderController extends Controller
                                     'pcs'=>$request->input('pcshit')[$key],
                                     'hrg'=>$request->input('jualhit')[$key],
                                     'diskon_persen'=>$request->input('diskon_persen')[$key],
-                                    'diskon_rupiah'=>$request->input('diskon_rupiah')[$key],
+                                    'diskon_persen_2'=>$request->input('diskon_rupiah')[$key],
+                                    'subtotal'=>$request->input('subtotal')[$key],
                                     'jumlah'=>$request->input('jumlahhit')[$key]
                                 ]
                             );
