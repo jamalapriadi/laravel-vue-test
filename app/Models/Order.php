@@ -26,6 +26,7 @@ class Order extends Model
                     'hrg',
                     'diskon_rupiah',
                     'diskon_persen',
+                    'diskon_persen_2',
                     'jumlah',
                     'status_retur'
                 ]

@@ -1062,7 +1062,6 @@ export default {
                             tanggal:response.data.nota.tgl,
                             tanggaljt:response.data.nota.tgljt,
                             customer:response.data.nota.picking.po.customer,
-                            datail:response.data.nota.detail,
                             total:response.data.nota.total,
                             kd_trans:response.data.nota.kd_trans,
                             kd_picking:response.data.nota.kd_picking,
@@ -1072,6 +1071,7 @@ export default {
                             total:response.data.nota.total,
                             update_at: response.data.nota.updated_at,
                         }
+                        this.dataprint.detail = response.data.detail;
                         // this.print();
 
                         this.$nextTick(() => {

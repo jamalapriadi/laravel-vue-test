@@ -25,7 +25,7 @@ class OrderController extends Controller
                 'perusahaan',
                 'sales'
             ]
-        );
+        )->where('perusahaan_id',auth()->user()->perusahaan_id);
 
         if($request->has('q')){
             $order=$order->where('customer_id','like','%'.request('q').'%');

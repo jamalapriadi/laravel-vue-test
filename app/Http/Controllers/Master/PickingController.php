@@ -317,6 +317,7 @@ class PickingController extends Controller
         $perusahaan=auth()->user()->perusahaan->nama;
 
         $sql=Picking::select(\DB::Raw("max(kd_picking) as maxKode"))
+            ->where('perusahaan_id',auth()->user()->perusahaan_id)
             ->where('kd_picking','like','PCK-'.$perusahaan.'%')
             ->first();
         $kodeBarang = $sql->maxKode;
@@ -348,6 +349,7 @@ class PickingController extends Controller
             ->leftJoin('customer as c','b.customer_id','=','c.kd')
             ->whereRaw("kd_picking not in (select kd_picking from orders)")
             ->select('a.*','c.nm','c.nm_toko')
+            ->where('a.perusahaan_id',auth()->user()->perusahaan_id)
             ->get();
 
         return $po;
