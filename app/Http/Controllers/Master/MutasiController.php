@@ -21,7 +21,7 @@ class MutasiController extends Controller
                 'gudang_lama',
                 'gudang_baru'
             ]
-        );
+        )->where('perusahaan_id',auth()->user()->perusahaan_id);
 
         // if($request->has('q')){
         //     $mutasi=$mutasi->where('no_storing','like','%'.request('q').'%')

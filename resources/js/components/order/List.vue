@@ -27,63 +27,65 @@
 
             <br>
             
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th width="5%">No.</th>
-                        <th>Nmr. Order</th>
-                        <th>Kd. Picking</th>
-                        <th>Customer</th>
-                        <!-- <th>Perusahaan</th> -->
-                        <th>Sales</th>
-                        <th>Kd Transaksi</th>
-                        <th>Tgl</th>
-                        <th>Tgl Jatuh Tempo</th>
-                        <!-- <th>Lokasi</th> -->
-                        <th>Keterangan</th>
-                        <th>Jumlah Barang</th>
-                        <th>Total</th>
-                        <th width="17%"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(l, index) in list.data" v-bind:key="index">
-                        <td>{{index+1}}</td>
-                        <td>{{l.no_order}}</td>
-                        <td>{{l.kd_picking}}</td>
-                        <td>
-                            <p v-if="l.picking!=null">
-                                {{l.picking.po.customer.nm}}
-                            </p>
-                            <p class="label label-danger" v-else>Picking Not Found</p>
-                        </td>
-                        <!-- <td>{{l.perusahaan.nama}}</td> -->
-                        <td>{{l.sales.nm}}</td>
-                        <td>{{l.kd_trans}}</td>
-                        <td>{{l.tgl}}</td>
-                        <td>{{l.tgljt}}</td>
-                        <!-- <td></td> -->
-                        <td>{{l.ket}}</td>
-                        <td>{{l.detail.length}}</td>
-                        <td>{{l.total}}</td>
-                        <td>
-                            <div class="btn-group">
-                                <router-link :to="{ name: 'orderDetail', params: {id: l.no_order}}" class="btn btn-info">
-                                    <i class="fa fa-list text-white"></i>
-                                </router-link>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th width="5%">No.</th>
+                            <th>Nmr. Order</th>
+                            <th>Kd. Picking</th>
+                            <th>Customer</th>
+                            <!-- <th>Perusahaan</th> -->
+                            <th>Sales</th>
+                            <th>Kd Transaksi</th>
+                            <th>Tgl</th>
+                            <th>Tgl Jatuh Tempo</th>
+                            <!-- <th>Lokasi</th> -->
+                            <th>Keterangan</th>
+                            <th>Jumlah Barang</th>
+                            <th>Total</th>
+                            <th width="17%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(l, index) in list.data" v-bind:key="index">
+                            <td>{{index+1}}</td>
+                            <td>{{l.no_order}}</td>
+                            <td>{{l.kd_picking}}</td>
+                            <td>
+                                <p v-if="l.picking!=null">
+                                    {{l.picking.po.customer.nm}}
+                                </p>
+                                <p class="label label-danger" v-else>Picking Not Found</p>
+                            </td>
+                            <!-- <td>{{l.perusahaan.nama}}</td> -->
+                            <td>{{l.sales.nm}}</td>
+                            <td>{{l.kd_trans}}</td>
+                            <td>{{l.tgl}}</td>
+                            <td>{{l.tgljt}}</td>
+                            <!-- <td></td> -->
+                            <td>{{l.ket}}</td>
+                            <td>{{l.detail.length}}</td>
+                            <td>{{l.total}}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <router-link :to="{ name: 'orderDetail', params: {id: l.no_order}}" class="btn btn-info">
+                                        <i class="fa fa-list text-white"></i>
+                                    </router-link>
 
-                                <a class="btn btn-danger" v-on:click="hapus(l.no_order, index, l.nm)" v-bind:id="'delete'+l.no_order">
-                                    <i class="fa fa-trash text-white"></i>
-                                </a>
+                                    <a class="btn btn-danger" v-on:click="hapus(l.no_order, index, l.nm)" v-bind:id="'delete'+l.no_order">
+                                        <i class="fa fa-trash text-white"></i>
+                                    </a>
 
-                                <a class="btn btn-success" v-on:click="cetak(l.no_order, index, l.nm)" v-bind:id="'cetak'+l.no_order">
-                                    <i class="fa fa-print text-white"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                    <a class="btn btn-success" v-on:click="cetak(l.no_order, index, l.nm)" v-bind:id="'cetak'+l.no_order">
+                                        <i class="fa fa-print text-white"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <vue-loading v-if="loading" type="bars" color="#d9544e" :size="{ width: '50px', height: '50px' }"></vue-loading>    
             <div align="right">
@@ -348,6 +350,7 @@
             },
 
             cetak(id,index,name){
+
                 axios.get('/data/order/'+id)
                     .then(response => {
                         this.dataprint={
@@ -358,7 +361,6 @@
                             tanggal:response.data.tgl,
                             tanggaljt:response.data.tgljt,
                             customer:response.data.picking.po.customer,
-                            datail:response.data.detail,
                             total:response.data.total,
                             kd_trans:response.data.kd_trans,
                             kd_picking:response.data.kd_picking,
@@ -367,6 +369,7 @@
                             total:response.data.total,
                             update_at: response.data.updated_at,
                         }
+                        this.dataprint.detail = response.data.detail;
                         // this.print();
 
                         this.$nextTick(() => {

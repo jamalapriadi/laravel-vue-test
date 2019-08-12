@@ -51,7 +51,9 @@ class HomeController extends Controller
                 'pesan'=>"Validasi Error",
             );
         }else{
-            $cek=\DB::table('ket')->count();
+            $cek=\DB::table('ket')
+                ->where('perusahaan_id',auth()->user()->perusahaan_id)
+                ->count();
 
             if($cek > 0)
             {
