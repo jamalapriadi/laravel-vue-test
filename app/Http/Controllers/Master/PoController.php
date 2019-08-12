@@ -548,6 +548,7 @@ class PoController extends Controller
     public function list_po_not_in_picking(Request $request)
     {
         $dimana="";
+        $perusahaan_id=auth()->user()->perusahaan_id;
 
         if($request->has('status')){
             $status=$request->input('status');
@@ -566,16 +567,19 @@ class PoController extends Controller
             $dimana.=" and customer_id='".$customer."'";
         }
 
-        $po=\DB::select("select * from po where status_konfirmasi!='Please Confirm' and no_po not in (select no_po from picking) $dimana");
+        $po=\DB::select("select * from po where perusahaan_id='$perusahaan_id' AND status_konfirmasi!='Please Confirm' AND no_po not in (select no_po from picking) $dimana");
 
         return $po;
     }
 
     public function po_by_customer(Request $request,$id)
     {
-        $picking=\App\Models\Picking::select('no_po')->get();
+        $picking=\App\Models\Picking::select('no_po')
+            ->where('perusahaan_id',auth()->user()->perusahaan_id)
+            ->get();
 
-        $po=Po::where('customer_id',$id);
+        $po=Po::where('customer_id',$id)
+            ->where('perusahaan_id',auth()->user()->perusahaan_id);
 
         if($request->has('status')){
             $status=$request->input('status');

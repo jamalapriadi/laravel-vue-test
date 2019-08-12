@@ -344,6 +344,7 @@ class PiutangController extends Controller
             //         WHERE aa.customer_id=c.customer_id
             //         GROUP BY aa.customer_id
             //     ),0)");
+            $perusahaan=auth()->user()->perusahaan_id;
 
             $lis=\DB::select("SELECT c.customer_id,d.nm, d.nm_toko,
                         a.no_order,
@@ -364,6 +365,7 @@ class PiutangController extends Controller
                         LEFT JOIN customer d ON d.kd=c.customer_id
                         WHERE a.kd_trans != 'Tunai'
                         AND a.status_pembayaran='Belum Lunas'
+                        AND a.perusahaan_id='$perusahaan'
                         AND c.customer_id='$cus'");
 
             $data=array(
