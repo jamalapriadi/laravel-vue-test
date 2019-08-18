@@ -6,16 +6,15 @@
             </div>
             <div class="card-body">
                 <form v-on:submit.prevent="saveForm()">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="" class="control-label">Kode Customer</label>
                         <input type="text" class="form-control" name="kode" :class="{ 'is-invalid': errors.kode }" v-model="state.kode">
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="" class="control-label">Jenis Customer</label>
-                        <select name="jeniscustomer" id="jeniscustomer" class="form-control" v-model="state.jenis_customer">
-                            <option value="">--Pilih Jenis Customer--</option>
-                            <option v-for="(l,index) in jeniscustomer" v-bind:key="index" v-bind:value="l.jns_customer">{{l.jns_customer}}</option>
-                        </select>
+                        <multiselect v-model="state.jenis_customer" :options="jeniscustomer" :multiple="true" :close-on-select="true" :clear-on-select="false" :preserve-search="true" placeholder="Pilih Jenis Customer" label="jns_customer" track-by="jns_customer" :preselect-first="true">
+                            
+                        </multiselect>
                     </div>
                     <div class="form-group">
                         <label for="" class="control-label">Nama Toko</label>
@@ -101,14 +100,21 @@
 </template>
 
 <script>
+import { VueLoading } from 'vue-loading-template'
+import Multiselect from 'vue-multiselect'
+
 export default {
+    components: {
+        VueLoading,
+        Multiselect 
+    },
     data() {
         return {
             lokasiId:'',
             url: window.location.origin + window.location.pathname,
             state: {
                 kode: '',
-                jenis_customer:'',
+                jenis_customer:[],
                 toko:'',
                 nama: '',
                 nik:'',
@@ -139,7 +145,8 @@ export default {
             axios.get('/data/customer/'+id)
                 .then(response => {
                     this.state.kode = response.data.kd;
-                    this.state.jenis_customer = response.data.jenis_customer;
+                    // this.state.jenis_customer = response.data.jenis_customer;
+                    this.state.jenis_customer = response.data.jenisnya;
                     this.state.toko = response.data.nm_toko;
                     this.state.nama = response.data.nm;
                     this.state.nik = response.data.nik;

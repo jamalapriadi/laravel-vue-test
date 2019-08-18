@@ -20,6 +20,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
+    Route::get('update-customer','Master\CustomerController@update_customer');
     Route::get('list-keterangan','HomeController@list_keterangan');
     Route::post('keterangan','HomeController@keterangan');
     Route::resource('bank','Master\BankController');

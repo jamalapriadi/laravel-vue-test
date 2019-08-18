@@ -15,7 +15,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $customer=Customer::with('kota');
+        $customer=Customer::with('kota','jenisnya');
 
         if($request->has('q')){
             $customer=$customer->where('nm','like','%'.request('q').'%');
@@ -44,6 +44,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
+        return $request->all();
         $rules=[
             'nama'=>'required',
             'jenis_customer'=>'required',
@@ -68,8 +69,17 @@ class CustomerController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
+            $userid=auth()->user()->id;
+
+            $user=\App\User::with(
+                [
+                    'perusahaan',
+                    'perusahaan.ket'
+                ]
+            )->find($userid);
+
             $cus=new Customer;
-            $cus->kd=request('kode');
+            $cus->kd=str_slug(request('nama')." ".$user->perusahaan->nama,'_');
             $cus->jenis_customer=request('jenis_customer');
             $cus->nm_toko=request('toko');
             $cus->nm=request('nama');
@@ -85,8 +95,25 @@ class CustomerController extends Controller
             $cus->npwp=request('npwp');
             $cus->nik=request('nik');
             $cus->jenis=request('jenis');
+            $cus->perusahaan_id=auth()->user()->perusahaan_id;
             $cus->insert_user=auth()->user()->username;
-            $cus->save();
+            $simpan=$cus->save();
+
+            if($simpan){
+                if($request->has('jenis_customer')){
+                    $jenis_customer=request('jenis_customer');
+
+                    foreach($jenis_customer as $row){
+                        \DB::table('customer_detail_jenis')
+                            ->insert(
+                                [
+                                    'customer_id'=>$cus->kd,
+                                    'jenis_customer_id'=>$row->jns_customer
+                                ]
+                            );
+                    }
+                }
+            }
 
             $data=array(
                 'success'=>true,
@@ -106,7 +133,7 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        $cus=Customer::find($id);
+        $cus=Customer::with('kota','jenisnya')->find($id);
 
         return $cus;
     }
@@ -157,7 +184,6 @@ class CustomerController extends Controller
         }else{
             $cus=Customer::find($id);
             $cus->nm_toko=request('toko');
-            $cus->jenis_customer=request('jenis_customer');
             $cus->nm=request('nama');
             $cus->alamat=request('alamat');
             $cus->alias=request('alias');
@@ -171,8 +197,30 @@ class CustomerController extends Controller
             $cus->npwp=request('npwp');
             $cus->nik=request('nik');
             $cus->jenis=request('jenis');
+            $cus->perusahaan_id=auth()->user()->perusahaan_id;
             $cus->insert_user=auth()->user()->username;
-            $cus->save();
+            $simpan=$cus->save();
+
+            if($simpan){
+                if($request->has('jenis_customer')){
+                    $jenis_customer=request('jenis_customer');
+
+                    //hapus data lama
+                    \DB::table('customer_detail_jenis')
+                        ->where('customer_id',$id)
+                        ->delete();
+
+                    foreach($jenis_customer as $row){
+                        \DB::table('customer_detail_jenis')
+                            ->insert(
+                                [
+                                    'customer_id'=>$cus->kd,
+                                    'jenis_customer_id'=>$row['jns_customer']
+                                ]
+                            );
+                    }
+                }
+            }
 
             $data=array(
                 'success'=>true,
@@ -228,7 +276,8 @@ class CustomerController extends Controller
 
     public function list_customer(Request $request)
     {
-        $customer=Customer::with('kota');
+        $customer=Customer::with('kota')
+            ->where('perusahaan_id',auth()->user()->perusahaan_id);
 
         if($request->has('q')){
             $customer=$customer->where('nm','like','%'.request('q').'%');
@@ -241,38 +290,58 @@ class CustomerController extends Controller
 
     public function cari_customer_by_nama(Request $request)
     {
-        $cus=Customer::select('kd','nm','nm_toko','saldo');
+        $cus=Customer::select('kd','nm','nm_toko','saldo','perusahaan_id');
 
         if($request->has('q')){
-            $cus=$cus->where('nm','like','%'.request('q').'%')
-                ->orWhere('kd','like','%'.request('q').'%')
-                ->orWhere('nm_toko','like','%'.request('q').'%');
+            $cus=$cus->where('nm','like','%'.request('q').'%');
         }
 
-        $cus=$cus->get();
+        $cus=$cus->where('perusahaan_id',auth()->user()->perusahaan_id)
+            ->whereNotNull('perusahaan_id')
+            ->get();
 
         return $cus;
     }
 
     public function customer_not_in_picking(Request $request)
     {
+        $perusahaan_id=auth()->user()->perusahaan_id;
 
         if($request->has('status')){
             $status=$request->input('status');
 
             if($status=="false"){
-                $lis=\DB::select("SELECT a.customer_id, b.nm FROM po a
+                $lis=\DB::select("SELECT a.customer_id, b.nm 
+                    FROM po a
                     LEFT JOIN customer b ON b.kd=a.customer_id
                     WHERE a.no_ref_po IS NOT NULL
+                    AND b.perusahaan_id=$perusahaan_id
                     GROUP BY a.customer_id");
             }else{
-                $lis=\DB::select("SELECT a.customer_id, b.nm FROM po a
+                $lis=\DB::select("SELECT a.customer_id, b.nm 
+                    FROM po a
                     LEFT JOIN customer b ON b.kd=a.customer_id
                     WHERE a.no_po NOT IN (SELECT no_po FROM picking)
+                    AND b.perusahaan_id=$perusahaan_id
                     GROUP BY a.customer_id");
             }
         }
 
         return $lis;
+    }
+
+    public function update_customer(){
+        $cus=Customer::whereNotNull('jenis_customer')->get();
+        foreach($cus as $row){
+            \DB::table('customer_detail_jenis')
+                ->insert(
+                    [
+                        'customer_id'=>$row->kd,
+                        'jenis_customer_id'=>$row->jenis_customer
+                    ]
+                );
+        }
+
+        return "sukses";
     }
 }

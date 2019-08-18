@@ -109,7 +109,7 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Kode / Nama Barang</th>
+                                <th>Nama Barang</th>
                                 <th>Dos / PCS  PO</th>
                                 <th>Rak</th>
                                 <th>Dos</th>
@@ -119,11 +119,8 @@
                         </thead>
                         <tbody>
                             <tr v-for="(l,index) in barang" v-bind:key="index">
-                                <!-- <input type="hidden" v-model="state.kodes[index]" :value="l.kd">
-                                <input type="hidden" v-model="state.pdoss[index]" :value="l.pivot.dos">
-                                <input type="hidden" v-model="state.ppcss[index]" :value="l.pivot.pcs"> -->
                                 <td>{{ index + 1 }}</td>
-                                <td>{{l.kd}} / {{l.nm}}</td>
+                                <td>{{l.nm}}</td>
                                 <td>{{l.dos}} Dos / {{l.pcs}} Pcs</td>
                                 <td>
                                     <select name="rak" id="rak" class="form-control" v-model="state.rak[index]">
@@ -132,10 +129,10 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" id="dos" placeholder="Dos" v-model.number="state.dos[index]">
+                                    <input type="number" :max="l.dos" class="form-control" id="dos" placeholder="Dos" v-model.number="state.dos[index]" @input="validasiDetailDos($event, index)">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]">
+                                    <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]" @input="validasiDetailPcs($event, index)">
                                     <small>
                                         {{ stok[index] }}
                                     </small>
@@ -213,7 +210,7 @@
             </table>
             <hr>
             <div v-for="(l,index) in dataprint.detail" v-bind:key="index">
-                <table width="100%">
+                <table width="45%">
                     <thead>
                         <tr>
                             <th rowspan="3">{{l.nm}}</th>
@@ -839,6 +836,26 @@ export default {
                         
                     }
                 })
+        },
+
+        validasiDetailDos(event, index){
+            var dos_seharusnya=this.barang[index].dos;
+            var dos_diisi=this.state.dos[index];
+
+            if(dos_diisi > dos_seharusnya){
+                alert('Jumlah dos melebihi jumlah dos yang diminta')
+                this.state.dos[index]=0;
+            }
+        },
+
+        validasiDetailPcs(event, index){
+            var pcs_seharusnya=this.barang[index].pcs;
+            var pcs_diisi=this.state.pcs[index];
+
+            if(pcs_diisi > pcs_seharusnya){
+                alert('Jumlah PCS melebihi jumlah dos yang diminta')
+                this.state.pcs[index]=0;
+            }
         }
  
     },

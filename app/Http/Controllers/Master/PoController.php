@@ -128,6 +128,9 @@ class PoController extends Controller
                     $listbarang=request('listBarang');
 
                     foreach($listbarang as $key=>$val){
+                        $cekB=\App\Models\Barang::find($val['kd_barang']);
+                        $totalpcnya=($cekB->pcs * $val['dos']) +$val['pcs'];
+
                         \DB::table('rpo')
                             ->insert(
                                 [
@@ -138,6 +141,17 @@ class PoController extends Controller
                                     'total_pcs'=>$val['total_pcs']
                                 ]
                             );
+
+                        $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
+                        if($cksstok!=null){
+                            if($cksstok->pcs > $totalpcnya){
+                                \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
+                                    where id='".$request->input('idstok')[$key]."'");
+                            }else{
+                                $cksstok->pcs=0;
+                                $cksstok->save();
+                            }
+                        }
                     }
                 }
 
