@@ -19,4 +19,9 @@ class Customer extends Model
         return $this->belongsTo('App\Models\Kota','kota_id','kd_kota');
     }
 
+    public function jenisnya()
+    {
+        return $this->belongsToMany('App\Models\Jeniscustomer','customer_detail_jenis','customer_id','jenis_customer_id','kd','jns_customer');
+    }
+
 }

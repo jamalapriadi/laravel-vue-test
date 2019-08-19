@@ -53,7 +53,13 @@
                     <tbody>
                         <tr v-for="(l, index) in list.data" v-bind:key="index">
                             <td>{{index+1}}</td>
-                            <td>{{l.jenis_customer}}</td>
+                            <td>
+                                <ol style="list-style:none;">
+                                    <li v-for="(m, k) in l.jenisnya" v-bind:key="k">
+                                        <span class="badge badge-primary">{{m.jns_customer}}</span>
+                                    </li>
+                                </ol>
+                            </td>
                             <td>{{l.nm_toko}}</td>
                             <td>{{l.nm}}</td>
                             <td>{{l.alias}}</td>

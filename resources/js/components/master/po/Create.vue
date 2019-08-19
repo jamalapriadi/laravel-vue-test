@@ -74,13 +74,13 @@
             <br><br>
             <div v-show="state.lokasi!=''">
                 <div class="row">
-                    <div class="form-group col-md-4">
-                        <label for="" class="control-label">Kode / Nama Barang</label>
+                    <div class="form-group col-md-3">
+                        <label for="" class="control-label">Nama Barang</label>
                         <div class="row">
-                            <div class="col-lg-6">
+                            <!-- <div class="col-lg-6">
                                 <vue-bootstrap-typeahead v-model="carikodebarang" :data="listkodebarang" placeholder="Cari Kode Barang..." @hit="getKodeBarang($event)" ref="kodebarang"/>
-                            </div>
-                            <div class="col-lg-6">
+                            </div> -->
+                            <div class="col-lg-12">
                                 <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Cari Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
                                 stok <strong>{{barang.stok}}</strong> PCS
                             </div>
@@ -128,7 +128,7 @@
                 <thead>
                     <tr>
                         <th>No.</th>
-                        <th>Kode Barang</th>
+                        <!-- <th>Kode Barang</th> -->
                         <th>Nama Barang</th>
                         <th>Dos</th>
                         <th>Pcs</th>
@@ -140,7 +140,7 @@
                 <tbody>
                     <tr v-for="(l,index) in state.listBarang" v-bind:key="index">
                         <td>{{ index+1 }}</td>
-                        <td>{{l.kd_barang}}</td>
+                        <!-- <td>{{l.kd_barang}}</td> -->
                         <td>{{l.nm_barang}}</td>
                         <td>{{l.dos}}</td>
                         <td>{{l.pcs}}</td>
@@ -160,7 +160,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="6">Total PCS</th>
+                        <th colspan="5">Total PCS</th>
                         <th>{{total_barang}}</th>
                         <th></th>
                     </tr>

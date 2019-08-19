@@ -336,10 +336,9 @@ class BarangController extends Controller
         if($request->has('lokasi')){
             $lokasi=request('lokasi');
 
-            $barang=Barang::select('kd','nm','pcs','jual','merk_id',\DB::raw("IFNULL((SELECT SUM(a.pcs) AS stok FROM stok a
-                WHERE a.lokasi_id=$lokasi
-                AND a.kd_brg=kd
-                GROUP BY a.kd_brg, a.lokasi_id),0) as stok"));
+            $barang=Barang::leftJoin('stok','stok.kd_brg','=','brg.kd')
+                ->select('kd','nm','brg.pcs','jual','merk_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"))
+                ->groupBy('kd');
         }else{
             $barang=Barang::select('kd','nm','pcs','jual','merk_id',\DB::raw("'0' as stok"));
         }
