@@ -44,7 +44,6 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        return $request->all();
         $rules=[
             'nama'=>'required',
             'jenis_customer'=>'required',
