@@ -79,7 +79,7 @@ class CustomerController extends Controller
 
             $cus=new Customer;
             $cus->kd=str_slug(request('nama')." ".$user->perusahaan->nama,'_');
-            $cus->jenis_customer=request('jenis_customer');
+            // $cus->jenis_customer=request('jenis_customer');
             $cus->nm_toko=request('toko');
             $cus->nm=request('nama');
             $cus->alamat=request('alamat');
