@@ -124,21 +124,93 @@ class PoController extends Controller
             $simpan=$cus->save();
 
             if($simpan){
+                // if($request->has('status_kurang')){
+                //     $statuskurang=$request->input('status_kurang');
+                //     $tambahan=array();
+
+                //     if($statuskurang=="N"){
+                //         if($request->has('kurang')){
+                //             $kurang=request('kurang');
+        
+                //             foreach($kurang as $key=>$val){
+                //                 $cekB=\App\Models\Barang::find($val['kd_brg']);
+
+                //                 $kurang_dos=round((int)$val['kurangnya'] / $cekB->pcs);
+                //                 $kurang_pcs=round((int)$val['kurangnya'] % $cekB->pcs);
+
+                //                 $tambahan[]=array(
+                //                     'kd_brg'=>$val['kd_brg'],
+                //                     'dos'=>$kurang_dos,
+                //                     'pcs'=>$kurang_pcs,
+                //                     'total_pcs'=>$val['kurangnya']
+                //                 );
+                //             }
+                //         }
+                //     }else{
+                //         //tambahkan list barang disini
+                //     }
+
+
+                //     if($request->has('tidakdistok')){
+                //         $tidakdistok=request('tidakdistok');
+    
+                //         if(count($tidakdistok) > 0){
+                //             foreach($tidakdistok as $key=>$val){
+                //                 $tambahan[]=array(
+                //                     'kd_brg'=>$val['kd_brg'],
+                //                     'dos'=>$val['dos'],
+                //                     'pcs'=>$val['pcs'],
+                //                     'total_pcs'=>$val['total_pcs']
+                //                 );
+                //             }   
+                //         }
+                //     }
+
+                //     if(count($tambahan)>0){
+                //         $posekarang=Po::find($kode);
+                //         $posekarang->no_ref_po=$kode;
+
+                //         $simpancus=$posekarang->save();
+
+                //         if($simpancus){
+                //             \DB::table('rpo')
+                //                 ->where('no_po',$kode)
+                //                 ->delete();
+
+
+                //             foreach($tambahan as $key=>$val){
+                //                 \DB::table('rpo')
+                //                     ->insert(
+                //                         [
+                //                             'no_po'=>$kode,
+                //                             'kd_brg'=>$val['kd_brg'],
+                //                             'dos'=>$val['dos'],
+                //                             'pcs'=>$val['pcs'],
+                //                             'total_pcs'=>$val['total_pcs']
+                //                         ]
+                //                     );
+                //             }
+                //         }
+                //     }
+                // }
+
                 if($request->has('listBarang')){
                     $listbarang=request('listBarang');
 
                     foreach($listbarang as $key=>$val){
-                        $cekB=\App\Models\Barang::find($val['kd_barang']);
-                        $totalpcnya=($cekB->pcs * $val['dos']) +$val['pcs'];
+                        $cekB=\App\Models\Barang::find($val['kd']);
+                        $totalpcnya=$val['realisasi_total_pcs'];
 
                         \DB::table('rpo')
                             ->insert(
                                 [
                                     'no_po'=>$kode,
-                                    'kd_brg'=>$val['kd_barang'],
-                                    'dos'=>$val['dos'],
-                                    'pcs'=>$val['pcs'],
-                                    'total_pcs'=>$val['total_pcs']
+                                    'kd_brg'=>$val['kd'],
+                                    'dos'=>$val['realisasi_dosnya'],
+                                    'pcs'=>$val['realisasi_pcsnya'],
+                                    'total_pcs'=>$val['realisasi_total_pcs'],
+                                    'lokasi_id'=>$val['lokasi_id'],
+                                    'rak_id'=>$val['rak_id']
                                 ]
                             );
 
@@ -522,6 +594,27 @@ class PoController extends Controller
         $hapus=$cus->delete();
 
         if($hapus){
+            $cekrpo=\DB::table('rpo')
+                    ->where('no_po',$id)
+                    ->leftJoin('brg','brg.kd','=','rpo.kd_brg')
+                    ->select('rpo.*','brg.pcs',\DB::raw("((brg.pcs*rpo.dos)+rpo.pcs) as total_pcs"))
+                    ->get();
+
+            foreach($cekrpo as $row){
+                \DB::table('stok')
+                    ->insert(
+                        [
+                            'kd_brg'=>$row->kd_brg,
+                            'lokasi_id'=>$row->lokasi_id,
+                            'rak_id'=>$row->rak_id,
+                            'tgl'=>date('Y-m-d'),
+                            'pcs'=>$row->total_pcs,
+                            'created_at'=>date('Y-m-d H:i:s'),
+                            'updated_at'=>date('Y-m-d H:i:s')
+                        ]
+                    );
+            }
+
             \DB::table('rpo')
                 ->where('no_po',$id)
                 ->delete();

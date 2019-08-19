@@ -125,6 +125,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('stok-opname','Master\StokopnameController');
     Route::get('stok-opname-by-lokasi/{id}','Master\StokopnameController@stok_opname_by_lokasi');
     Route::get('get-rak-by-barang/{id}','Master\BarangController@get_rak_by_barang');
+    Route::get('fifo-barang/{id}','Master\BarangController@fifo_barang');
     Route::get('customer-not-in-picking','Master\CustomerController@customer_not_in_picking');
     Route::get('po-by-customer/{id}','Master\PoController@po_by_customer');
     Route::resource('jenis-customer','Master\JeniscustomerController');

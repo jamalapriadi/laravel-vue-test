@@ -433,4 +433,178 @@ class BarangController extends Controller
 
         
     }
+
+    public function fifo_barang(Request $request,$id)
+    {
+        $rules=[
+            'dos'=>'required',
+            'pcs'=>'required',
+            'lokasi'=>'required'
+        ];
+
+        $validasi=\Validator::make($request->all(),$rules);
+
+        if($validasi->fails())
+        {
+            $data=array(
+                'success'=>false,
+                'pesan'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            //delete barang yang stoknya 0
+            \DB::Table('stok')  
+                ->where('pcs',0)
+                ->delete();
+
+
+            $barang=Barang::find($id);
+            $req_dos=request('dos');
+            $req_pcs=request('pcs');
+            $lokasi=request('lokasi');
+
+            //jumlah pcs yang diminta
+            $qty=($barang->pcs*$req_dos) + $req_pcs;
+            $total_pcsnya=($barang->pcs*$req_dos) + $req_pcs;
+
+            //cek jumlah stok yang tersedia berdasarkan lokasi
+            $allstok=\DB::select("SELECT a.* FROM stok a
+                WHERE a.lokasi_id=$lokasi
+                AND a.kd_brg='$id'");
+
+            $stok_all=0;
+            foreach($allstok as $row)
+            {
+                $stok_all+=$row->pcs;
+            }
+
+            $list=array();
+            $kurangnya=array();
+            $status_stok=array();
+
+            if(count($allstok)> 0){
+                //ada stok
+
+                if($qty <= $stok_all)
+                {
+                    foreach($allstok as $row){
+                        $stok = $row->pcs;
+
+                        if($qty > 0){
+                            $temp = $qty;
+                            $qty=$qty - $stok;
+
+                            if($qty > 0){
+                                $dos=FLOOR($row->pcs/$barang->pcs);
+                                $pcs=FLOOR($row->pcs % $barang->pcs); 
+                                $status='terpenuhi';
+
+                            }else{
+                                $dos=FLOOR($temp/$barang->pcs);
+                                $pcs=FLOOR($temp % $barang->pcs); 
+                                $status='kurang';
+                            }
+
+                            $list[]=array(
+                                'idstok'=>$row->id,
+                                'kd'=>$barang->kd,
+                                'nm'=>$barang->nm,
+                                'jual'=>$barang->jual,
+                                'dos'=>$req_dos,
+                                'pcs'=>$req_pcs,
+                                'pcs_per_dos'=>$barang->pcs,
+                                'lokasi_id'=>$row->lokasi_id,
+                                'rak_id'=>$row->rak_id,
+                                'jumlah_stok'=>$row->pcs,
+                                'status'=>$status,
+                                'realisasi_dosnya'=>$dos,
+                                'realisasi_pcsnya'=>$pcs,
+                                'realisasi_total_pcs'=>($barang->pcs * $dos) + $pcs
+                            );
+                        }
+                    }   
+                }else{
+                    foreach($allstok as $row){
+                        $dos=FLOOR($stok_all/$barang->pcs);
+                        $pcs=FLOOR($stok_all % $barang->pcs); 
+                        $status='stok tidak mencukupi';
+
+                        $list[]=array(
+                            'idstok'=>$row->id,
+                            'kd'=>$barang->kd,
+                            'nm'=>$barang->nm,
+                            'jual'=>$barang->jual,
+                            'dos'=>$req_dos,
+                            'pcs'=>$req_pcs,
+                            'pcs_per_dos'=>$barang->pcs,
+                            'lokasi_id'=>$lokasi,
+                            'rak_id'=>$row->rak_id,
+                            'jumlah_stok'=>$row->pcs,
+                            'status'=>$status,
+                            'yg_diminta'=>$qty,
+                            'realisasi_dosnya'=>$dos,
+                            'realisasi_pcsnya'=>$pcs,
+                            'realisasi_total_pcs'=>($barang->pcs * $dos) + $pcs
+                        );
+                    }
+                }
+            }else{
+                //stok tidak ada
+                $list[]=array(
+                    'idstok'=>'',
+                    'kd'=>$barang->kd,
+                    'nm'=>$barang->nm,
+                    'jual'=>$barang->jual,
+                    'dos'=>$req_dos,
+                    'pcs'=>$req_pcs,
+                    'pcs_per_dos'=>$barang->pcs,
+                    'lokasi_id'=>$lokasi,
+                    'rak_id'=>'',
+                    'jumlah_stok'=>0,
+                    'status'=>'stok tidak ada',
+                    'realisasi_dosnya'=>0,
+                    'realisasi_pcsnya'=>0,
+                    'realisasi_total_pcs'=>0,
+                    'default_jml_yg_diminta'=>0,
+                    'jumlah_yg_diminta'=>0
+                );
+
+                $status_stok[]=array(
+                    'lokasi_id'=>$lokasi,
+                    'kd_brg'=>$barang->kd,
+                    'nm'=>$barang->nm,
+                    'status'=>'Tidak ada dalam stok',
+                    'dos'=>$req_dos,
+                    'pcs'=>$req_pcs,
+                    'total_pcs'=>$qty
+                );
+            }
+        }
+
+        $barang_sisa=\DB::select("SELECT semua.id, semua.kd_brg, semua.nm,semua.pcs_per_dos,
+                semua.jumlah_stok, semua.yang_diminta, 
+                semua.sisa,
+                (semua.yang_diminta - semua.jumlah_stok) AS kurangnya,
+                FLOOR((semua.yang_diminta - semua.jumlah_stok) / semua.pcs_per_dos) AS dos,
+                FLOOR((semua.yang_diminta - semua.jumlah_stok) % semua.pcs_per_dos) AS pcs
+                FROM 
+                (
+                    SELECT a.id, a.kd_brg, b.nm,b.pcs AS pcs_per_dos,
+                    SUM(a.pcs) AS jumlah_stok,
+                    $total_pcsnya AS yang_diminta,
+                    SUM(a.pcs) - $total_pcsnya AS sisa
+                    FROM stok a
+                    LEFT JOIN brg b ON b.kd=a.kd_brg
+                    WHERE a.kd_brg='$id'
+                    AND a.lokasi_id=$lokasi
+                    GROUP BY a.kd_brg
+                ) AS semua
+                WHERE semua.sisa < 0");
+
+        return array(
+            'list'=>$list,
+            'status_stok'=>$status_stok,
+            'kurang'=>$barang_sisa
+        );
+    }
 }

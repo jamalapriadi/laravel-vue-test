@@ -133,24 +133,33 @@
                         <th>Dos</th>
                         <th>Pcs</th>
                         <th>Rak</th>
-                        <th>Total Pcs</th>
+                        <th>Dos</th>
+                        <th>PCS</th>
+                        <!-- <th>Total Pcs</th> -->
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(l,index) in state.listBarang" v-bind:key="index">
-                        <td>{{ index+1 }}</td>
-                        <!-- <td>{{l.kd_barang}}</td> -->
-                        <td>{{l.nm_barang}}</td>
-                        <td>{{l.dos}}</td>
-                        <td>{{l.pcs}}</td>
+                        <td>{{ index + 1 }}</td>
+                        <td>{{l.nm}}</td>
+                        <td>{{l.dos}} Dos</td>
+                        <td>{{l.pcs}} Pcs</td>
                         <td>
-                            <ol v-if="l.rak.length > 0">
-                                <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}}</li>
-                            </ol>
-                            <label class="label label-info" v-else>Rak tidak ditemukan</label>
+                            <select name="rak" id="rak" class="form-control" v-model="state.rak[index]">
+                                <option value="" disabled selected>--Pilih Rak--</option>
+                                <option v-for="k in raks" v-bind:key="k.kd" v-bind:value="k.kd">{{k.nm}}</option>
+                            </select>
                         </td>
-                        <td>{{l.total_pcs}}</td>
+                        <td>
+                            <input type="number" :max="l.dos" class="form-control" id="dos" placeholder="Dos" v-model.number="state.dos[index]" @input="validasiDetailDos($event, index)">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]" @input="validasiDetailPcs($event, index)">
+                            <!-- <small>
+                                {{ stok[index] }}
+                            </small> -->
+                        </td>
                         <td>
                             <a @click="deleteBarang(index)" class="btn btn-danger text-white">
                                 <i class="fa fa-trash"></i>
@@ -160,12 +169,24 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="5">Total PCS</th>
+                        <th colspan="6">Total PCS</th>
                         <th>{{total_barang}}</th>
                         <th></th>
                     </tr>
                 </tfoot>
             </table>
+
+            <div class="alert alert-info" v-show="state.kurang.length>0">
+                <ol>
+                    <li v-for="(l,index) in state.kurang" v-bind:key="index">Barang <strong>{{l.nm}}</strong> masih kurang <strong>{{l.kurangnya}}</strong> Pcs</li>
+                </ol>
+            </div>
+
+            <div class="alert alert-info" v-show="state.tidakdistok.length>0">
+                <ol>
+                    <li v-for="(l,index) in state.tidakdistok" v-bind:key="index">Barang <strong>{{l.nm}}</strong> Tidak ada dalam stok</li>
+                </ol>
+            </div>
 
             
             <hr>
@@ -177,7 +198,7 @@
                     <i class="fa fa-backward"></i> Back
                 </router-link>
 
-                <button class="btn btn-primary" v-on:click="saveProgram">
+                <button class="btn btn-primary" v-on:click="saveProgram" :disabled="siapsimpan">
                     <i class="fa fa-save"></i>
                     Save
                 </button>
@@ -337,7 +358,22 @@ export default {
                 plafon:0,
                 totalharga:0,
                 statuskonfirmasi:'Accept',
+                rak:[],
+                kodes:[],
+                pdos:[],
+                ppcs:[],
+                rak:[],
+                dos:[],
+                pcs:[],
+                idstok:[],
+                kurang:[],
+                status_kurang:'Y',
+                tidakdistok:[],
+                tampil:[]
             },
+            siapsimpan:true,
+            raks:[],
+            stok:[],
             date: new Date(),
             total_barang:0,
             options: {
@@ -562,7 +598,7 @@ export default {
             this.hasilpcs=pcs;
             this.barang.stok=stok;
             // this.carinamabarang=nama;
-            this.$refs.kodebarang.inputValue = nama
+            // this.$refs.kodebarang.inputValue = nama
         },
 
         getKodeBarang(item){
@@ -696,6 +732,34 @@ export default {
                 })
         },
 
+        changeRak(i, r , b, l,p){
+            console.log(p);
+            var hasilpcs=0;
+            
+            axios.get('/data/stok-dirak?rak='+r+"&barang="+b+"&lokasi="+l)
+                .then(response => {
+                    this.hasilpcs[i]=response.data.pcs;
+                    hasilpcs=response.data.pcs;
+                    // console.log(response.data.pcs);
+                })
+
+            // console.log(parseInt(this.hasilpcs[i]));
+            console.log(hasilpcs)
+            if(this.hasilpcs[i] > parseInt(p)){
+                this.stok[i]="Stok Cukup di rak ada : "+this.hasilpcs[i]+" PCs";
+                this.state.dos[i]=0;
+                this.state.pcs[i]=p;
+                this.tampilTambah[i]=false;
+                // this.$refs.nm.inputValue =pcs;
+            }else{
+                // alert('stok di rak ini tidak mencukupi');
+                this.state.dos[i]=0;
+                this.stok[i]="Stok Kurang, di rak ada : "+this.hasilpcs[i]+" PCs";
+                this.tampilTambah[i]=true;
+                this.state.pcs[i]=0;
+            }
+        },
+
         saveBarang(){
             if(this.barang.kode==""){
                 alert('Barang harus diisi');
@@ -721,36 +785,81 @@ export default {
                 return false;
             }
 
-            axios.get('/data/get-rak-by-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs+'&lokasi='+this.state.lokasi)
+            axios.get('/data/fifo-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs+'&lokasi='+this.state.lokasi)
                 .then(response => {
-                    if(response.data.success==true){
-                        this.state.listBarang.push(
-                            {
-                                // kd_barang:this.barang.kode.kd,
-                                kd_barang:response.data.kd_barang,
-                                nm_barang:response.data.nm_barang,
-                                dos:parseInt(response.data.dos),
-                                pcs:parseInt(response.data.pcs),
-                                total_pcs:parseInt(response.data.total_pcs),
-                                harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
-                                rak:response.data.rak
-                            }
-                        );
+                    this.siapsimpan=false
+                    this.state.kurang=response.data.kurang;
+                    this.state.tidakdistok= response.data.status_stok;
+                    this.changeLokasi();
 
-                        this.state.totalharga=0;
-                        this.total_barang=0;
-
-                        for(var a=0; a < this.state.listBarang.length; a++){
-                            this.state.totalharga+=this.state.listBarang[a].harga;
-                            this.total_barang+=parseInt(this.state.listBarang[a].total_pcs);
-                        }
-                        // console.log(this.state.total_barang);
-                        this.hitunghutang();
-
-                        this.kosongBarang();
+                    if(this.state.tidakdistok.length > 0){
+                        this.state.status_kurang='Y';
                     }else{
-                        alert('silahkan lengkapi data');
+                        if(this.state.kurang.length>0){
+                            this.state.status_kurang='Y';
+                        }else{
+                            this.state.status_kurang='N';
+                        }
                     }
+
+                    for(var a=0; a< response.data.list.length; a++){
+                        this.state.listBarang.push(response.data.list[a]);    
+                    }
+
+                    for (var i = 0; i < this.state.listBarang.length; i++) {
+                        this.state.idstok.push(this.state.listBarang[i].idstok);
+                        this.state.kodes.push(this.state.listBarang[i].kd);
+                        this.state.pdos.push(this.state.listBarang[i].dos);
+                        this.state.ppcs.push(this.state.listBarang[i].pcs);
+                        // if(this.state.listBarang[i].realisasi_pcsnya > 0 && this.state.listBarang[i].realisasi_dosnya > 0){
+                        //     this.state.tampil[i]=true;
+                        // }else{
+                        //     this.state.tampil[i]=false;
+                        // }
+                        this.state.pcs[i]=this.state.listBarang[i].realisasi_pcsnya;
+                        this.state.dos[i]=this.state.listBarang[i].realisasi_dosnya;
+                        this.state.rak[i]=this.state.listBarang[i].rak_id;
+                    }
+
+                    this.state.totalharga=0;
+                    this.total_barang=0;
+
+                    for(var a=0; a < this.state.listBarang.length; a++){
+                        // this.state.totalharga+=this.state.listBarang[a].harga;
+                        this.total_barang+=parseInt(this.state.listBarang[a].realisasi_total_pcs);
+                    }
+
+                    this.kosongBarang();
+
+
+                    // if(response.data.success==true){
+                    //     this.state.listBarang.push(
+                    //         {
+                    //             // kd_barang:this.barang.kode.kd,
+                    //             kd_barang:response.data.kd_barang,
+                    //             nm_barang:response.data.nm_barang,
+                    //             dos:parseInt(response.data.dos),
+                    //             pcs:parseInt(response.data.pcs),
+                    //             total_pcs:parseInt(response.data.total_pcs),
+                    //             harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
+                    //             rak:response.data.rak
+                    //         }
+                    //     );
+
+                    //     this.state.totalharga=0;
+                    //     this.total_barang=0;
+
+                    //     for(var a=0; a < this.state.listBarang.length; a++){
+                    //         this.state.totalharga+=this.state.listBarang[a].harga;
+                    //         this.total_barang+=parseInt(this.state.listBarang[a].total_pcs);
+                    //     }
+                    //     // console.log(this.state.total_barang);
+                    //     this.hitunghutang();
+
+                    //     this.kosongBarang();
+                    // }else{
+                    //     alert('silahkan lengkapi data');
+                    // }
                 })
         },
 
@@ -762,7 +871,7 @@ export default {
             this.barang.total_pcs=0;
             this.barang.stok=0;
             this.hasilpcs=0;
-            this.$refs.kodebarang.inputValue = '';
+            // this.$refs.kodebarang.inputValue = '';
             this.$refs.namabarang.inputValue = '';
         },
 
@@ -784,11 +893,13 @@ export default {
             this.state.listBarang.splice(index, 1);
 
             this.state.totalharga=0;
+            this.total_barang=0;
             for(var a=0; a<this.state.listBarang.length; a++){
-                this.state.totalharga+=this.state.listBarang[a].harga;
+                // this.state.totalharga+=this.state.listBarang[a].harga;
+                this.total_barang+=parseInt(this.state.listBarang[a].realisasi_total_pcs);
             }
 
-            this.hitunghutang()
+            // this.hitunghutang()
         },
 
         hitunghutang(){
@@ -948,6 +1059,28 @@ export default {
                         alert('Internal server error');
                     }
                 })
+        },
+
+        validasiDetailDos(event, index){
+            var dos_seharusnya=this.state.listBarang[index].dos;
+            var dos_diisi=this.state.dos[index];
+            this.siapsimpan=false
+
+            if(dos_diisi > dos_seharusnya){
+                alert('Jumlah dos melebihi jumlah dos yang diminta')
+                this.state.dos[index]=dos_diisi;
+                this.siapsimpan=true
+            }
+        },
+
+        validasiDetailPcs(event, index){
+            var pcs_seharusnya=this.state.listBarang[index].pcs;
+            var pcs_diisi=this.state.pcs[index];
+
+            if(pcs_diisi > pcs_seharusnya){
+                alert('Jumlah PCS melebihi jumlah dos yang diminta')
+                this.state.pcs[index]=0;
+            }
         }
  
     },
