@@ -107,7 +107,7 @@ class CustomerController extends Controller
                             ->insert(
                                 [
                                     'customer_id'=>$cus->kd,
-                                    'jenis_customer_id'=>$row->jns_customer
+                                    'jenis_customer_id'=>$row['jns_customer']
                                 ]
                             );
                     }
