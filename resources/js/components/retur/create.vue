@@ -116,21 +116,21 @@
                     <!-- <div v-show="state.tampil_order==false"> -->
                     <div v-show="state.full_nota==false">
                         <div class="row">
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="" class="control-label">Kode Barang</label>
                                     <select name="kode" id="kode" class="form-control" v-model="form.kd" @change="ubahBarang(form.kd,state.no_order)">
                                         <option value="">--Pilih Barang--</option>
-                                        <option v-for="(p,index) in barang" v-bind:key="index" v-bind:value="p.kd_brg">{{p.kd_brg}}</option>
+                                        <option v-for="(p,index) in barang" v-bind:key="index" v-bind:value="p.kd_brg">{{p.nm}}</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <!-- <div class="col-lg-2">
                                 <div class="form-group">
                                     <label for="" class="control">Nama Barang</label>
                                     <input type="text" class="form-control" v-model="form.nama" readonly>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-lg-1">
                                 <div class="form-group">
                                     <label for="" class="control-label">Dos</label>
@@ -172,12 +172,13 @@
                         <fieldset>
                             <legend>Info Retur</legend>
                             <div class="row">
-                                <div class="col-lg-2">
+                                <!-- <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="" class="control-label">Jumlah Dos</label>
                                         <input type="text" class="form-control" v-model="form.return_dos">
                                     </div>
-                                </div>
+                                </div> -->
+                                
                                 <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="pcs" class="control-label">Jumlah Pcs</label>
@@ -581,19 +582,20 @@ export default {
                 return false;
             }
 
-            if(this.form.return_pcs > this.form.pcs){
+            if(parseInt(this.form.return_pcs) > parseInt(this.form.total_pcs)){
                 alert('Jumlah pcs tidak boleh melebihi jumlah yang di order');
 
                 return false;
             }
 
             var statusnya="sama";
-            var totalpcs=parseInt(this.form.return_dos*this.form.pcs_barang)+parseInt(this.form.return_pcs);
+            var totalpcs=parseInt(this.form.return_pcs);
+            
 
-            if(totalpcs > this.form.total_pcs){
+            if(totalpcs > parseInt(this.form.total_pcs)){
                 alert('Jumlah barang retur tidak sesuai dengan jumlah barang dibeli');
             }else{
-                if(this.form.total_pcs == totalpcs){
+                if(parseInt(this.form.total_pcs) == totalpcs){
                     statusnya="sama";
                 }else{
                     statusnya="kurang";

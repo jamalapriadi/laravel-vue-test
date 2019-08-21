@@ -111,6 +111,7 @@
                                 <th>No.</th>
                                 <th>Nama Barang</th>
                                 <th>Dos / PCS  PO</th>
+                                <th>Jumlah</th>
                                 <th>Rak</th>
                                 <th>Dos</th>
                                 <th>PCS</th>
@@ -122,6 +123,7 @@
                                 <td>{{ index + 1 }}</td>
                                 <td>{{l.nm}}</td>
                                 <td>{{l.dos}} Dos / {{l.pcs}} Pcs</td>
+                                <td>{{l.jumlah}}</td>
                                 <td>
                                     <select name="rak" id="rak" class="form-control" v-model="state.rak[index]">
                                         <option value="" disabled selected>--Pilih Rak--</option>
@@ -278,7 +280,9 @@ export default {
                 kurang:[],
                 status_kurang:'Y',
                 tidakdistok:[],
-                tampil:[]
+                tampil:[],
+                jumlah:[],
+                total_pcs:[]
             },
             date: new Date(),
             options: {
@@ -479,6 +483,11 @@ export default {
                     this.state.pdos=[];
                     this.state.ppc=[];
                     this.state.idstok=[];
+                    this.state.pcs=[];
+                    this.state.dos=[];
+                    this.state.rak=[];
+                    this.state.jumlah=[];
+                    this.state.total_pcs=[];
                     this.state.customer=response.data.po.customer_id;
                     this.state.lokasi=response.data.po.lokasi_id;
                     this.changeLokasi();
@@ -511,6 +520,8 @@ export default {
                         this.state.pcs[i]=this.barang[i].realisasi_pcsnya;
                         this.state.dos[i]=this.barang[i].realisasi_dosnya;
                         this.state.rak[i]=this.barang[i].rak_id;
+                        this.state.jumlah[i]=this.barang[i].jumlah;
+                        this.state.total_pcs[i]=this.barang[i].total_pcs;
                     }
 
                     

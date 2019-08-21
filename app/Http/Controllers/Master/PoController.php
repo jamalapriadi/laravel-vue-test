@@ -197,33 +197,70 @@ class PoController extends Controller
                 if($request->has('listBarang')){
                     $listbarang=request('listBarang');
 
-                    foreach($listbarang as $key=>$val){
-                        $cekB=\App\Models\Barang::find($val['kd']);
-                        $totalpcnya=$val['realisasi_total_pcs'];
+                    $res  = array();
+                    foreach($listbarang as $vals){
+                        if(array_key_exists($vals['kd_barang'],$res)){
+                            $res[$vals['kd_barang']]['total_pcs']    += $vals['total_pcs'];
+                            $res[$vals['kd_barang']]['kd_barang']        = $vals['kd_barang'];
+                        }
+                        else{
+                            $res[$vals['kd_barang']]  = $vals;
+                        }
+                    }
+
+
+                    foreach($res as $key=>$val){
+                        // $cekB=\App\Models\Barang::find($val['kd']);
+                        // $totalpcnya=$val['realisasi_total_pcs'];
+
+                        //cek stok
+                        $cksstok=\DB::select("SELECT SUM(a.pcs) AS stok FROM stok a
+                                WHERE a.kd_brg='".$val['kd_barang']."'
+                                AND a.lokasi_id=".request('lokasi')."
+                                GROUP BY a.kd_brg");
+                        
+                        if($val['total_pcs'] > 0){
+                            $jumlah=$val['total_pcs'] * -1;        
+
+                            if($cksstok > 0){
+                                if($cksstok[0]->stok > 0){
+                                    $selisih= $cksstok[0]->stok - $val['total_pcs'];
+    
+                                    if($selisih >= 0){
+                                        $jumlah=$val['total_pcs'];
+                                    }else{
+                                        $jumlah=$cksstok[0]->stok;
+                                    }
+                                }
+                            }
+                            
+                        }else{
+                            $jumlah=0;
+                        }
 
                         \DB::table('rpo')
                             ->insert(
                                 [
                                     'no_po'=>$kode,
-                                    'kd_brg'=>$val['kd'],
-                                    'dos'=>$val['realisasi_dosnya'],
-                                    'pcs'=>$val['realisasi_pcsnya'],
-                                    'total_pcs'=>$val['realisasi_total_pcs'],
-                                    'lokasi_id'=>$val['lokasi_id'],
-                                    'rak_id'=>$val['rak_id']
+                                    'kd_brg'=>$val['kd_barang'],
+                                    'dos'=>$val['dos'],
+                                    'pcs'=>$val['pcs'],
+                                    'total_pcs'=>$val['total_pcs'],
+                                    'lokasi_id'=>request('lokasi'),
+                                    'jumlah'=>$jumlah
                                 ]
                             );
 
-                        $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
-                        if($cksstok!=null){
-                            if($cksstok->pcs > $totalpcnya){
-                                \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
-                                    where id='".$request->input('idstok')[$key]."'");
-                            }else{
-                                $cksstok->pcs=0;
-                                $cksstok->save();
-                            }
-                        }
+                        // $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
+                        // if($cksstok!=null){
+                        //     if($cksstok->pcs > $totalpcnya){
+                        //         \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
+                        //             where id='".$request->input('idstok')[$key]."'");
+                        //     }else{
+                        //         $cksstok->pcs=0;
+                        //         $cksstok->save();
+                        //     }
+                        // }
                     }
                 }
 
@@ -294,6 +331,8 @@ class PoController extends Controller
                         'nm'=>$detail->nm,
                         'dos'=>$detail->pivot->dos,
                         'pcs'=>$detail->pivot->pcs,
+                        'jumlah'=>$detail->pivot->jumlah,
+                        'total_pcs'=>$detail->pivot->total_pcs,
                         'rak'=>$rak
                     );
                 }
@@ -395,6 +434,8 @@ class PoController extends Controller
                 'nm'=>$detail->nm,
                 'dos'=>$detail->pivot->dos,
                 'pcs'=>$detail->pivot->pcs,
+                'jumlah'=>$detail->pivot->jumlah,
+                'total_pcs'=>$detail->pivot->total_pcs,
                 'rak'=>$rak
             );
         }
@@ -463,6 +504,8 @@ class PoController extends Controller
                                 'jual'=>$row->jual,
                                 'dos'=>$row->pivot->dos,
                                 'pcs'=>$row->pivot->pcs,
+                                'jumlah'=>$row->pivot->jumlah,
+                                'total_pcs'=>$row->pivot->total_pcs,
                                 'pcs_per_dos'=>$row->pcs,
                                 'lokasi_id'=>$row3->lokasi_id,
                                 'rak_id'=>$row3->rak_id,
@@ -486,6 +529,8 @@ class PoController extends Controller
                             'jual'=>$row->jual,
                             'dos'=>$row->pivot->dos,
                             'pcs'=>$row->pivot->pcs,
+                            'jumlah'=>$row->pivot->jumlah,
+                            'total_pcs'=>$row->pivot->total_pcs,
                             'pcs_per_dos'=>$row->pcs,
                             'lokasi_id'=>$row3->lokasi_id,
                             'rak_id'=>$row3->rak_id,
@@ -506,6 +551,8 @@ class PoController extends Controller
                     'jual'=>$row->jual,
                     'dos'=>$row->pivot->dos,
                     'pcs'=>$row->pivot->pcs,
+                    'jumlah'=>$row->pivot->jumlah,
+                    'total_pcs'=>$row->pivot->total_pcs,
                     'pcs_per_dos'=>$row->pcs,
                     'lokasi_id'=>$po->lokasi_id,
                     'rak_id'=>'',

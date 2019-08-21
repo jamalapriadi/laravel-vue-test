@@ -23,7 +23,6 @@ class ReturController extends Controller
     }
 
     public function store(Request $request){
-        // return $request->all();
         $rules=[
             'kode'=>'required',
             'customer'=>'required',
@@ -215,7 +214,7 @@ class ReturController extends Controller
         return $data;
     }
 
-    public function autonumber_retur(Request $request){
+    public function autonumber_retur(){
         $perusahaan=auth()->user()->perusahaan->nama;
 
         $sql=Retur::select(\DB::Raw("max(no_retur) as maxKode"))

@@ -227,7 +227,7 @@ class MutasiController extends Controller
         return $data;
     }
 
-    public function autonumber_mutasi(Request $request)
+    public function autonumber_mutasi()
     {
         $perusahaan=auth()->user()->perusahaan->nama;
 

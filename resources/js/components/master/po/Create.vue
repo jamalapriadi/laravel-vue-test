@@ -133,33 +133,25 @@
                         <th>Dos</th>
                         <th>Pcs</th>
                         <th>Rak</th>
-                        <th>Dos</th>
-                        <th>PCS</th>
+                        <th>Total Pcs</th>
                         <!-- <th>Total Pcs</th> -->
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(l,index) in state.listBarang" v-bind:key="index">
-                        <td>{{ index + 1 }}</td>
-                        <td>{{l.nm}}</td>
-                        <td>{{l.dos}} Dos</td>
-                        <td>{{l.pcs}} Pcs</td>
+                        <td>{{ index+1 }}</td>
+                        <!-- <td>{{l.kd_barang}}</td> -->
+                        <td>{{l.nm_barang}}</td>
+                        <td>{{l.dos}}</td>
+                        <td>{{l.pcs}}</td>
                         <td>
-                            <select name="rak" id="rak" class="form-control" v-model="state.rak[index]">
-                                <option value="" disabled selected>--Pilih Rak--</option>
-                                <option v-for="k in raks" v-bind:key="k.kd" v-bind:value="k.kd">{{k.nm}}</option>
-                            </select>
+                            <ol v-if="l.rak.length > 0">
+                                <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}}</li>
+                            </ol>
+                            <label class="label label-info" v-else>Rak tidak ditemukan</label>
                         </td>
-                        <td>
-                            <input type="number" :max="l.dos" class="form-control" id="dos" placeholder="Dos" v-model.number="state.dos[index]" @input="validasiDetailDos($event, index)">
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" id="pcs" placeholder="pcs" v-model="state.pcs[index]" @input="validasiDetailPcs($event, index)">
-                            <!-- <small>
-                                {{ stok[index] }}
-                            </small> -->
-                        </td>
+                        <td>{{l.total_pcs}}</td>
                         <td>
                             <a @click="deleteBarang(index)" class="btn btn-danger text-white">
                                 <i class="fa fa-trash"></i>
@@ -169,7 +161,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="6">Total PCS</th>
+                        <th colspan="5">Total PCS</th>
                         <th>{{total_barang}}</th>
                         <th></th>
                     </tr>
@@ -198,7 +190,7 @@
                     <i class="fa fa-backward"></i> Back
                 </router-link>
 
-                <button class="btn btn-primary" v-on:click="saveProgram" :disabled="siapsimpan">
+                <button class="btn btn-primary" v-on:click="saveProgram" >
                     <i class="fa fa-save"></i>
                     Save
                 </button>
@@ -292,7 +284,7 @@
             </table>
             <hr>
             <div v-for="(l,index) in dataprint.detail" v-bind:key="index">
-                <table width="45%">
+                <table width="45%" v-show="l.jumlah > 0">
                     <thead>
                         <tr>
                             <th rowspan="3">{{l.nm}}</th>
@@ -305,8 +297,10 @@
                                     <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}} - {{k.diambil}}</li>
                                 </ul>
                             </td>
-                            <td>{{l.dos}} Dos</td>
-                            <td>{{l.pcs}} Pcs</td>
+                            <td v-show="l.jumlah == l.total_pcs">{{l.dos}} Dos</td>
+                            <td v-show="l.jumlah == l.total_pcs">{{l.pcs}} Pcs</td>
+
+                            <td colspan="2" v-show="l.total_pcs > l.jumlah">{{l.jumlah}} Pcs</td>
                         </tr>
                     </tbody>
                 </table>
@@ -785,82 +779,114 @@ export default {
                 return false;
             }
 
-            axios.get('/data/fifo-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs+'&lokasi='+this.state.lokasi)
+            axios.get('/data/get-rak-by-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs+'&lokasi='+this.state.lokasi)
                 .then(response => {
-                    this.siapsimpan=false
-                    this.state.kurang=response.data.kurang;
-                    this.state.tidakdistok= response.data.status_stok;
-                    this.changeLokasi();
+                    if(response.data.success==true){
+                        this.state.listBarang.push(
+                            {
+                                // kd_barang:this.barang.kode.kd,
+                                kd_barang:response.data.kd_barang,
+                                nm_barang:response.data.nm_barang,
+                                dos:parseInt(response.data.dos),
+                                pcs:parseInt(response.data.pcs),
+                                total_pcs:parseInt(response.data.total_pcs),
+                                harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
+                                rak:response.data.rak
+                            }
+                        );
 
-                    if(this.state.tidakdistok.length > 0){
-                        this.state.status_kurang='Y';
-                    }else{
-                        if(this.state.kurang.length>0){
-                            this.state.status_kurang='Y';
-                        }else{
-                            this.state.status_kurang='N';
+                        this.state.totalharga=0;
+                        this.total_barang=0;
+
+                        for(var a=0; a < this.state.listBarang.length; a++){
+                            this.state.totalharga+=this.state.listBarang[a].harga;
+                            this.total_barang+=parseInt(this.state.listBarang[a].total_pcs);
                         }
+                        // console.log(this.state.total_barang);
+                        this.hitunghutang();
+
+                        this.kosongBarang();
+                    }else{
+                        alert('silahkan lengkapi data');
                     }
+                });
 
-                    for(var a=0; a< response.data.list.length; a++){
-                        this.state.listBarang.push(response.data.list[a]);    
-                    }
+            // axios.get('/data/fifo-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs+'&lokasi='+this.state.lokasi)
+            //     .then(response => {
+            //         this.siapsimpan=false
+            //         this.state.kurang=response.data.kurang;
+            //         this.state.tidakdistok= response.data.status_stok;
+            //         this.changeLokasi();
 
-                    for (var i = 0; i < this.state.listBarang.length; i++) {
-                        this.state.idstok.push(this.state.listBarang[i].idstok);
-                        this.state.kodes.push(this.state.listBarang[i].kd);
-                        this.state.pdos.push(this.state.listBarang[i].dos);
-                        this.state.ppcs.push(this.state.listBarang[i].pcs);
-                        // if(this.state.listBarang[i].realisasi_pcsnya > 0 && this.state.listBarang[i].realisasi_dosnya > 0){
-                        //     this.state.tampil[i]=true;
-                        // }else{
-                        //     this.state.tampil[i]=false;
-                        // }
-                        this.state.pcs[i]=this.state.listBarang[i].realisasi_pcsnya;
-                        this.state.dos[i]=this.state.listBarang[i].realisasi_dosnya;
-                        this.state.rak[i]=this.state.listBarang[i].rak_id;
-                    }
+            //         if(this.state.tidakdistok.length > 0){
+            //             this.state.status_kurang='Y';
+            //         }else{
+            //             if(this.state.kurang.length>0){
+            //                 this.state.status_kurang='Y';
+            //             }else{
+            //                 this.state.status_kurang='N';
+            //             }
+            //         }
 
-                    this.state.totalharga=0;
-                    this.total_barang=0;
+            //         for(var a=0; a< response.data.list.length; a++){
+            //             this.state.listBarang.push(response.data.list[a]);    
+            //         }
 
-                    for(var a=0; a < this.state.listBarang.length; a++){
-                        // this.state.totalharga+=this.state.listBarang[a].harga;
-                        this.total_barang+=parseInt(this.state.listBarang[a].realisasi_total_pcs);
-                    }
+            //         for (var i = 0; i < this.state.listBarang.length; i++) {
+            //             this.state.idstok.push(this.state.listBarang[i].idstok);
+            //             this.state.kodes.push(this.state.listBarang[i].kd);
+            //             this.state.pdos.push(this.state.listBarang[i].dos);
+            //             this.state.ppcs.push(this.state.listBarang[i].pcs);
+            //             // if(this.state.listBarang[i].realisasi_pcsnya > 0 && this.state.listBarang[i].realisasi_dosnya > 0){
+            //             //     this.state.tampil[i]=true;
+            //             // }else{
+            //             //     this.state.tampil[i]=false;
+            //             // }
+            //             this.state.pcs[i]=this.state.listBarang[i].realisasi_pcsnya;
+            //             this.state.dos[i]=this.state.listBarang[i].realisasi_dosnya;
+            //             this.state.rak[i]=this.state.listBarang[i].rak_id;
+            //         }
 
-                    this.kosongBarang();
+            //         this.state.totalharga=0;
+            //         this.total_barang=0;
+
+            //         for(var a=0; a < this.state.listBarang.length; a++){
+            //             // this.state.totalharga+=this.state.listBarang[a].harga;
+            //             this.total_barang+=parseInt(this.state.listBarang[a].realisasi_total_pcs);
+            //         }
+
+            //         this.kosongBarang();
 
 
-                    // if(response.data.success==true){
-                    //     this.state.listBarang.push(
-                    //         {
-                    //             // kd_barang:this.barang.kode.kd,
-                    //             kd_barang:response.data.kd_barang,
-                    //             nm_barang:response.data.nm_barang,
-                    //             dos:parseInt(response.data.dos),
-                    //             pcs:parseInt(response.data.pcs),
-                    //             total_pcs:parseInt(response.data.total_pcs),
-                    //             harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
-                    //             rak:response.data.rak
-                    //         }
-                    //     );
+            //         // if(response.data.success==true){
+            //         //     this.state.listBarang.push(
+            //         //         {
+            //         //             // kd_barang:this.barang.kode.kd,
+            //         //             kd_barang:response.data.kd_barang,
+            //         //             nm_barang:response.data.nm_barang,
+            //         //             dos:parseInt(response.data.dos),
+            //         //             pcs:parseInt(response.data.pcs),
+            //         //             total_pcs:parseInt(response.data.total_pcs),
+            //         //             harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
+            //         //             rak:response.data.rak
+            //         //         }
+            //         //     );
 
-                    //     this.state.totalharga=0;
-                    //     this.total_barang=0;
+            //         //     this.state.totalharga=0;
+            //         //     this.total_barang=0;
 
-                    //     for(var a=0; a < this.state.listBarang.length; a++){
-                    //         this.state.totalharga+=this.state.listBarang[a].harga;
-                    //         this.total_barang+=parseInt(this.state.listBarang[a].total_pcs);
-                    //     }
-                    //     // console.log(this.state.total_barang);
-                    //     this.hitunghutang();
+            //         //     for(var a=0; a < this.state.listBarang.length; a++){
+            //         //         this.state.totalharga+=this.state.listBarang[a].harga;
+            //         //         this.total_barang+=parseInt(this.state.listBarang[a].total_pcs);
+            //         //     }
+            //         //     // console.log(this.state.total_barang);
+            //         //     this.hitunghutang();
 
-                    //     this.kosongBarang();
-                    // }else{
-                    //     alert('silahkan lengkapi data');
-                    // }
-                })
+            //         //     this.kosongBarang();
+            //         // }else{
+            //         //     alert('silahkan lengkapi data');
+            //         // }
+            //     })
         },
 
         kosongBarang(){

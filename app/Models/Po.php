@@ -23,7 +23,9 @@ class Po extends Model
                     'kd_brg',
                     'dos',
                     'pcs',
-                    'total_pcs'
+                    'total_pcs',
+                    'lokasi_id',
+                    'jumlah'
                 ]
             );
     }

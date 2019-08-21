@@ -176,16 +176,16 @@ class PickingController extends Controller
                                 ]
                             );
 
-                        // $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
-                        // if($cksstok!=null){
-                        //     if($cksstok->pcs > $totalpcnya){
-                        //         \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
-                        //             where id='".$request->input('idstok')[$key]."'");
-                        //     }else{
-                        //         $cksstok->pcs=0;
-                        //         $cksstok->save();
-                        //     }
-                        // }
+                        $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
+                        if($cksstok!=null){
+                            if($cksstok->pcs > $totalpcnya){
+                                \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
+                                    where id='".$request->input('idstok')[$key]."'");
+                            }else{
+                                $cksstok->pcs=0;
+                                $cksstok->save();
+                            }
+                        }
                     }
                 }
 
