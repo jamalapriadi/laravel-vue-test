@@ -107,7 +107,7 @@
                 </table>
                 <hr>
                 <div v-for="(l,index) in dataprint.detail" v-bind:key="index">
-                    <table width="45%">
+                    <table width="45%" v-show="l.jumlah > 0">
                         <thead>
                             <tr>
                                 <th rowspan="3">{{l.nm}}</th>
@@ -120,8 +120,10 @@
                                         <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}} - {{k.diambil}}</li>
                                     </ul>
                                 </td>
-                                <td>{{l.dos}} Dos</td>
-                                <td>{{l.pcs}} Pcs</td>
+                                <td v-show="l.jumlah == l.total_pcs">{{l.dos}} Dos</td>
+                                <td v-show="l.jumlah == l.total_pcs">{{l.pcs}} Pcs</td>
+
+                                <td colspan="2" v-show="l.total_pcs > l.jumlah">{{l.jumlah}} Pcs</td>
                             </tr>
                         </tbody>
                     </table>
