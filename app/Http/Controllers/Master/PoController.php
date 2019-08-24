@@ -222,7 +222,7 @@ class PoController extends Controller
                         if($val['total_pcs'] > 0){
                             $jumlah=$val['total_pcs'] * -1;        
 
-                            if($cksstok > 0){
+                            if(count($cksstok) > 0){
                                 if($cksstok[0]->stok > 0){
                                     $selisih= $cksstok[0]->stok - $val['total_pcs'];
     
@@ -261,6 +261,43 @@ class PoController extends Controller
                         //         $cksstok->save();
                         //     }
                         // }
+                    }
+                }
+
+                if($request->has('kurang')){
+                    $kurang=$request->input('kurang');
+
+                    if(count($kurang)>0){
+                        $kode2=$this->autonumber_po();
+
+                        $newPo=new Po;
+                        $newPo->no_po=$kode2;
+                        $newPo->no_ref_po=$kode;
+                        $newPo->customer_id=request('customer');
+                        $newPo->ket=request('keterangan');
+                        $newPo->tgl=date('Y-m-d',strtotime(request('tanggal')));
+                        $newPo->lokasi_id=request('lokasi');
+                        $newPo->perusahaan_id=auth()->user()->perusahaan_id;
+                        $newPo->insert_user=auth()->user()->username;
+                        $newPo->update_user=auth()->user()->username;
+                        $simpan2=$newPo->save();
+
+                        if($simpan2){
+                            foreach($kurang as $val){
+                                \DB::table('rpo')
+                                    ->insert(
+                                        [
+                                            'no_po'=>$newPo->no_po,
+                                            'kd_brg'=>$val['kd_brg'],
+                                            'dos'=>$val['dos'],
+                                            'pcs'=>$val['pcs'],
+                                            'total_pcs'=>$val['kurangnya'],
+                                            'lokasi_id'=>request('lokasi'),
+                                            'jumlah'=>$val['kurangnya']
+                                        ]
+                                    );
+                            }
+                        }
                     }
                 }
 
