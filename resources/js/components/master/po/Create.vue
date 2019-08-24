@@ -134,7 +134,7 @@
                         <th>Pcs</th>
                         <th>Rak</th>
                         <th>Total Pcs</th>
-                        <!-- <th>Total Pcs</th> -->
+                        <th>Stok Tersedia</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -146,11 +146,13 @@
                         <td>{{l.dos}}</td>
                         <td>{{l.pcs}}</td>
                         <td>
-                            <ol v-if="l.rak.length > 0">
+                            <!-- <ol v-if="l.rak.length > 0">
                                 <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}}</li>
-                            </ol>
+                            </ol> -->
+                            <label v-if="l.rak!=''">{{l.rak}}</label>
                             <label class="label label-info" v-else>Rak tidak ditemukan</label>
                         </td>
+                        <td>{{l.yg_diminta}}</td>
                         <td>{{l.total_pcs}}</td>
                         <td>
                             <a @click="deleteBarang(index)" class="btn btn-danger text-white">
@@ -161,7 +163,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="5">Total PCS</th>
+                        <th colspan="6">Total PCS</th>
                         <th>{{total_barang}}</th>
                         <th></th>
                     </tr>
@@ -284,7 +286,7 @@
             </table>
             <hr>
             <div v-for="(l,index) in dataprint.detail" v-bind:key="index">
-                <table width="45%" v-show="l.jumlah > 0">
+                <table width="35%" v-show="l.jumlah > 0">
                     <thead>
                         <tr>
                             <th rowspan="3">{{l.nm}}</th>
@@ -779,21 +781,28 @@ export default {
                 return false;
             }
 
-            axios.get('/data/get-rak-by-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs+'&lokasi='+this.state.lokasi)
+            axios.get('/data/fifo-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs+'&lokasi='+this.state.lokasi)
                 .then(response => {
                     if(response.data.success==true){
-                        this.state.listBarang.push(
-                            {
-                                // kd_barang:this.barang.kode.kd,
-                                kd_barang:response.data.kd_barang,
-                                nm_barang:response.data.nm_barang,
-                                dos:parseInt(response.data.dos),
-                                pcs:parseInt(response.data.pcs),
-                                total_pcs:parseInt(response.data.total_pcs),
-                                harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
-                                rak:response.data.rak
+                        if(response.data.list.length > 0){
+                            for(var a=0; a< response.data.list.length; a++){
+                                this.state.listBarang.push(
+                                    {
+                                        // kd_barang:this.barang.kode.kd,
+                                        kd_barang:response.data.list[a].kd,
+                                        nm_barang:response.data.list[a].nm,
+                                        dos:parseInt(response.data.list[a].dos),
+                                        pcs:parseInt(response.data.list[a].pcs),
+                                        yg_diminta:parseInt(response.data.list[a].yg_diminta),
+                                        total_pcs:parseInt(response.data.list[a].realisasi_total_pcs),
+                                        // harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
+                                        rak:response.data.list[a].nama_rak
+                                    }
+                                );
                             }
-                        );
+                        }
+
+                        this.state.kurang=response.data.kurang
 
                         this.state.totalharga=0;
                         this.total_barang=0;
@@ -1052,6 +1061,7 @@ export default {
                         this.$refs.kodecustomer.inputValue = '';
                         this.$refs.namacustomer.inputValue = '';
                         this.state.listBarang=[];
+                        this.state.kurang=[];
 
                         if(response.data.adahutang=="Y"){
                             this.adahutang="Customer ini memiliki order yang sudah jatuh tempo";

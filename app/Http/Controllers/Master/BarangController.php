@@ -468,7 +468,8 @@ class BarangController extends Controller
             $total_pcsnya=($barang->pcs*$req_dos) + $req_pcs;
 
             //cek jumlah stok yang tersedia berdasarkan lokasi
-            $allstok=\DB::select("SELECT a.* FROM stok a
+            $allstok=\DB::select("SELECT a.*, b.nm as nama_rak FROM stok a
+                LEFT JOIN rak as b on b.kd=a.rak_id
                 WHERE a.lokasi_id=$lokasi
                 AND a.kd_brg='$id'");
 
@@ -506,6 +507,7 @@ class BarangController extends Controller
                             }
 
                             $list[]=array(
+                                'success'=>true,
                                 'idstok'=>$row->id,
                                 'kd'=>$barang->kd,
                                 'nm'=>$barang->nm,
@@ -515,6 +517,7 @@ class BarangController extends Controller
                                 'pcs_per_dos'=>$barang->pcs,
                                 'lokasi_id'=>$row->lokasi_id,
                                 'rak_id'=>$row->rak_id,
+                                'nama_rak'=>$row->nama_rak,
                                 'jumlah_stok'=>$row->pcs,
                                 'status'=>$status,
                                 'realisasi_dosnya'=>$dos,
@@ -530,6 +533,7 @@ class BarangController extends Controller
                         $status='stok tidak mencukupi';
 
                         $list[]=array(
+                            'success'=>true,
                             'idstok'=>$row->id,
                             'kd'=>$barang->kd,
                             'nm'=>$barang->nm,
@@ -539,6 +543,7 @@ class BarangController extends Controller
                             'pcs_per_dos'=>$barang->pcs,
                             'lokasi_id'=>$lokasi,
                             'rak_id'=>$row->rak_id,
+                            'nama_rak'=>$row->nama_rak,
                             'jumlah_stok'=>$row->pcs,
                             'status'=>$status,
                             'yg_diminta'=>$qty,
@@ -551,6 +556,7 @@ class BarangController extends Controller
             }else{
                 //stok tidak ada
                 $list[]=array(
+                    'success'=>true,
                     'idstok'=>'',
                     'kd'=>$barang->kd,
                     'nm'=>$barang->nm,
@@ -560,6 +566,7 @@ class BarangController extends Controller
                     'pcs_per_dos'=>$barang->pcs,
                     'lokasi_id'=>$lokasi,
                     'rak_id'=>'',
+                    'nama_rak'=>'',
                     'jumlah_stok'=>0,
                     'status'=>'stok tidak ada',
                     'realisasi_dosnya'=>0,
@@ -602,6 +609,7 @@ class BarangController extends Controller
                 WHERE semua.sisa < 0");
 
         return array(
+            'success'=>true,
             'list'=>$list,
             'status_stok'=>$status_stok,
             'kurang'=>$barang_sisa
