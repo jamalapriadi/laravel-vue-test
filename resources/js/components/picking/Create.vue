@@ -851,20 +851,32 @@ export default {
 
         validasiDetailDos(event, index){
             var dos_seharusnya=this.barang[index].dos;
-            var dos_diisi=this.state.dos[index];
+            var pcs_per_dos=this.barang[index].pcs_per_dos;
+            var jumlah = parseInt(this.barang[index].jumlah);
 
-            if(dos_diisi > dos_seharusnya){
-                alert('Jumlah dos melebihi jumlah dos yang diminta')
+            var dos_diisi=this.state.dos[index];
+            var pcs_diisi=this.state.pcs[index];
+
+            var total_pcs_sekarang=(parseInt(dos_diisi)*parseInt(pcs_per_dos)) + parseInt(pcs_diisi);
+
+            if(total_pcs_sekarang > jumlah){
+                alert('Jumlah pcs melebihi jumlah pcs yang diminta')
                 this.state.dos[index]=0;
             }
         },
 
         validasiDetailPcs(event, index){
-            var pcs_seharusnya=this.barang[index].pcs;
+            var dos_seharusnya=this.barang[index].dos;
+            var pcs_per_dos=this.barang[index].pcs_per_dos;
+            var jumlah = parseInt(this.barang[index].jumlah);
+
+            var dos_diisi=this.state.dos[index];
             var pcs_diisi=this.state.pcs[index];
 
-            if(pcs_diisi > pcs_seharusnya){
-                alert('Jumlah PCS melebihi jumlah dos yang diminta')
+            var total_pcs_sekarang=(parseInt(dos_diisi)*parseInt(pcs_per_dos)) + parseInt(pcs_diisi);
+
+            if(total_pcs_sekarang > jumlah){
+                alert('Jumlah pcs melebihi jumlah pcs yang diminta')
                 this.state.pcs[index]=0;
             }
         }

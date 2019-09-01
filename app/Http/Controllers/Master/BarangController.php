@@ -520,6 +520,7 @@ class BarangController extends Controller
                                 'nama_rak'=>$row->nama_rak,
                                 'jumlah_stok'=>$row->pcs,
                                 'status'=>$status,
+                                'yg_diminta'=>($barang->pcs * $dos) + $pcs,
                                 'realisasi_dosnya'=>$dos,
                                 'realisasi_pcsnya'=>$pcs,
                                 'realisasi_total_pcs'=>($barang->pcs * $dos) + $pcs

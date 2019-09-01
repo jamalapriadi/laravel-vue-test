@@ -157,33 +157,187 @@ class PickingController extends Controller
 
                 if($request->has('kodes')){
                     $kodes=request('kodes');
+                    $detail_no_ref_po=array();
 
                     foreach($kodes as $key=>$val){
                         $cekB=\App\Models\Barang::find($val);
                         $totalpcnya=($cekB->pcs * $request->input('pdos')[$key]) + $request->input('ppcs')[$key];
+                        $total_diinput=($cekB->pcs * $request->input('dos')[$key]) + $request->input('pcs')[$key];
 
-                        \DB::table('rpicking')
-                            ->insert(
-                                [
-                                    'kd_picking'=>$kode,
-                                    'kd_brg'=>$val,
-                                    'kd_rak'=>$request->input('rak')[$key],
-                                    'pdos'=>$request->input('pdos')[$key],
-                                    'ppcs'=>$request->input('ppcs')[$key],
-                                    'dos'=>$request->input('dos')[$key],
-                                    'pcs'=>$request->input('pcs')[$key],
-                                    'stok_id'=>$request->input('idstok')[$key]
-                                ]
-                            );
+                        if($request->input('dos')[$key]!=0){
+                            $final_dos=$request->input('pdos')[$key] - $request->input('dos')[$key];   
+                        }else{
+                            $final_dos=0;    
+                        }
 
-                        $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
-                        if($cksstok!=null){
-                            if($cksstok->pcs > $totalpcnya){
-                                \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
-                                    where id='".$request->input('idstok')[$key]."'");
+                        if($request->input('pcs')[$key]!=0){
+                            $final_pcs=$request->input('jumlah')[$key] - $request->input('pcs')[$key];
+                        }else{
+                            $final_pcs=0;
+                        }
+                        
+                        $final_total_diinput=($cekB->pcs * $final_dos) + $final_pcs;
+
+                        //jika total yang diinput kurang dari totalpc nya,, maka summary kan dengan no refpo sebelumnya jika ada
+                        if($total_diinput < $totalpcnya)
+                        {
+                            //cek apakah dia ada no ref po nya atau tidak
+                            $cekPo=\App\Models\Po::where('no_ref_po',request('no_po'))
+                                ->get();
+                            
+                            if(count($cekPo)>0){
+                                //cek apakah di rpo ada kode barang ini atau tidak
+                                foreach($cekPo as $norefpo){
+                                    $cekDetailPo=\DB::table('rpo')
+                                        ->where('no_po',$norefpo->no_po)
+                                        ->where('kd_brg',$val)
+                                        ->get();
+
+                                    if(count($cekDetailPo)>0)
+                                    {
+                                        \DB::statement("UPDATE rpo SET dos = dos+".$final_dos.",
+                                            pcs = pcs+".$final_pcs.",
+                                            total_pcs = total_pcs+".$final_total_diinput.",
+                                            jumlah = jumlah +".$final_total_diinput." 
+                                            where no_po='".$norefpo->no_po."'
+                                            AND kd_brg='".$val."'");   
+                                    }else{
+                                        \DB::table('rpo')
+                                            ->insert(
+                                                [
+                                                    'no_po'=>$norefpo->no_po,
+                                                    'kd_brg'=>$val,
+                                                    'dos'=>$final_dos,
+                                                    'pcs'=>$final_pcs,
+                                                    'total_pcs'=>$final_total_diinput,
+                                                    'lokasi_id'=>request('lokasi'),
+                                                    'jumlah'=>$final_total_diinput
+                                                ]
+                                            );
+                                    }
+                                }
+
+                                \DB::table('rpicking')
+                                    ->insert(
+                                        [
+                                            'kd_picking'=>$kode,
+                                            'kd_brg'=>$val,
+                                            'kd_rak'=>$request->input('rak')[$key],
+                                            'pdos'=>$request->input('pdos')[$key],
+                                            'ppcs'=>$request->input('ppcs')[$key],
+                                            'dos'=>$request->input('dos')[$key],
+                                            'pcs'=>$request->input('pcs')[$key],
+                                            'stok_id'=>$request->input('idstok')[$key]
+                                        ]
+                                    );
+
+                                $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
+                                if($cksstok!=null){
+                                    if($cksstok->pcs >= $total_diinput){
+                                        \DB::statement("UPDATE stok SET pcs = pcs-".$total_diinput." 
+                                            where id='".$request->input('idstok')[$key]."'");
+                                    }else{
+                                        $cksstok->pcs=0;
+                                        $cksstok->save();
+                                    }
+                                }
+                                
                             }else{
-                                $cksstok->pcs=0;
-                                $cksstok->save();
+                                $detail_no_ref_po[]=array(
+                                    'no_po'=>request('no_po'),
+                                    'kd_brg'=>$val,
+                                    'dos'=>$final_dos,
+                                    'pcs'=>$final_pcs,
+                                    'total_pcs'=>$final_total_diinput,
+                                    'lokasi_id'=>request('lokasi'),
+                                    'jumlah'=>$final_total_diinput
+                                );
+
+                                \DB::table('rpicking')
+                                    ->insert(
+                                        [
+                                            'kd_picking'=>$kode,
+                                            'kd_brg'=>$val,
+                                            'kd_rak'=>$request->input('rak')[$key],
+                                            'pdos'=>$request->input('pdos')[$key],
+                                            'ppcs'=>$request->input('ppcs')[$key],
+                                            'dos'=>$request->input('dos')[$key],
+                                            'pcs'=>$request->input('pcs')[$key],
+                                            'stok_id'=>$request->input('idstok')[$key]
+                                        ]
+                                    );
+
+                                $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
+                                if($cksstok!=null){
+                                    if($cksstok->pcs >= $total_diinput){
+                                        \DB::statement("UPDATE stok SET pcs = pcs-".$total_diinput." 
+                                            where id='".$request->input('idstok')[$key]."'");
+                                    }else{
+                                        $cksstok->pcs=0;
+                                        $cksstok->save();
+                                    }
+                                }
+                            }
+
+                        }else{
+                            \DB::table('rpicking')
+                                ->insert(
+                                    [
+                                        'kd_picking'=>$kode,
+                                        'kd_brg'=>$val,
+                                        'kd_rak'=>$request->input('rak')[$key],
+                                        'pdos'=>$request->input('pdos')[$key],
+                                        'ppcs'=>$request->input('ppcs')[$key],
+                                        'dos'=>$request->input('dos')[$key],
+                                        'pcs'=>$request->input('pcs')[$key],
+                                        'stok_id'=>$request->input('idstok')[$key]
+                                    ]
+                                );
+
+                            $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
+                            if($cksstok!=null){
+                                if($cksstok->pcs >= $totalpcnya){
+                                    \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
+                                        where id='".$request->input('idstok')[$key]."'");
+                                }else{
+                                    $cksstok->pcs=0;
+                                    $cksstok->save();
+                                }
+                            }
+                        }
+                    }
+
+                    if(count($detail_no_ref_po)>0){
+                        $poSekarang=\App\Models\Po::find(request('no_po'));
+                        $kodepo=$this->autonumber_po();
+                        
+                        $cus=new \App\Models\Po;
+                        $cus->no_po=$kodepo;
+                        $cus->no_ref_po=request('no_po');
+                        $cus->customer_id=$poSekarang->customer_id;
+                        $cus->ket=$poSekarang->ket;
+                        $cus->tgl=date('Y-m-d');
+                        $cus->lokasi_id=request('lokasi');
+                        $cus->perusahaan_id=auth()->user()->perusahaan_id;
+                        $cus->insert_user=auth()->user()->username;
+                        $cus->update_user=auth()->user()->username;
+                        $simpancus=$cus->save();
+
+                        if($simpancus){
+                            foreach($detail_no_ref_po as $row)
+                            {
+                                \DB::table('rpo')
+                                    ->insert(
+                                        [
+                                            'no_po'=>$kodepo,
+                                            'kd_brg'=>$row['kd_brg'],
+                                            'dos'=>$row['dos'],
+                                            'pcs'=>$row['pcs'],
+                                            'total_pcs'=>$row['total_pcs'],
+                                            'lokasi_id'=>$row['lokasi_id'],
+                                            'jumlah'=>$row['jumlah']
+                                        ]
+                                    );   
                             }
                         }
                     }
@@ -331,12 +485,15 @@ class PickingController extends Controller
 
     public function autonumber_po()
     {
+        $perusahaan=auth()->user()->perusahaan->nama;
+
         $sql=Po::select(\DB::Raw("max(no_po) as maxKode"))
+            ->where('no_po','like','PO-'.$perusahaan.'%')
             ->first();
         $kodeBarang = $sql->maxKode;
         $noUrut= (int) substr($kodeBarang, 10,10);
         $noUrut++;
-        $char = "PO-TLG-".date('y')."-";
+        $char = "PO-".$perusahaan."-".date('y')."-";
         $newId= $char.sprintf("%06s",$noUrut);
 
         return $newId;
