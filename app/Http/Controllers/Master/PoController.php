@@ -124,75 +124,6 @@ class PoController extends Controller
             $simpan=$cus->save();
 
             if($simpan){
-                // if($request->has('status_kurang')){
-                //     $statuskurang=$request->input('status_kurang');
-                //     $tambahan=array();
-
-                //     if($statuskurang=="N"){
-                //         if($request->has('kurang')){
-                //             $kurang=request('kurang');
-        
-                //             foreach($kurang as $key=>$val){
-                //                 $cekB=\App\Models\Barang::find($val['kd_brg']);
-
-                //                 $kurang_dos=round((int)$val['kurangnya'] / $cekB->pcs);
-                //                 $kurang_pcs=round((int)$val['kurangnya'] % $cekB->pcs);
-
-                //                 $tambahan[]=array(
-                //                     'kd_brg'=>$val['kd_brg'],
-                //                     'dos'=>$kurang_dos,
-                //                     'pcs'=>$kurang_pcs,
-                //                     'total_pcs'=>$val['kurangnya']
-                //                 );
-                //             }
-                //         }
-                //     }else{
-                //         //tambahkan list barang disini
-                //     }
-
-
-                //     if($request->has('tidakdistok')){
-                //         $tidakdistok=request('tidakdistok');
-    
-                //         if(count($tidakdistok) > 0){
-                //             foreach($tidakdistok as $key=>$val){
-                //                 $tambahan[]=array(
-                //                     'kd_brg'=>$val['kd_brg'],
-                //                     'dos'=>$val['dos'],
-                //                     'pcs'=>$val['pcs'],
-                //                     'total_pcs'=>$val['total_pcs']
-                //                 );
-                //             }   
-                //         }
-                //     }
-
-                //     if(count($tambahan)>0){
-                //         $posekarang=Po::find($kode);
-                //         $posekarang->no_ref_po=$kode;
-
-                //         $simpancus=$posekarang->save();
-
-                //         if($simpancus){
-                //             \DB::table('rpo')
-                //                 ->where('no_po',$kode)
-                //                 ->delete();
-
-
-                //             foreach($tambahan as $key=>$val){
-                //                 \DB::table('rpo')
-                //                     ->insert(
-                //                         [
-                //                             'no_po'=>$kode,
-                //                             'kd_brg'=>$val['kd_brg'],
-                //                             'dos'=>$val['dos'],
-                //                             'pcs'=>$val['pcs'],
-                //                             'total_pcs'=>$val['total_pcs']
-                //                         ]
-                //                     );
-                //             }
-                //         }
-                //     }
-                // }
 
                 if($request->has('listBarang')){
                     $listbarang=request('listBarang');
@@ -236,6 +167,10 @@ class PoController extends Controller
                             
                         }else{
                             $jumlah=0;
+
+                            $updatePo=Po::find($kode);
+                            $updatePo->no_ref_po=$kode;
+                            $updatePo->save();
                         }
 
                         \DB::table('rpo')
