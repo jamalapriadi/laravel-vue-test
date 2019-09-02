@@ -83,7 +83,14 @@ class MutasiController extends Controller
 
             if($simpan){
                 if($request->has('listBarang')){
+                    //delete barang yang stoknya 0
+                    \DB::Table('stok')  
+                        ->where('pcs',0)
+                        ->delete();
+
+
                     $listbarang=request('listBarang');
+                    $list=array();
 
                     foreach($listbarang as $key=>$val){
                         \DB::table('rmutasi')
@@ -98,38 +105,130 @@ class MutasiController extends Controller
                                     ]
                                 );
 
-                        //cek di tabel stok ada gak barang ini
-                        $cek=\DB::table('stok')
-                            ->where('kd_brg',$val['kd_barang'])
-                            ->where('lokasi_id',$val['gudang_lama_id'])
-                            ->where('rak_id',$val['rak_lama_id'])
-                            ->count();
+                        $id=$val['kd_barang'];
 
-                        if($cek > 0){
+                        $barang=\App\Models\Barang::find($val['kd_barang']);
+                        $req_dos=$val['dos'];
+                        $req_pcs=$val['pcs'];
+                        $lokasi=$val['gudang_lama_id'];
 
-                            \DB::statement("UPDATE stok SET pcs = pcs-".$val['pcs']." where kd_brg='".$val['kd_barang']."' 
-                                            and lokasi_id='".$val['gudang_lama_id']."' and rak_id='".$val['rak_lama_id']."'");
+                        //jumlah pcs yang diminta
+                        $qty=($barang->pcs*$req_dos) + $req_pcs;
+                        $total_pcsnya=($barang->pcs*$req_dos) + $req_pcs;
 
-                            $cekbaru=\DB::table('stok')
-                                ->where('kd_brg',$val['kd_barang'])
-                                ->where('lokasi_id',$val['gudang_baru_id'])
-                                ->where('rak_id',$val['rak_baru_id'])
-                                ->count();
+                        //cek jumlah stok yang tersedia berdasarkan lokasi
+                        $allstok=\DB::select("SELECT a.*, b.nm as nama_rak FROM stok a
+                            LEFT JOIN rak as b on b.kd=a.rak_id
+                            WHERE a.lokasi_id=$lokasi
+                            AND a.kd_brg='$id'");
 
-                            if($cekbaru>0){
-                                \DB::statement("UPDATE stok SET pcs = pcs+".$val['pcs']." where kd_brg='".$val['kd_barang']."' 
-                                            and lokasi_id='".$val['gudang_baru_id']."' and rak_id='".$val['rak_baru_id']."'");
+                        $stok_all=0;
+                        foreach($allstok as $row)
+                        {
+                            $stok_all+=$row->pcs;
+                        }
+
+                        if(count($allstok)> 0){
+                            //ada stok
+            
+                            if($qty <= $stok_all)
+                            {
+                                foreach($allstok as $row){
+                                    $stok = $row->pcs;
+            
+                                    if($qty > 0){
+                                        $temp = $qty;
+                                        $qty=$qty - $stok;
+            
+                                        if($qty > 0){
+                                            $dos=FLOOR($row->pcs/$barang->pcs);
+                                            $pcs=FLOOR($row->pcs % $barang->pcs); 
+                                            $status='terpenuhi';
+            
+                                        }else{
+                                            $dos=FLOOR($temp/$barang->pcs);
+                                            $pcs=FLOOR($temp % $barang->pcs); 
+                                            $status='kurang';
+                                        }
+            
+                                        $list[]=array(
+                                            'success'=>true,
+                                            'idstok'=>$row->id,
+                                            'kd'=>$barang->kd,
+                                            'nm'=>$barang->nm,
+                                            'jual'=>$barang->jual,
+                                            'dos'=>$req_dos,
+                                            'pcs'=>$req_pcs,
+                                            'pcs_per_dos'=>$barang->pcs,
+                                            'lokasi_id'=>$row->lokasi_id,
+                                            'lokasi_baru'=>$val['gudang_baru_id'],
+                                            'rak_id'=>$row->rak_id,
+                                            'rak_baru'=>$val['rak_baru_id'],
+                                            'nama_rak'=>$row->nama_rak,
+                                            'jumlah_stok'=>$row->pcs,
+                                            'status'=>$status,
+                                            'yg_diminta'=>($barang->pcs * $dos) + $pcs,
+                                            'realisasi_dosnya'=>$dos,
+                                            'realisasi_pcsnya'=>$pcs,
+                                            'realisasi_total_pcs'=>($barang->pcs * $dos) + $pcs
+                                        );
+                                    }
+                                }   
                             }else{
-                                \DB::table('stok')
+                                foreach($allstok as $row){
+                                    $dos=FLOOR($stok_all/$barang->pcs);
+                                    $pcs=FLOOR($stok_all % $barang->pcs); 
+                                    $status='stok tidak mencukupi';
+            
+                                    $list[]=array(
+                                        'success'=>true,
+                                        'idstok'=>$row->id,
+                                        'kd'=>$barang->kd,
+                                        'nm'=>$barang->nm,
+                                        'jual'=>$barang->jual,
+                                        'dos'=>$req_dos,
+                                        'pcs'=>$req_pcs,
+                                        'pcs_per_dos'=>$barang->pcs,
+                                        'lokasi_id'=>$lokasi,
+                                        'lokasi_baru'=>$val['gudang_baru_id'],
+                                        'rak_id'=>$row->rak_id,
+                                        'rak_baru'=>$val['rak_baru_id'],
+                                        'nama_rak'=>$row->nama_rak,
+                                        'jumlah_stok'=>$row->pcs,
+                                        'status'=>$status,
+                                        'yg_diminta'=>$qty,
+                                        'realisasi_dosnya'=>$dos,
+                                        'realisasi_pcsnya'=>$pcs,
+                                        'realisasi_total_pcs'=>($barang->pcs * $dos) + $pcs
+                                    );
+                                }
+                            }
+                        }
+                    }
+
+                    foreach($list as $key=>$val){
+                        //cek apakah barang ini sudah ada di stok atau belum
+                        $cekstok=\DB::table('stok')
+                            ->where('kd_brg',$val['kd'])
+                            ->where('rak_id',$val['rak_baru'])
+                            ->where('lokasi_id',$val['lokasi_baru'])
+                            ->get();
+
+                        if(count($cekstok) > 0){
+                            \DB::statement("UPDATE stok SET pcs = pcs-".$val['realisasi_total_pcs']." where id=".$val['idstok']);
+                        }else{
+                            \DB::table('stok')
                                 ->insert(
                                     [
-                                        'kd_brg'=>$val['kd_barang'],
-                                        'lokasi_id'=>$val['gudang_baru_id'],
-                                        'rak_id'=>$val['rak_baru_id'],
-                                        'pcs'=>$val['pcs']
+                                        'kd_brg'=>$val['kd'],
+                                        'lokasi_id'=>$val['lokasi_baru'],
+                                        'rak_id'=>$val['rak_baru'],
+                                        'tgl'=>date('Y-m-d'),
+                                        'pcs'=>$val['realisasi_total_pcs'],
+                                        'created_at'=>date('Y-m-d H:i:s'),
+                                        'updated_at'=>date('Y-m-d H:i:s')
                                     ]
                                 );
-                            }
                         }
                     }
                 }
@@ -137,7 +236,8 @@ class MutasiController extends Controller
                 $data=array(
                     'success'=>true,
                     'pesan'=>'Data berhasil disimpan',
-                    'errors'=>''
+                    'errors'=>'',
+                    'list'=>$list
                 );
             }else{
                 $data=array(

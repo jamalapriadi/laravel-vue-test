@@ -257,7 +257,7 @@ export default {
     data() {
         return {
             state: {
-                po_pending:'',
+                po_pending:'false',
                 kode:'',
                 no_po:'',
                 customer:'',
