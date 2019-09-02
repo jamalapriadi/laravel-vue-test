@@ -363,6 +363,40 @@ class BarangController extends Controller
         return $barang->get();
     }
 
+    public function cari_barang_by_nama_2(Request $request)
+    {
+        if($request->has('lokasi')){
+            $lokasi=request('lokasi');
+
+            $barang=Barang::leftJoin('stok','stok.kd_brg','=','brg.kd')
+                ->select('kd','nm','brg.pcs','jual','merk_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"))
+                ->groupBy('kd');
+        }else{
+            $barang=Barang::leftJoin('stok','stok.kd_brg','=','brg.kd')
+                ->select('kd','nm','brg.pcs','jual','merk_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"))
+                ->groupBy('kd');
+        }
+
+        if($request->has('q')){
+            $barang=$barang->where('nm','like','%'.request('q').'%');
+        }
+
+        if($request->has('kode') && $request->input('kode')!=""){
+            $barang=$barang->where('kd','like','%'.request('kode').'%');
+        }
+
+        if($request->has('merk') && $request->input('merk')!=""){
+            $barang=$barang->where('merk_id',$request->input('merk'));
+        }
+
+        if($request->has('rak')){
+            $rak=request('rak');
+            $barang=$barang->whereRaw("kd in (select kd_brg from stok where rak_id=$rak)");
+        }
+
+        return $barang->get();
+    }
+
     public function get_rak_by_barang(Request $request, $id)
     {
         $rules=[

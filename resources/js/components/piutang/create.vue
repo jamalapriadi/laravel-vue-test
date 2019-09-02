@@ -112,7 +112,9 @@
                             </div>
                         </div>
                         <div class="col-lg-3">
-
+                            <a href="#" class="btn btn-primary" @click="tampilListBarang">
+                                List Barang
+                            </a>
                         </div>
                         <div class="col-lg-3">
                             <div class="form-group row">
@@ -663,7 +665,11 @@ export default {
                         alert('Internal server error');
                     }
                 })
-        }
+        },
+
+        tampilListBarang(){
+
+        },
  
     },
     // computed:{

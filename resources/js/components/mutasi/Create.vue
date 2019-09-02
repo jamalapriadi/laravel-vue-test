@@ -88,17 +88,18 @@
                                         <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Cari Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
                                     </div>
                                 </div>
+                                <small>*stok {{barang.stok}}</small>
                                 
                             </div>
 
                             <div class="form-group col-md-1">
                                 <label for="" class="control-label">Dos</label>
-                                <input type="text" class="form-control" v-model="barang.dos">
+                                <input type="text" class="form-control" v-model="barang.dos" @input="validasiDetailDos($event, index)">
                             </div>
 
                             <div class="form-group col-md-1">
                                 <label for="" class="control-label">PCS</label>
-                                <input type="text" class="form-control" v-model="barang.pcs">
+                                <input type="text" class="form-control" v-model="barang.pcs" @input="validasiDetailPcs($event, index)">
                             </div>
 
                             <div class="col-lg-2">
@@ -293,7 +294,9 @@ export default {
                 kode:'',
                 nama:'',
                 dos:0,
-                pcs:0
+                pcs:0,
+                stok:0,
+                ppcs:0
             },
             listBarang:[],
             list:[],
@@ -374,7 +377,7 @@ export default {
             this.listcaribarang=[];
             this.listCBarang=[];
             let result=[];
-            axios.get('/data/cari-barang-by-nama?q='+query+"&rak="+this.state.rak_lama.kd)
+            axios.get('/data/cari-barang-by-nama-2?q='+query+"&rak="+this.state.rak_lama.kd)
                 .then(response => {
                     for(var i=0; i< response.data.length; i++){
                         this.listcaribarang.push(response.data[i].nm);
@@ -382,7 +385,9 @@ export default {
                         this.listCBarang.push(
                             {
                                 kd:response.data[i].kd,
-                                nm:response.data[i].nm
+                                nm:response.data[i].nm,
+                                stok:response.data[i].stok,
+                                pcs:parseInt(response.data[i].pcs)
                             }
                         );
                     }
@@ -392,7 +397,7 @@ export default {
         async cariBarangByKode(q){
             this.listkodebarang=[];
             this.listCBarang=[];
-            axios.get('/data/cari-barang-by-nama?q='+q+"&rak="+this.state.rak_lama.kd)
+            axios.get('/data/cari-barang-by-nama-2?q='+q+"&rak="+this.state.rak_lama.kd)
                 .then(response => {
                     for(var i=0; i< response.data.length; i++){
                         this.listkodebarang.push(response.data[i].kd);
@@ -400,7 +405,9 @@ export default {
                         this.listCBarang.push(
                             {
                                 kd:response.data[i].kd,
-                                nm:response.data[i].nm
+                                nm:response.data[i].nm,
+                                stok:parseInt(response.data[i].stok),
+                                pcs:parseInt(response.data[i].pcs)
                             }
                         );
                     }
@@ -410,15 +417,21 @@ export default {
         getNamaBarang(item){
             let unique = [...new Set(this.listCBarang)]; 
             var nama="";
+            var stok=0;
+            var pcs=0;
             
             for(var i=0; i< unique.length; i++){
                 if(unique[i].nm == item){
                     nama=unique[i].kd;
+                    stok=parseInt(unique[i].stok);
+                    pcs=parseInt(unique[i].pcs);
                 }
             }
 
             this.barang.nama=item;
             this.barang.kode=nama;
+            this.barang.stok=stok;
+            this.barang.ppcs=pcs;
             // this.carinamabarang=nama;
             this.$refs.kodebarang.inputValue = nama
         },
@@ -426,17 +439,53 @@ export default {
         getKodeBarang(item){
             let unique = [...new Set(this.listCBarang)]; 
             var nama="";
+            var stok=0;
+            var pcs=0;
             
             for(var i=0; i< unique.length; i++){
                 if(unique[i].kd == item){
                     nama=unique[i].nm;
+                    stok=parseInt(unique[i].stok);
+                    pcs=parseInt(unique[i].pcs);
                 }
             }
 
             this.barang.kode=item;
             this.barang.nama=nama;
+            this.barang.stok=stok;
+            this.barang.ppcs=pcs;
             // this.carinamabarang=nama;
             this.$refs.namabarang.inputValue = nama;
+        },
+
+        validasiDetailDos(event, index){
+            var pcs_per_dos=parseInt(this.barang.ppcs);
+            var stok=parseInt(this.barang.stok);
+            var dos=parseInt(this.barang.dos);
+            var pcs=parseInt(this.barang.pcs);
+
+            var jumlah = parseInt(pcs_per_dos*dos) + pcs;
+
+            if(jumlah >  stok){
+                alert('Jumlah pcs melebihi jumlah pcs yang diminta')
+                this.barang.dos=0;
+                this.barang.pcs=0;
+            }
+        },
+
+        validasiDetailPcs(event, index){
+            var pcs_per_dos=parseInt(this.barang.ppcs);
+            var stok=parseInt(this.barang.stok);
+            var dos=parseInt(this.barang.dos);
+            var pcs=parseInt(this.barang.pcs);
+
+            var jumlah = parseInt(pcs_per_dos*dos) + pcs;
+
+            if(jumlah >  stok){
+                alert('Jumlah pcs melebihi jumlah pcs yang diminta')
+                this.barang.dos=0;
+                this.barang.pcs=0;
+            }
         },
 
 
@@ -502,6 +551,8 @@ export default {
             this.barang.nama='';
             this.barang.dos=0;
             this.barang.pcs=0;
+            this.barang.stok=0;
+            this.barang.ppcs=0;
             this.$refs.kodebarang.inputValue = '';
             this.$refs.namabarang.inputValue = '';
         },

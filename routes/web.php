@@ -89,6 +89,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('list-barang','Master\BarangController@list_barang');
     Route::get('cari-barang-by-kode/{id}','Master\BarangController@cari_barang_by_kode');
     Route::get('cari-barang-by-nama','Master\BarangController@cari_barang_by_nama');
+    Route::get('cari-barang-by-nama-2','Master\BarangController@cari_barang_by_nama_2');
     Route::get('cari-customer-by-nama','Master\CustomerController@cari_customer_by_nama');
     Route::get('list-po-not-in-picking','Master\PoController@list_po_not_in_picking');
     Route::get('list-picking-not-in-order','Master\PickingController@list_picking_not_in_order');
