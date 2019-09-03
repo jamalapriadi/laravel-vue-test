@@ -229,6 +229,8 @@ class MutasiController extends Controller
                                         'updated_at'=>date('Y-m-d H:i:s')
                                     ]
                                 );
+
+                            \DB::statement("UPDATE stok SET pcs = pcs-".$val['realisasi_total_pcs']." where id=".$val['idstok']);
                         }
                     }
                 }

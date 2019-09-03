@@ -31,8 +31,8 @@ class PiutangController extends Controller
         FROM orders a
         LEFT JOIN picking b ON b.kd_picking=a.kd_picking
         LEFT JOIN po c ON c.no_po=b.no_po
-        WHERE a.kd_trans='Kredit'")
-        ->where('a.perusahaan_id',auth()->user()->perusahaan_id);
+        WHERE a.kd_trans='Kredit'
+        and a.perusahaan_id=".auth()->user()->perusahaan_id);
 
 
         return $sql;
