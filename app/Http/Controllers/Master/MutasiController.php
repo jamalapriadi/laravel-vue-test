@@ -215,7 +215,10 @@ class MutasiController extends Controller
                             ->get();
 
                         if(count($cekstok) > 0){
+                            $idstokbaru=$cekstok[0]->id;
+
                             \DB::statement("UPDATE stok SET pcs = pcs-".$val['realisasi_total_pcs']." where id=".$val['idstok']);
+                            \DB::statement("UPDATE stok SET pcs = pcs+".$val['realisasi_total_pcs']." where id=".$idstokbaru);
                         }else{
                             \DB::table('stok')
                                 ->insert(

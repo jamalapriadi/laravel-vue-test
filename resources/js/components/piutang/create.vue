@@ -8,44 +8,9 @@
                     <div class="row">
                         <div class="col-lg-7">
                             <div class="form-group row">
-                                <label for="" class="control-label col-lg-3">No. Pembayaran</label>
-                                <div class="col-lg-9">
-                                    <div class="row">
-                                        <!-- <div class="col-lg-6">
-                                            <input type="text" class="form-control" :class="{ 'is-invalid': errors.kode }" v-model="state.kode" readonly>
-                                        </div> -->
-
-                                        <div class="col-lg-6">
-                                            <div class="form-group row">
-                                                <label for="" class="col-lg-3 control-label">Tanggal</label>
-                                                <div class="col-lg-9">
-                                                    <date-picker v-model="state.tanggal" :config="options"></date-picker>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="" class="control-label col-lg-3">Customer</label>
-                                <div class="col-lg-9">
-                                    <div class="row">
-                                        <div class="col-lg-5">
-                                            <vue-bootstrap-typeahead v-model="caritokocustomer" :data="listtokocustomer" placeholder="Nama Toko" @hit="getTokoCustomer($event)" ref="tokocustomer"/>
-                                        </div>
-
-                                        <div class="col-lg-7">
-                                            <vue-bootstrap-typeahead v-model="carinamacustomer" :data="listcaricustomer" placeholder="Cari Customer..." @hit="getNamaCustomer($event)" ref="namacustomer"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label class="control-label col-lg-3">No. Nota</label>
-                                <div class="col-lg-9">
-                                    <vue-bootstrap-typeahead v-model="carinonota" :data="listnonota" placeholder="No. Nota" @hit="getNoNota($event)" ref="nonota"/>
+                                <label for="" class="col-lg-3 control-label">Tanggal</label>
+                                <div class="col-lg-6">
+                                    <date-picker v-model="state.tanggal" :config="options"></date-picker>
                                 </div>
                             </div>
                         </div>
@@ -112,15 +77,15 @@
                             </div>
                         </div>
                         <div class="col-lg-3">
-                            <a href="#" class="btn btn-primary" @click="tampilListBarang">
-                                List Barang
-                            </a>
-                        </div>
-                        <div class="col-lg-3">
                             <div class="form-group row">
                                 <label for="" class="control-label">Nominal</label>
                                 <input type="text" class="form-control" v-model="state.nominal">
                             </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <a href="#" class="btn btn-primary" @click="showModal" style="margin-top:25px;">
+                                List Barang
+                            </a>
                         </div>
                     </div>
 
@@ -234,6 +199,54 @@
                 </div>
             </div>
         </div>
+
+        <b-modal ref="myModalRef" size="lg" hide-footer title="Cari Nota">
+            <div class="form-group row">
+                <div class="col-lg-9">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <vue-bootstrap-typeahead v-model="caritokocustomer" :data="listtokocustomer" placeholder="Nama Toko" @hit="getTokoCustomer($event)" ref="tokocustomer"/>
+                        </div>
+
+                        <div class="col-lg-7">
+                            <vue-bootstrap-typeahead v-model="carinamacustomer" :data="listcaricustomer" placeholder="Cari Customer..." @hit="getNamaCustomer($event)" ref="namacustomer"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th width="5%">No.</th>
+                        <th>No. Nota</th>
+                        <th>Customer</th>
+                        <th>Tanggal</th>
+                        <th>Piutang</th>
+                        <th width="17%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(l,index) in pos" v-bind:key="index">
+                        <td>{{index+1}}</td>
+                        <td>{{l.kd_picking}}</td>
+                        <td>{{l.nm}}</td>
+                        <td>{{l.tgl}}</td>
+                        <td>{{l.total}}</td>
+                        <td>
+                            <a href="#" class="btn btn-info" @click="pilih(l)">
+                                Pilih
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            
+        </b-modal>
+
     </div>
     
 </template>
@@ -335,6 +348,21 @@ export default {
         rupiah(value) {
             let val = (value/1).toFixed().replace('.', ',')
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        },
+
+        showModal () {
+            this.$refs.myModalRef.show()
+        },
+
+        hideModal () {
+            this.$refs.myModalRef.hide()
+        },
+
+        pilih(l){
+            this.$refs.myModalRef.hide();
+            this.detail.no_order=l.no_order;
+            console.log(this.detail.no_order);
+            this.changeOrder();
         },
 
         getOrderBelumLunasCostomer(nama){
