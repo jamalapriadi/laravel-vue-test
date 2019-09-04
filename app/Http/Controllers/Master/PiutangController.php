@@ -40,7 +40,6 @@ class PiutangController extends Controller
 
     public function store(Request $request)
     {
-        // return $request->all();
         $rules=[
             'kode'=>'required',
             'customer'=>'required',
@@ -102,12 +101,13 @@ class PiutangController extends Controller
                         $total+=$val['nominal'];
 
                         $order=\App\Models\Order::find($val['no_order']);
-                        if($val['tagihan'] > $val['nominal']){
+                        $sisa_sekarang=$order->sisa_pembayaran;
+                        if($val['tagihan'] > ($sisa_sekarang - $val['nominal'])){
                             $order->status_pembayaran='Belum Lunas';
-                            $order->sisa_pembayaran= $val['tagihan'] - $val['nominal'];
+                            $order->sisa_pembayaran= $sisa_sekarang - $val['nominal'];
                         }else{
                             $order->status_pembayaran='Lunas';
-                            $order->sisa_pembayaran = $val['tagihan'] - $val['nominal'];
+                            $order->sisa_pembayaran= $sisa_sekarang - $val['nominal'];
                         }
                         $order->save();
 
@@ -357,6 +357,7 @@ class PiutangController extends Controller
                         a.perusahaan_id,
                         a.total,
                         a.status_pembayaran,
+                        a.sisa_pembayaran,
                         a.total - IFNULL(a.sisa_pembayaran,0) as sudah_dibayar,
                         IFNULL(a.sisa_pembayaran,a.total) AS total_hutang
                         FROM orders a

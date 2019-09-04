@@ -1,10 +1,13 @@
 <template>
     <div class="row">
-
         <div class="col-lg-12">
             <div class="card card-default">
                 <div class="card-header">Detail Piutang</div>
                 <div class="card-body">
+                    <div v-if="message" class="alert alert-success">
+                        {{ message }}
+                    </div>
+
                     <div class="row">
                         <div class="col-lg-7">
                             <div class="form-group row">
@@ -51,80 +54,10 @@
                 <div class="card-header">Detail Pembayaran</div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-lg-2">
-                            <div class="form-grou">
-                                <label for="" class="control-label">Jenis Pembayaran</label>
-                                <select name="jnspembayaran" id="jnspembayaran" class="form-control" v-model="detail.jns_pembayaran">
-                                    <option value="Tunai">Tunai</option>
-                                    <option value="Cek">Cek</option>
-                                    <option value="Transfer">Transfer</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div class="form-group" v-if="detail.jns_pembayaran=='Transfer' || detail.jns_pembayaran=='Cek'">
-                                <label for="" class="control-label">Bank</label>
-                                <select name="bank" id="bank" class="form-control" v-model="detail.bank">
-                                    <option disabled selected>--Pilih Bank--</option>
-                                    <option v-for="(l,index) in banks" v-bind:key="index" v-bind:value="l.nm">{{l.nm}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div class="form-group" v-if="detail.jns_pembayaran=='Cek'">
-                                <label for="" class="control-label">No. Cek / BG</label>
-                                <input type="text" class="form-control" v-model="detail.no_cek_bg" :readonly="detail.jns_pembayaran!='Transfer' ? false : true">
-                            </div>
-                        </div>
                         <div class="col-lg-3">
-                            <div class="form-group row">
-                                <label for="" class="control-label">Nominal</label>
-                                <input type="text" class="form-control" v-model="state.nominal">
-                            </div>
-                        </div>
-                        <div class="col-lg-3">
-                            <a href="#" class="btn btn-primary" @click="showModal" style="margin-top:25px;">
-                                List Barang
+                            <a class="btn btn-primary text-white" @click="showModal" style="margin-top:25px;">
+                                List Nota
                             </a>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="form-group">
-                                <label for="" class="control-label">Nomor Order</label>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <select name="po" id="po" class="form-control" v-model="detail.no_order" @change="changeOrder">
-                                            <option value="" disabled selected>--Pilih Order--</option>
-                                            <option v-for="(l,index) in pos" v-bind:key="index" v-bind:value="l.no_order">{{l.no_order}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control" v-model="detail.total_rupiah" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2" v-if="detail.jns_pembayaran=='Transfer'">
-                            <label for="" class="control-label">Tgl. JT / Transfer</label>
-                            <date-picker v-model="detail.tgl_jt" :config="options"></date-picker>
-                        </div>
-                        <div class="col-lg-3">
-                            <div class="form-group row">
-                                <label for="" class="control-label">Keterangan</label>
-                                <input type="text" class="form-control" v-model="detail.keterangan">
-                            </div>
-                        </div>
-                        <div class="form-group col-md-1">
-                            <div class="btn-group">
-                                <button v-on:click="saveBarang()" class="btn btn-primary" style="margin-top:25px;">
-                                    <i class="fa fa-plus"></i>
-                                    Add
-                                </button>
-                            </div>
                         </div>
                     </div>
 
@@ -215,6 +148,34 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label for="" class="control-label">Jenis Pembayaran</label>
+                        <select name="jnspembayaran" id="jnspembayaran" class="form-control" v-model="detail.jns_pembayaran">
+                            <option value="Tunai">Tunai</option>
+                            <option value="Cek">Cek</option>
+                            <option value="Transfer">Transfer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group" v-if="detail.jns_pembayaran=='Transfer' || detail.jns_pembayaran=='Cek'">
+                        <label for="" class="control-label">Bank</label>
+                        <select name="bank" id="bank" class="form-control" v-model="detail.bank">
+                            <option disabled selected>--Pilih Bank--</option>
+                            <option v-for="(l,index) in banks" v-bind:key="index" v-bind:value="l.nm">{{l.nm}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group" v-if="detail.jns_pembayaran=='Cek'">
+                        <label for="" class="control-label">No. Cek / BG</label>
+                        <input type="text" class="form-control" v-model="detail.no_cek_bg" :readonly="detail.jns_pembayaran!='Transfer' ? false : true">
+                    </div>
+                </div>
+            </div>
+
             <br>
 
             <table class="table table-striped">
@@ -225,6 +186,9 @@
                         <th>Customer</th>
                         <th>Tanggal</th>
                         <th>Piutang</th>
+                        <th>Sudah Dibayar</th>
+                        <th>Nominal</th>
+                        <th>Keterangan</th>
                         <th width="17%"></th>
                     </tr>
                 </thead>
@@ -235,8 +199,15 @@
                         <td>{{l.nm}}</td>
                         <td>{{l.tgl}}</td>
                         <td>{{l.total}}</td>
+                        <td>{{l.sudah_dibayar}}</td>
                         <td>
-                            <a href="#" class="btn btn-info" @click="pilih(l)">
+                            <input type="text" class="form-control" v-model="nominal[index]">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" v-model="keterangan[index]">
+                        </td>
+                        <td>
+                            <a class="btn btn-info text-white" @click="pilih(l, index)">
                                 Pilih
                             </a>
                         </td>
@@ -298,7 +269,7 @@ export default {
             errors: [],
             pos:[],
             detail:{
-                jns_pembayaran:'',
+                jns_pembayaran:'Tunai',
                 bank:'',
                 no_cek_bg:'',
                 no_order:'',
@@ -315,7 +286,9 @@ export default {
             barang:[],
             carinonota:'',
             listnonota:[],
-            listCnonota:[]
+            listCnonota:[],
+            nominal:[],
+            keterangan:[]
             
         }
     },
@@ -358,11 +331,60 @@ export default {
             this.$refs.myModalRef.hide()
         },
 
-        pilih(l){
-            this.$refs.myModalRef.hide();
-            this.detail.no_order=l.no_order;
-            console.log(this.detail.no_order);
-            this.changeOrder();
+        pilih(l, index){
+            console.log(l);
+            if(this.nominal[index]==0){
+                alert('Nominal harus lebih dari 0');
+                return false;
+            }
+
+            if(this.state.detail.length>0){
+                for(var a=0; a<this.state.detail.length; a++){
+                    sisa+=this.state.detail[a].total;
+                }
+            }
+
+            var jumlahbayar=this.nominal[index];
+            var bayar=this.detail.total;
+
+            var sisa=this.detail.total;
+            if(this.state.detail.length>0){
+                for(var a=0; a<this.state.detail.length; a++){
+                    if(this.state.detail[a].no_order == l.no_order){
+                        this.state.detail.splice(a,1);
+                    }
+                }
+            }
+            
+            // alert(sisa)
+            
+            if(jumlahbayar >  sisa){
+                bayar=this.detail.total;
+            }else{
+                bayar=this.state.nominal - this.state.total;
+            }
+
+            this.state.detail.push(
+                {
+                    jns_pembayaran:this.detail.jns_pembayaran,
+                    bank:this.detail.bank,
+                    no_cek_bg:this.detail.no_cek_bg,
+                    no_order:l.no_order,
+                    total:l.total,
+                    tgl_jt:l.tgljt,
+                    tagihan:l.total,
+                    nominal:this.nominal[index],
+                    keterangan:this.keterangan[index]
+                }
+            )
+
+            var total=0;
+            var newpos=[];
+            for(var a=0; a<this.state.detail.length; a++){
+                total+=this.state.detail[a].total;
+            }
+
+            this.hitungTotal()
         },
 
         getOrderBelumLunasCostomer(nama){
@@ -370,6 +392,11 @@ export default {
                 .then(response => {
                     if(response.data.success==true){
                         this.pos= response.data.data
+
+                        for(var a=0; a < response.data.data.length; a++){
+                            this.nominal[a]=0;
+                            this.keterangan[a]="";
+                        }
                     }
                 })
         },
@@ -628,7 +655,7 @@ export default {
         hitungTotal(){
             var total=0;
             for(var a=0; a<this.state.detail.length; a++){
-                total+=this.state.detail[a].total;
+                total+=this.state.detail[a].nominal;
             }
             this.state.total=total;
         },
@@ -684,6 +711,9 @@ export default {
                         this.state.total=0;
                         this.state.tanggal=new Date();
                         this.state.detail=[]
+                        this.pos=[]
+                        this.$refs.namacustomer.inputValue = ""
+                        this.$refs.tokocustomer.inputValue = ""
 
                         this.getCode();
                         this.getBank();
