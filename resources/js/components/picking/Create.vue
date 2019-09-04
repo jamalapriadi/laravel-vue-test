@@ -30,7 +30,7 @@
                             <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Po Baru?</label>
                                 <div class="col-lg-9">
-                                    <toggle-button :value="true" :labels="{checked: 'No', unchecked: 'Yes'}" v-model="state.po_pending" @change="ubahPoPending(state.po_pending)"/>
+                                    <toggle-button :value="true" :sync="true" :labels="{checked: 'No', unchecked: 'Yes'}" v-model="state.po_pending" @change="ubahPoPending()"/>
                                 </div>
                             </div>
                             
@@ -257,7 +257,7 @@ export default {
     data() {
         return {
             state: {
-                po_pending:'false',
+                po_pending:true,
                 kode:'',
                 no_po:'',
                 customer:'',
@@ -357,8 +357,15 @@ export default {
         this.getLokasi();
     },
     methods: {
-        getNoPo(status){
-            axios.get('/data/list-po-not-in-picking?status='+status+"&customer="+this.state.customer)
+        getNoPo(){
+            var statusnya='Y';
+            if(this.state.po_pending==true){
+                statusnya='Y';
+            }else{
+                statusnya='N';
+            }
+
+            axios.get('/data/list-po-not-in-picking?status='+statusnya+"&customer="+this.state.customer)
                 .then(response => {
                     this.pos= response.data
                 })
@@ -426,7 +433,15 @@ export default {
 
             this.$refs.tokocustomer.inputValue = toko
             this.state.customer=nama;
-            this.getNoPo(this.state.po_pending);
+
+            var statusnya='Y';
+            if(this.state.po_pending==true){
+                statusnya='Y';
+            }else{
+                statusnya='N';
+            }
+
+            this.getNoPo(statusnya);
         },
 
         getTokoCustomer(item){
@@ -443,13 +458,28 @@ export default {
             
             this.$refs.namacustomer.inputValue = nama
             this.state.customer=kode;
-            this.getNoPo(this.state.po_pending);
+
+            var statusnya='Y';
+            if(this.state.po_pending==true){
+                statusnya='Y';
+            }else{
+                statusnya='N';
+            }
+
+            this.getNoPo(statusnya);
         },
 
-        ubahPoPending(ppending){
+        ubahPoPending(){
+            var ppending=this.state.po_pending;
+            var statusnya='Y';
+            if(this.state.po_pending==true){
+                statusnya='Y';
+            }else{
+                statusnya='N';
+            }
+
             this.listcaricustomer=[];
             this.listCCustomer=[];
-            // this.customers=[];
             this.state.no_po='';
             this.state.customer='';
             this.state.tanggal=new Date();
@@ -469,10 +499,8 @@ export default {
             this.barang=[];
             this.customers=[];
             this.state.kurang=[];
-            // this.$refs.tokocustomer.inputValue = ""
-            // this.$refs.namacustomer.inputValue = ""
 
-            this.getNoPo(ppending);
+            this.getNoPo(statusnya);
             this.getCustomer()
         },
 
@@ -566,9 +594,16 @@ export default {
         },
 
         getCustomer(){
+            var statusnya='Y';
+            if(this.state.po_pending==true){
+                statusnya='Y';
+            }else{
+                statusnya='N';
+            }
+
             axios.get('/data/customer-not-in-picking',{
                 params:{
-                    status:this.state.po_pending
+                    status:statusnya
                 }
             })
                 .then(response => {
@@ -818,7 +853,15 @@ export default {
                         this.state.status_kurang='N';
 
                         this.getCode();
-                        this.getNoPo();
+
+                        var statusnya='Y';
+                        if(this.state.po_pending==true){
+                            statusnya='Y';
+                        }else{
+                            statusnya='N';
+                        }
+
+                        this.getNoPo(statusnya);
 
                         this.message = 'Data has been saved.';
                         this.loading = false;

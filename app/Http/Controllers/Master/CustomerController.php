@@ -309,7 +309,7 @@ class CustomerController extends Controller
         if($request->has('status')){
             $status=$request->input('status');
 
-            if($status=="false"){
+            if($status=="N"){
                 $lis=\DB::select("SELECT a.customer_id, b.nm 
                     FROM po a
                     LEFT JOIN customer b ON b.kd=a.customer_id
