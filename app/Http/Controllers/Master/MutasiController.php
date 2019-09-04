@@ -117,10 +117,20 @@ class MutasiController extends Controller
                         $total_pcsnya=($barang->pcs*$req_dos) + $req_pcs;
 
                         //cek jumlah stok yang tersedia berdasarkan lokasi
-                        $allstok=\DB::select("SELECT a.*, b.nm as nama_rak FROM stok a
-                            LEFT JOIN rak as b on b.kd=a.rak_id
-                            WHERE a.lokasi_id=$lokasi
-                            AND a.kd_brg='$id'");
+                        if($val['gudang_lama_id'] == $val['gudang_baru_id']){
+                            $raklamaid=$val['rak_lama_id'];
+
+                            $allstok=\DB::select("SELECT a.*, b.nm as nama_rak FROM stok a
+                                LEFT JOIN rak as b on b.kd=a.rak_id
+                                WHERE a.lokasi_id=$lokasi
+                                AND a.rak_id=$raklamaid
+                                AND a.kd_brg='$id'");
+                        }else{
+                            $allstok=\DB::select("SELECT a.*, b.nm as nama_rak FROM stok a
+                                LEFT JOIN rak as b on b.kd=a.rak_id
+                                WHERE a.lokasi_id=$lokasi
+                                AND a.kd_brg='$id'");
+                        }
 
                         $stok_all=0;
                         foreach($allstok as $row)
