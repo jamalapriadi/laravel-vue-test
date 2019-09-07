@@ -133,7 +133,7 @@
             </div>
         </div>
 
-        <b-modal ref="myModalRef" size="lg" hide-footer title="Cari Nota">
+        <b-modal ref="myModalRef" size="lg" hide-footer title="Cari Nota" id="modalku"  style="width:1250px;">
             <div class="form-group row">
                 <div class="col-lg-9">
                     <div class="row">
@@ -145,6 +145,9 @@
                             <vue-bootstrap-typeahead v-model="carinamacustomer" :data="listcaricustomer" placeholder="Cari Customer..." @hit="getNamaCustomer($event)" ref="namacustomer"/>
                         </div>
                     </div>
+                </div>
+                <div class="col-lg-3">
+                    
                 </div>
             </div>
 
@@ -197,7 +200,9 @@
                         <td>{{index+1}}</td>
                         <td>{{l.kd_picking}}</td>
                         <td>{{l.nm}}</td>
-                        <td>{{l.tgl}}</td>
+                        <td>
+                            <input type="date" class="form-control" v-model="tanggal[index]">
+                        </td>
                         <td>{{l.total}}</td>
                         <td>{{l.sudah_dibayar}}</td>
                         <td>
@@ -288,7 +293,8 @@ export default {
             listnonota:[],
             listCnonota:[],
             nominal:[],
-            keterangan:[]
+            keterangan:[],
+            tanggal:[]
             
         }
     },
@@ -371,7 +377,8 @@ export default {
                     no_cek_bg:this.detail.no_cek_bg,
                     no_order:l.no_order,
                     total:l.total,
-                    tgl_jt:l.tgljt,
+                    // tgl_jt:l.tgljt,
+                    tgl_jt:this.tanggal[index],
                     tagihan:l.total,
                     nominal:this.nominal[index],
                     keterangan:this.keterangan[index]
@@ -655,9 +662,9 @@ export default {
         hitungTotal(){
             var total=0;
             for(var a=0; a<this.state.detail.length; a++){
-                total+=this.state.detail[a].nominal;
+                total+=parseInt(this.state.detail[a].nominal);
             }
-            this.state.total=total;
+            this.state.total=parseInt(total);
         },
 
         changeNota(no_nota){
@@ -789,5 +796,14 @@ export default {
     .form-group label {
         font-size: 80%;
         display: block;
+    }
+
+    #modalku{
+        width: 90%; 
+    }
+
+    .modal-lg {
+        max-width: 80% !important;
+        margin: 30px auto;
     }
 </style>
