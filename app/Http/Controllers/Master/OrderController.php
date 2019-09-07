@@ -649,4 +649,26 @@ class OrderController extends Controller
 
         return $order;
     }
+
+    public function print_order($id)
+    {
+        $user=\App\User::with('perusahaan')->find(auth()->user()->id);
+
+        $nota=Order::with(
+            [
+                'picking',
+                'picking.po.customer',
+                'picking.lokasi',
+                'picking.perusahaan',
+                'detail',
+                'perusahaan',
+                'perusahaan.ket',
+                'sales'
+            ]
+        )->find($id);
+
+        return view('print.nota')
+                ->with('nota',$nota)
+                ->with('user',$user);
+    }
 }
