@@ -77,7 +77,10 @@
                                         <i class="fa fa-trash text-white"></i>
                                     </a>
 
-                                    <a class="btn btn-success" v-on:click="cetak(l.no_order, index, l.nm)" v-bind:id="'cetak'+l.no_order">
+                                    <!-- <a class="btn btn-success" v-on:click="cetak(l.no_order, index, l.nm)" v-bind:id="'cetak'+l.no_order">
+                                        <i class="fa fa-print text-white"></i>
+                                    </a> -->
+                                    <a class="btn btn-success" :href="'/data/print-order/'+l.no_order" target="_blank">
                                         <i class="fa fa-print text-white"></i>
                                     </a>
                                 </div>
@@ -93,7 +96,7 @@
             </div>
 
             <!-- print -->
-            <div id="printMe" style="margin-top:10px;display:none;">
+            <div id="printMe" style="margin-top:10px;display:none;size: landscape;">
                 <div class="container">
                     <br><br>
                     <div class="row">
@@ -394,7 +397,3 @@
         }
     }
 </script>
-
-<style type="text/css" media="print">
-    @page { size: landscape; }
-</style>

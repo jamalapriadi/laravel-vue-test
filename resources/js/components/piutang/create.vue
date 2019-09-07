@@ -19,7 +19,7 @@
                         </div>
 
                         <div class="col-lg-5">
-                            <div class="form-group row">
+                            <!-- <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Saldo</label>
                                 <div class="col-lg-9">
                                     <input type="text" class="form-control" v-model="state.saldo" readonly>
@@ -31,7 +31,7 @@
                                 <div class="col-lg-9">
                                     <input type="text" class="form-control" v-model="state.total_piutang_rupiah" readonly>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Keterangan</label>
@@ -193,7 +193,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(l,index) in pos" v-bind:key="index">
+                    <tr v-for="(l,index) in pos" v-bind:key="index" v-if="l.sudah_dibayar < l.total">
                         <td>{{index+1}}</td>
                         <td>{{l.kd_picking}}</td>
                         <td>{{l.nm}}</td>

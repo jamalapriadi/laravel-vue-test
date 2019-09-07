@@ -1086,9 +1086,10 @@ export default {
                         this.dataprint.detail = response.data.nota.detail;
                         // this.print();
 
-                        this.$nextTick(() => {
-                            this.$htmlToPaper('printMe');
-                        });
+                        // this.$nextTick(() => {
+                        //     this.$htmlToPaper('printMe');
+                        // });
+                        window.open("/data/print-order/"+response.data.nota.no_order, "_blank");   
 
                         this.getCode();
                         this.getPicking();
