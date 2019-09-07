@@ -102,11 +102,11 @@
                                 <th>Rp. {{rupiah(state.total)}}</th>
                                 <th colspan="2"></th>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <th colspan='7'>Jumlah Bayar</th>
                                 <th>Rp. {{rupiah(state.nominal)}}</th>
                                 <th colspan="2"></th>
-                            </tr>
+                            </tr> -->
                             <tr v-if="state.nominal - state.total > 0">
                                 <th colspan='7'>Kembali</th>
                                 <th>Rp. {{rupiah(state.nominal - state.total)}}</th>
