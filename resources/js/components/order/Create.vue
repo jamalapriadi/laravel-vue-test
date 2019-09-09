@@ -551,6 +551,9 @@ export default {
                     this.barangs=response.data.detail;
                     this.hitungan = response.data.hitungan;
                     this.state.kd_customer= response.data.po.customer_id;
+                    this.subtotal=0;
+                    this.state.total=0;
+                    this.state.diskon_tambahan=0;
 
                     for(var c=0; c < this.hitungan.length; c++){
                         this.state.kodehit.push(this.hitungan[c].kd_brg);
@@ -749,11 +752,12 @@ export default {
             var diskon_tambahan=this.state.diskon_tambahan;
             this.subtotal=0;
             for(var i=0; i<this.state.subtotal.length; i++){
-                subtotalnya+=parseFloat(subtotalnya)+parseFloat(this.state.subtotal[i]);
+                subtotalnya=parseFloat(subtotalnya)+parseFloat(this.state.subtotal[i]);
             }
+            console.log(subtotalnya);
 
             // var hasil_diskon_tambahan=subtotalnya * diskon_tambahan / 100;
-            var hasil_diskon_tambahan=subtotalnya - diskon_tambahan;
+            var hasil_diskon_tambahan=parseInt(subtotalnya) - parseInt(diskon_tambahan);
             this.subtotal=subtotalnya;
             this.state.total=hasil_diskon_tambahan;
         },
