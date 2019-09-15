@@ -59,7 +59,7 @@
                                 <label for="" class="control-label">Pilih Lokasi Tujuan</label>
                                 <select name="" id="" class="form-control" v-model="state.gudang_baru" @change="changeLokasi(state.gudang_baru.id,'baru')">
                                     <option value="" disabled selected>--Pilih Lokasi--</option>
-                                    <option v-for="(l,index) in lokasis" v-bind:key="index" v-bind:value="l">{{l.nm}}</option>
+                                    <option v-for="(l,index) in lokasis2" v-bind:key="index" v-bind:value="l">{{l.nm}}</option>
                                 </select>
                             </div>
                         </div>
@@ -94,12 +94,12 @@
 
                             <div class="form-group col-md-1">
                                 <label for="" class="control-label">Dos</label>
-                                <input type="text" class="form-control" v-model="barang.dos" @input="validasiDetailDos($event, index)">
+                                <input type="text" class="form-control" v-model="barang.dos" @input="validasiDetailDos($event)">
                             </div>
 
                             <div class="form-group col-md-1">
                                 <label for="" class="control-label">PCS</label>
-                                <input type="text" class="form-control" v-model="barang.pcs" @input="validasiDetailPcs($event, index)">
+                                <input type="text" class="form-control" v-model="barang.pcs" @input="validasiDetailPcs($event)">
                             </div>
 
                             <div class="col-lg-2">
@@ -312,6 +312,7 @@ export default {
             carinamacustomer:'',
             carikodecustomer:'',
             lokasis:[],
+            lokasis2:[],
             raks:[],
             rakslama:[]
         }
@@ -458,7 +459,7 @@ export default {
             this.$refs.namabarang.inputValue = nama;
         },
 
-        validasiDetailDos(event, index){
+        validasiDetailDos(event){
             var pcs_per_dos=parseInt(this.barang.ppcs);
             var stok=parseInt(this.barang.stok);
             var dos=parseInt(this.barang.dos);
@@ -473,7 +474,7 @@ export default {
             }
         },
 
-        validasiDetailPcs(event, index){
+        validasiDetailPcs(event){
             var pcs_per_dos=parseInt(this.barang.ppcs);
             var stok=parseInt(this.barang.stok);
             var dos=parseInt(this.barang.dos);
@@ -524,6 +525,7 @@ export default {
             //     return false;
             // }
 
+            console.log(this.state.gudang_baru);
 
             this.state.listBarang.push(
                 {
@@ -561,6 +563,7 @@ export default {
             axios.get('/data/list-lokasi')
                 .then(response => {
                     this.lokasis = response.data;
+                    this.lokasis2 = response.data;
                 })
         },
 

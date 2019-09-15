@@ -357,7 +357,8 @@ class BarangController extends Controller
 
         if($request->has('rak')){
             $rak=request('rak');
-            $barang=$barang->whereRaw("kd in (select kd_brg from stok where rak_id=$rak)");
+            $barang=$barang->whereRaw("kd in (select kd_brg from stok where rak_id=$rak)")
+                ->where('stok.rak_id',$rak);
         }
 
         return $barang->get();
@@ -391,7 +392,8 @@ class BarangController extends Controller
 
         if($request->has('rak')){
             $rak=request('rak');
-            $barang=$barang->whereRaw("kd in (select kd_brg from stok where rak_id=$rak)");
+            $barang=$barang->whereRaw("kd in (select kd_brg from stok where rak_id=$rak)")
+                ->where('stok.rak_id',$rak);
         }
 
         return $barang->get();

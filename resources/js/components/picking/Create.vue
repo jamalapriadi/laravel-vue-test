@@ -876,9 +876,9 @@ export default {
                             detail:response.data.nota.detail
                         }
 
-                        this.$nextTick(() => {
-                            this.$htmlToPaper('printMe');
-                        });
+                        // this.$nextTick(() => {
+                        //     this.$htmlToPaper('printMe');
+                        // });
                     }else{
                         if(response.data.adahutang==true){
                             this.adahutang=true;
