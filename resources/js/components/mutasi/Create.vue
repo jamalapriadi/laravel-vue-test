@@ -71,7 +71,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="" class="control-label">Pilih Rak Awal</label>
-                                    <select name="rak" id="rak" class="form-control" v-model="state.rak_lama">
+                                    <select name="rak" id="rak" class="form-control" v-model="state.rak_lama" @change="ubahRakAwal()">
                                         <option value="" disabled selected>--Pilih Rak--</option>
                                         <option v-for="(l,index) in raks" v-bind:key="index" v-bind:value="l">{{l.nm}}</option>
                                     </select>
@@ -548,6 +548,10 @@ export default {
             this.kosongBarang();
         },
 
+        ubahRakAwal(){
+            this.kosongBarang();
+        },
+
         kosongBarang(){
             this.barang.kode='';
             this.barang.nama='';
@@ -570,6 +574,7 @@ export default {
         changeLokasi(gudang,type){
             axios.get('/data/list-rak?lokasi='+gudang)
                 .then(response => {
+                    this.kosongBarang();
                     if(type=="lama"){
                         this.raks=response.data;
                     }else{
@@ -685,6 +690,7 @@ export default {
                         this.getCode();
                         this.message = 'Data has been saved.';
                         this.loading = false;
+                        this.kosongBarang();
                     }else{
                         alert('Internal server error');
                     }
