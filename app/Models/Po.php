@@ -25,6 +25,7 @@ class Po extends Model
                     'pcs',
                     'total_pcs',
                     'lokasi_id',
+                    'rak_id',
                     'jumlah'
                 ]
             );

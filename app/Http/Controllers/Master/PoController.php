@@ -54,6 +54,7 @@ class PoController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request->all();
         $rules=[
             'kode'=>'required',
             'tanggal'=>'required',
@@ -130,20 +131,27 @@ class PoController extends Controller
 
                     $res  = array();
                     foreach($listbarang as $vals){
-                        if(array_key_exists($vals['kd_barang'],$res)){
-                            $res[$vals['kd_barang']]['total_pcs']    += $vals['total_pcs'];
-                            $res[$vals['kd_barang']]['kd_barang']        = $vals['kd_barang'];
-                        }
-                        else{
-                            $res[$vals['kd_barang']]  = $vals;
+                        $res[]=$vals;
+                    }
+
+                    foreach($listbarang as $vals){
+                        for($a=0; $a<count($res); $a++){
+                            if($res[$a]['kd_barang'] == $vals['kd_barang'] && $res[$a]['rak']== $vals['rak']){
+                                $res[$a]['total_pcs']+=$vals['total_pcs'];    
+                            }
                         }
                     }
 
 
                     foreach($res as $key=>$val){
+                        // $cekB=\App\Models\Barang::find($val['kd']);
+                        // $totalpcnya=$val['realisasi_total_pcs'];
+
+                        //cek stok
                         $cksstok=\DB::select("SELECT SUM(a.pcs) AS stok FROM stok a
                                 WHERE a.kd_brg='".$val['kd_barang']."'
                                 AND a.lokasi_id=".request('lokasi')."
+                                AND a.rak_id=".$val['rak']."
                                 GROUP BY a.kd_brg");
                         
                         if($val['total_pcs'] > 0){
@@ -182,6 +190,17 @@ class PoController extends Controller
                                     'jumlah'=>$jumlah
                                 ]
                             );
+
+                        // $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
+                        // if($cksstok!=null){
+                        //     if($cksstok->pcs > $totalpcnya){
+                        //         \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
+                        //             where id='".$request->input('idstok')[$key]."'");
+                        //     }else{
+                        //         $cksstok->pcs=0;
+                        //         $cksstok->save();
+                        //     }
+                        // }
                     }
                 }
 
@@ -243,8 +262,10 @@ class PoController extends Controller
 
                     $stokbarang=\DB::table('stok')
                         ->leftJoin('rak','rak.kd','=','stok.rak_id')
+                        ->leftJoin('lokasi','lokasi.id','=','stok.lokasi_id')
                         ->where('kd_brg',$detail->kd)
-                        ->select('rak.nm as nama_rak','stok.*')
+                        ->where('rak_id',$detail->pivot->rak_id)
+                        ->select('rak.nm as nama_rak','stok.*','lokasi.nm as nama_lokasi')
                         ->get();
 
                     $rak=array();
@@ -347,6 +368,7 @@ class PoController extends Controller
             $stokbarang=\DB::table('stok')
                 ->leftJoin('rak','rak.kd','=','stok.rak_id')
                 ->where('kd_brg',$detail->kd)
+                ->where('rak_id',$detail->pivot->rak_id)
                 ->select('rak.nm as nama_rak','stok.*')
                 ->get();
 

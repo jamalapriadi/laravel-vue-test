@@ -149,7 +149,7 @@
                             <!-- <ol v-if="l.rak.length > 0">
                                 <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}}</li>
                             </ol> -->
-                            <label v-if="l.rak!=''">{{l.rak}}</label>
+                            <label v-if="l.rak!=''">{{l.nama_rak}}</label>
                             <label class="label label-info" v-else>Rak tidak ditemukan</label>
                         </td>
                         <td>{{l.yg_diminta}}</td>
@@ -796,7 +796,8 @@ export default {
                                         yg_diminta:parseInt(response.data.list[a].yg_diminta),
                                         total_pcs:parseInt(response.data.list[a].realisasi_total_pcs),
                                         // harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
-                                        rak:response.data.list[a].nama_rak
+                                        nama_rak:response.data.list[a].nama_rak,
+                                        rak:response.data.list[a].rak_id
                                     }
                                 );
                             }
