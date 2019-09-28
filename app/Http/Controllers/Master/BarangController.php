@@ -370,20 +370,28 @@ class BarangController extends Controller
             $lokasi=request('lokasi');
 
             $barang=Barang::leftJoin('stok','stok.kd_brg','=','brg.kd')
-                ->select('kd','nm','brg.pcs','jual','merk_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"))
-                ->groupBy('kd');
+                ->leftJoin('rak','rak.kd','=','stok.rak_id')
+                ->leftJoin('lokasi','lokasi.id','=','stok.lokasi_id')
+                ->select('brg.kd','brg.nm','brg.pcs','jual','merk_id','stok.rak_id',
+                \DB::raw("rak.nm as nama_rak"),
+                \DB::raw("lokasi.nm as nama_lokasi"),
+                'stok.lokasi_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"));
         }else{
             $barang=Barang::leftJoin('stok','stok.kd_brg','=','brg.kd')
-                ->select('kd','nm','brg.pcs','jual','merk_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"))
-                ->groupBy('kd');
+                ->leftJoin('rak','rak.kd','=','stok.rak_id')
+                ->leftJoin('lokasi','lokasi.id','=','stok.lokasi_id')
+                ->select('brg.kd','brg.nm','brg.pcs','jual','merk_id','stok.rak_id',
+                \DB::raw("rak.nm as nama_rak"),
+                \DB::raw("lokasi.nm as nama_lokasi"),
+                'stok.lokasi_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"));
         }
 
         if($request->has('q')){
-            $barang=$barang->where('nm','like','%'.request('q').'%');
+            $barang=$barang->where('brg.nm','like','%'.request('q').'%');
         }
 
         if($request->has('kode') && $request->input('kode')!=""){
-            $barang=$barang->where('kd','like','%'.request('kode').'%');
+            $barang=$barang->where('brg.kd','like','%'.request('kode').'%');
         }
 
         if($request->has('merk') && $request->input('merk')!=""){
@@ -392,7 +400,7 @@ class BarangController extends Controller
 
         if($request->has('rak')){
             $rak=request('rak');
-            $barang=$barang->whereRaw("kd in (select kd_brg from stok where rak_id=$rak)")
+            $barang=$barang->whereRaw("brg.kd in (select kd_brg from stok where rak_id=$rak)")
                 ->where('stok.rak_id',$rak);
         }
 
