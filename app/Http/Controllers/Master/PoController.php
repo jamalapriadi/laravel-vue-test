@@ -141,10 +141,6 @@ class PoController extends Controller
 
 
                     foreach($res as $key=>$val){
-                        // $cekB=\App\Models\Barang::find($val['kd']);
-                        // $totalpcnya=$val['realisasi_total_pcs'];
-
-                        //cek stok
                         $cksstok=\DB::select("SELECT SUM(a.pcs) AS stok FROM stok a
                                 WHERE a.kd_brg='".$val['kd_barang']."'
                                 AND a.lokasi_id=".request('lokasi')."
@@ -182,20 +178,10 @@ class PoController extends Controller
                                     'pcs'=>$val['pcs'],
                                     'total_pcs'=>$val['total_pcs'],
                                     'lokasi_id'=>request('lokasi'),
+                                    'rak_id'=>$val['rak'],
                                     'jumlah'=>$jumlah
                                 ]
                             );
-
-                        // $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
-                        // if($cksstok!=null){
-                        //     if($cksstok->pcs > $totalpcnya){
-                        //         \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
-                        //             where id='".$request->input('idstok')[$key]."'");
-                        //     }else{
-                        //         $cksstok->pcs=0;
-                        //         $cksstok->save();
-                        //     }
-                        // }
                     }
                 }
 
