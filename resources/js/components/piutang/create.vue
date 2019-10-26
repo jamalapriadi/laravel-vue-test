@@ -124,7 +124,7 @@
                             <i class="fa fa-backward"></i> Back
                         </router-link>
 
-                        <button class="btn btn-primary" v-on:click="saveProgram">
+                        <button class="btn btn-primary float-right" v-on:click="saveProgram">
                             <i class="fa fa-save"></i>
                             Save
                         </button>
@@ -157,8 +157,9 @@
                         <label for="" class="control-label">Jenis Pembayaran</label>
                         <select name="jnspembayaran" id="jnspembayaran" class="form-control" v-model="detail.jns_pembayaran">
                             <option value="Tunai">Tunai</option>
-                            <option value="Cek">Cek</option>
-                            <option value="Transfer">Transfer</option>
+                            <option value="Non Tunai">Non Tunai</option>
+                            <!-- <option value="Cek">Cek</option>
+                            <option value="Transfer">Transfer</option> -->
                         </select>
                     </div>
                 </div>

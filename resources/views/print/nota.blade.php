@@ -81,11 +81,11 @@
                             <td>{{$row->nm}}</td>
                             <td>{{$row->pivot->dos}}</td>
                             <td>{{$row->pivot->pcs}}</td>
-                            <td>{{$row->pivot->hrg}}</td>
+                            <td>{{number_format($row->pivot->hrg)}}</td>
                             <td>{{$row->pivot->diskon_persen}} %</td>
                             <td>{{$row->pivot->diskon_persen_2}} %</td>
                             <!-- <td>{{$row->pivot->diskon_rupiah}}</td> -->
-                            <td>{{$row->pivot->subtotal}}</td>
+                            <td>{{number_format($row->pivot->subtotal)}}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -94,11 +94,11 @@
                         <th rowspan="2">{{$nota->update_at}}</th>
                         <th rowspan="2">{{auth()->user()->username}}</th>
                         <th colspan="4">DISKON TAMBAHAN</th>
-                        <th>{{$nota->diskon_rupiah}}</th>
+                        <th>{{number_format($nota->diskon_rupiah)}}</th>
                     </tr>
                     <tr>
                         <th colspan="4">TOTAL</th>
-                        <th>{{$nota->total}}</th>
+                        <th>{{number_format($nota->total)}}</th>
                     </tr>
                 </tfoot>
             </table>

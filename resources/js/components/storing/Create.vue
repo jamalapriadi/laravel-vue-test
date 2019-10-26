@@ -9,6 +9,8 @@
                 {{ message }}
             </div>
 
+            <!-- <input type="text" class="form-control" v-autofocus placeholder="Tes"> -->
+
             <form @submit.prevent="store" action="/data/program" method="post">
                 <div class="row">
                     <div class="col-lg-6">
@@ -74,17 +76,13 @@
                                 <vue-bootstrap-typeahead v-model="carikodebarang" :data="listkodebarang" placeholder="Kode Barang..." @hit="getKodeBarang($event)" ref="kodebarang"/>
                             </div>
                             <div class="col-lg-6">
-                                <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Nama Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
+                                <vue-bootstrap-typeahead v-autofocus v-model="carinamabarang" :data="listcaribarang" placeholder="Nama Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group col-md-2">
                         <label for="" class="control-label">Rak</label>
-                        <!-- <select name="rak" id="rak" class="form-control" v-model="barang.rak">
-                            <option value="">--Pilih Rak--</option>
-                            <option v-for="(l,index) in raks" v-bind:key="index" v-bind:value="l">{{l.kd}} [ {{l.nm}} ]</option>
-                        </select> -->
                         <multiselect v-model="barang.rak" :options="raks" placeholder="Cari Rak" label="nm" track-by="kd"></multiselect>
                         
                     </div>
@@ -162,7 +160,7 @@
                     <i class="fa fa-backward"></i> Back
                 </router-link>
 
-                <button class="btn btn-primary" v-on:click="saveProgram">
+                <button class="btn btn-primary float-right" v-on:click="saveProgram">
                     <i class="fa fa-save"></i>
                     Save
                 </button>
@@ -299,7 +297,8 @@ export default {
             hasilpcs:0,
             lokasis:[],
             raks:[],
-            merk: []
+            merk: [],
+            dynamicValue:true
         }
     },
     watch: {
@@ -329,6 +328,7 @@ export default {
 
     },
     mounted() {
+        this.setFocusNamaBarang();
         this.getCode();
         this.getCustomer();
         this.getLokasi();
@@ -336,6 +336,12 @@ export default {
         // this.getPerusahaan();
     },
     methods: {
+        setFocusNamaBarang(){
+            this.$nextTick(() => {
+                this.$refs.namabarang.$el.focus()
+            })
+        },
+
         getCode(){
             axios.get('/data/autonumber-storing')
                 .then(response => {
@@ -561,11 +567,11 @@ export default {
                 return false;
             }
 
-            // if(this.barang.dos==""){
-            //     alert('Dos barang harus diisi');
+            if(this.barang.rak==""){
+                alert('Rak harus diisi');
 
-            //     return false;
-            // }
+                return false;
+            }
 
             // if(this.barang.pcs==""){
             //     alert('PCS harus diisi');
@@ -587,6 +593,8 @@ export default {
             );
 
             this.kosongBarang();
+
+            this.dynamicValue = true
         },
 
         kosongBarang(){

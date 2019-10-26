@@ -95,6 +95,11 @@
                         <td>{{dataprint.customer}}</td>
                     </tr>
                     <tr>
+                        <td>Kota</td>
+                        <td> : </td>
+                        <td>{{dataprint.kota}}</td>
+                    </tr>
+                    <tr>
                         <td>Lokasi</td>
                         <td> : </td>
                         <td>{{dataprint.lokasi}}</td>
@@ -154,6 +159,7 @@
                     customer:'',
                     lokasi:'',
                     keterangan:'',
+                    kota:'',
                     detail:[]
                 },
             }
@@ -244,6 +250,7 @@
                             no_po:response.data.po.no_po,
                             tanggal:response.data.po.tgl,
                             customer:response.data.po.customer.nm,
+                            kota:response.data.po.customer.kota.nm,
                             lokasi:response.data.po.lokasi.nm,
                             keterangan:response.data.po.ket,
                             detail:response.data.detail

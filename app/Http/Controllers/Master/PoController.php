@@ -245,6 +245,7 @@ class PoController extends Controller
                     [
                         'detail',
                         'customer',
+                        'customer.kota',
                         'perusahaan',
                         'lokasi'
                     ]
@@ -350,6 +351,7 @@ class PoController extends Controller
             [
                 'detail',
                 'customer',
+                'customer.kota',
                 'perusahaan',
                 'lokasi'
             ]

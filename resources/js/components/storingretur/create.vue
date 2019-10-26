@@ -106,7 +106,7 @@
                     <i class="fa fa-backward"></i> Back
                 </router-link>
 
-                <button class="btn btn-primary" v-on:click="saveProgram">
+                <button class="btn btn-primary float-right" v-on:click="saveProgram">
                     <i class="fa fa-save"></i>
                     Save
                 </button>

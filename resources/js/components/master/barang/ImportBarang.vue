@@ -31,7 +31,7 @@
                             <i class="fa fa-backward"></i> Back
                         </router-link>
 
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary float-right">
                             <i class="fa fa-save"></i>
                             Save
                         </button>

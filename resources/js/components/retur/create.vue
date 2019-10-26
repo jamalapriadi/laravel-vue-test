@@ -65,7 +65,7 @@
                                 <label for="" class="control-label col-lg-3">Nomor Order</label>
                                 <div class="col-lg-9">
                                     <select name="po" id="po" class="form-control" v-model="state.no_order" @change="changeOrder">
-                                        <option value="" disabled selected>--Pilih PO--</option>
+                                        <option value="" disabled selected>--Nomor Order--</option>
                                         <option v-for="(l,index) in pos" v-bind:key="index" v-bind:value="l.no_order">{{l.no_order}}</option>
                                     </select>
                                 </div>
@@ -245,7 +245,7 @@
                             <i class="fa fa-backward"></i> Back
                         </router-link>
 
-                        <button class="btn btn-primary" v-on:click="saveProgram">
+                        <button class="btn btn-primary float-right" v-on:click="saveProgram">
                             <i class="fa fa-save"></i>
                             Save
                         </button>

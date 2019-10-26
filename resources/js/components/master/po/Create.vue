@@ -192,7 +192,7 @@
                     <i class="fa fa-backward"></i> Back
                 </router-link>
 
-                <button class="btn btn-primary" v-on:click="saveProgram" >
+                <button class="btn btn-primary float-right" v-on:click="saveProgram" >
                     <i class="fa fa-save"></i>
                     Save
                 </button>
@@ -272,6 +272,11 @@
                     <td>Customer</td>
                     <td> : </td>
                     <td>{{dataprint.customer}}</td>
+                </tr>
+                <tr>
+                    <td>Kota</td>
+                    <td> : </td>
+                    <td>{{dataprint.kota}}</td>
                 </tr>
                 <tr>
                     <td>Lokasi</td>
@@ -419,6 +424,7 @@ export default {
                 tanggal:'',
                 customer:'',
                 lokasi:'',
+                kota:'',
                 keterangan:'',
                 detail:[]
             }
@@ -1083,6 +1089,7 @@ export default {
                             no_po:response.data.nota.no_po,
                             tanggal:response.data.nota.tgl,
                             customer:response.data.nota.customer.nm,
+                            kota:response.data.nota.customer.kota.nm,
                             lokasi:response.data.nota.lokasi.nm,
                             keterangan:response.data.nota.keterangan,
                             detail:response.data.detail

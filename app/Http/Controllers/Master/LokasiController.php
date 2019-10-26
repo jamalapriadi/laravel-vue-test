@@ -173,7 +173,7 @@ class LokasiController extends Controller
             $lokasi=$lokasi->where('nm','like','%'.$request->input('q').'%');
         }
 
-        $lokasi=$lokasi->get();
+        $lokasi=$lokasi->orderBy('id','asc')->get();
 
         return $lokasi;
     }

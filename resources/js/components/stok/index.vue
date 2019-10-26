@@ -28,7 +28,8 @@
                     <div class="col-lg-2">
                         <div class="form-group">
                             <label for="" class="control-label">Keyword</label>
-                            <input type="text" class="form-control" v-model="state.pencarian">
+                            <!-- <input type="text" class="form-control" v-model="state.pencarian"> -->
+                            <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Nama Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
                         </div>
                     </div>
 
@@ -82,10 +83,12 @@ Vue.filter("formatNumber", function (value) {
 return numeral(value).format("0,0"); // displaying other groupings/separators is possible, look at the docs
 });
 import { VueLoading } from 'vue-loading-template'
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
 
 export default {
     components: {
-        VueLoading
+        VueLoading,
+        VueBootstrapTypeahead
     },
     data(){
         return {
@@ -100,7 +103,9 @@ export default {
             loading:true,
             lokasi:[],
             rak:[],
-            merk:[]
+            merk:[],
+            listcaribarang:[],
+            carinamabarang:'',
         }
     },
     mounted() {
@@ -115,9 +120,27 @@ export default {
             }else{
                 this.showData();
             }
-        }
+        },
+
+        carinamabarang: _.debounce(function(addr){
+            this.cariBarangByNama(addr);
+        }, 500),
     },
     methods: {
+        async cariBarangByNama(query){
+            this.listcaribarang=[];
+            axios.get('/data/cari-barang-by-nama?q='+query)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listcaribarang.push(response.data[i].nm);
+                    }
+                })
+        },
+
+        getNamaBarang(item){
+            this.state.pencarian = item
+        },
+
         paginate(url){
             axios.get(url)
                 .then(response => {
