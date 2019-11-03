@@ -853,6 +853,8 @@ export default {
                         this.state.status_kurang='N';
 
                         this.getCode();
+                        this.getCustomer();
+                        this.getLokasi();
 
                         var statusnya='Y';
                         if(this.state.po_pending==true){

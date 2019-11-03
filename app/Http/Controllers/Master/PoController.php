@@ -54,7 +54,6 @@ class PoController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         $rules=[
             'kode'=>'required',
             'tanggal'=>'required',
@@ -129,24 +128,28 @@ class PoController extends Controller
                 if($request->has('listBarang')){
                     $listbarang=request('listBarang');
 
-                    $res  = array();
-                    foreach($listbarang as $vals){
-                        $res[]=$vals;
+                    $res=array();
+                    foreach($listbarang as $value){
+                        $res[$value['kd_barang'].'-'.$value['nama_rak']]=array(
+                            'kd_barang'=>'',
+                            'rak'=>'',
+                            'dos'=>0,
+                            'pcs'=>0,
+                            'total_pcs'=>0
+                        );
                     }
 
-                    foreach($listbarang as $vals){
-                        for($a=0; $a<count($res); $a++){
-                            if($res[$a]['kd_barang'] == $vals['kd_barang'] && $res[$a]['rak']== $vals['rak']){
-                                $res[$a]['total_pcs']+=$vals['total_pcs'];    
-                            }
-                        }
+                    
+                    foreach($listbarang as $value){
+                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['kd_barang']=$value['kd_barang'];
+                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['rak']=$value['rak'];
+                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['dos']+=$value['dos'];
+                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['pcs']+=$value['pcs'];
+                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['total_pcs']+=$value['total_pcs'];
                     }
 
 
                     foreach($res as $key=>$val){
-                        // $cekB=\App\Models\Barang::find($val['kd']);
-                        // $totalpcnya=$val['realisasi_total_pcs'];
-
                         //cek stok
                         $cksstok=\DB::select("SELECT SUM(a.pcs) AS stok FROM stok a
                                 WHERE a.kd_brg='".$val['kd_barang']."'

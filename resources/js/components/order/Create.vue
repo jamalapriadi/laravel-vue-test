@@ -92,6 +92,60 @@
                         <!-- </thead> -->
                     </table>
 
+                    <br>
+                        <a href="#" class="btn btn-primary" v-show="tambah == false" @click="tambahItem">
+                            <i class="fa fa-plus"></i> Add New 
+                        </a>
+
+                        <div v-show="tambah == true">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="" class="control-label">Nama Barang</label>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Cari Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
+                                            stok <strong>{{barang.stok}}</strong> PCS
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label for="" class="control-label">Dos</label>
+                                    <input type="text" class="form-control" v-model="barang.dos" @keyup.enter="changeDos" @input="hitungTotal($event)">
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label for="" class="control-label">PCS</label>
+                                    <input type="text" class="form-control" v-model="barang.pcs" @keyup.enter="changePcs(barang.pcs)" @input="hitungTotalPcs($event)">
+                                    <p>
+                                        <small>
+                                            {{hasilpcs}} jumlah per 1 dos
+                                        </small>
+                                    </p>
+                                </div>
+
+                                <div class="form-group col-md-2">
+                                    <label for="" class="control-label">Total Pcs</label>
+                                    <input type="text" class="form-control" v-model="barang.total_pcs" readonly>
+                                </div>
+
+
+                                <div class="form-group col-md-1">
+                                    <div class="btn-group">
+                                        <button v-on:click="saveBarang()" class="btn btn-primary" style="margin-top:25px;">
+                                            <i class="fa fa-plus"></i>
+                                            Add
+                                        </button>
+
+                                        <a @click="showModal" class="btn btn-info text-white" style="margin-top:25px;">
+                                            <i class="fa fa-list"></i> List Barang
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
                     <br><br>
                     <table class="table table-striped">
                         <thead>
@@ -341,15 +395,20 @@ import datePicker from 'vue-bootstrap-datetimepicker';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
 import Multiselect from 'vue-multiselect'
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
+import uniq from 'lodash/uniq'
+
 
 export default {
     components: {
         VueLoading,
         datePicker,
-        Multiselect 
+        Multiselect,
+        VueBootstrapTypeahead 
     },
     data() {
         return {
+            tambah:false,
             detailPicking:[],
             state: {
                 kd_picking:'',
@@ -493,6 +552,10 @@ export default {
         rupiah(value) {
             let val = (value/1).toFixed().replace('.', ',')
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        },
+
+        tambahItem(){
+            this.tambah = true
         },
 
         print(){

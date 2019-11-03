@@ -139,3 +139,72 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
         Route::get('stok','Master\LaporanController@laporan_stok');
     });
 });
+
+Route::get('cek-duplicate-po',function(){
+    $lis=array(
+        array(
+            'dos'=> 3,
+            'kd_barang'=> "BRG003381",
+            'nama_rak'=> "Z002",
+            'nm_barang'=> "RITCHI ASORTED 12X230GR",
+            'pcs'=> 2,
+            'rak'=> 573,
+            'total_pcs'=> 5,
+            'yg_diminta'=> 5,
+        ),
+        array(
+            'dos'=> 2,
+            'kd_barang'=> "BRG003383",
+            'nama_rak'=> "Z002",
+            'nm_barang'=> "RITCHI COKELAT 12X230GR",
+            'pcs'=> 6,
+            'rak'=> 573,
+            'total_pcs'=> 8,
+            'yg_diminta'=> 8,
+        ),
+        array(
+            'dos'=> 7,
+            'kd_barang'=> "BRG003383",
+            'nama_rak'=> "Z002",
+            'nm_barang'=> "RITCHI COKELAT 12X230GR",
+            'pcs'=> 2,
+            'rak'=> 573,
+            'total_pcs'=> 9,
+            'yg_diminta'=> 9,
+        )
+    );
+
+    $data_summ=array();
+    foreach($lis as $value){
+        $data_summ[$value['kd_barang'].'-'.$value['nama_rak']]=array(
+            'kd_barang'=>'',
+            'rak'=>'',
+            'jumlah'=>0
+        );
+    }
+
+    
+    foreach($lis as $value){
+        $data_summ[$value['kd_barang'].'-'.$value['nama_rak']]['kd_barang']=$value['kd_barang'];
+        $data_summ[$value['kd_barang'].'-'.$value['nama_rak']]['rak']=$value['rak'];
+        $data_summ[$value['kd_barang'].'-'.$value['nama_rak']]['jumlah']+=$value['total_pcs'];
+    }
+    return $data_summ;
+
+    // foreach($lis as $key=>$val){
+    //     $data_summ[$key]=array(
+    //         'kd_barang'=>$val['kd_barang'],
+    //         'rak'=>$val['rak'],
+    //         'total_pcs'=>$val['total_pcs']
+    //     );
+    // }
+
+    // $hasil=array();
+    // foreach($lis as $key=>$val){
+    //     for($a=0; $a<count($data_summ); $a++){
+            
+    //     }
+    // }
+
+    return $data_summ;
+});
