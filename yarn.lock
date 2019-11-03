@@ -511,6 +511,12 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
+"@babel/runtime@^7.4.5":
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.6.3.tgz#935122c74c73d2240cafd32ddb5fc2a6cd35cf1f"
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
 "@babel/template@^7.1.0", "@babel/template@^7.1.2", "@babel/template@^7.2.2":
   version "7.2.2"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.2.2.tgz#005b3fdf0ed96e88041330379e0da9a708eb2907"
@@ -541,6 +547,33 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@coreui/coreui-plugin-chartjs-custom-tooltips@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@coreui/coreui-plugin-chartjs-custom-tooltips/-/coreui-plugin-chartjs-custom-tooltips-1.2.0.tgz#de251422454edbba6ba925da451cfecdf9b48b22"
+  dependencies:
+    ms "^2.1.1"
+
+"@coreui/coreui-plugin-npm-postinstall@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@coreui/coreui-plugin-npm-postinstall/-/coreui-plugin-npm-postinstall-1.0.2.tgz#6daeb2ec786580d9c0849b05bc3e8d0222d5c463"
+
+"@coreui/coreui@^2.1.6":
+  version "2.1.16"
+  resolved "https://registry.yarnpkg.com/@coreui/coreui/-/coreui-2.1.16.tgz#93efb7d903bcd53092cc4bcc31ef8703de565457"
+  dependencies:
+    "@coreui/coreui-plugin-npm-postinstall" "^1.0.2"
+    bootstrap "^4.3.1"
+    core-js "^3.3.4"
+    regenerator-runtime "^0.13.3"
+
+"@coreui/icons@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@coreui/icons/-/icons-0.3.0.tgz#d5bece91b1442a9543593d1146bc8042b18489e3"
+
+"@fortawesome/fontawesome-free@^5.6.3":
+  version "5.11.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.11.2.tgz#8644bc25b19475779a7b7c1fc104bc0a794f4465"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -551,6 +584,14 @@
 "@nodelib/fs.stat@^1.1.2":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
+
+"@nuxt/opencollective@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@nuxt/opencollective/-/opencollective-0.3.0.tgz#11d8944dcf2d526e31660bb69570be03f8fb72b7"
+  dependencies:
+    chalk "^2.4.2"
+    consola "^2.10.1"
+    node-fetch "^2.6.0"
 
 "@types/q@^1.5.1":
   version "1.5.1"
@@ -996,9 +1037,23 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
 
-bootstrap@^4.0.0:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.2.1.tgz#8f8bdca024dbf0e8644da32e918c8a03a90a5757"
+bootstrap-vue@^2.0.0-rc.11:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.0.4.tgz#9bf99754a22acece72e02adda3c7965b818ae2bc"
+  dependencies:
+    "@nuxt/opencollective" "^0.3.0"
+    bootstrap ">=4.3.1 <5.0.0"
+    popper.js "^1.15.0"
+    portal-vue "^2.1.6"
+    vue-functional-data-merge "^3.1.0"
+
+bootstrap@4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.1.3.tgz#0eb371af2c8448e8c210411d0cb824a6409a12be"
+
+"bootstrap@>=4.3.1 <5.0.0", bootstrap@^4.0.0-beta.2, bootstrap@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.3.1.tgz#280ca8f610504d99d7b6b4bfc4b68cec601704ac"
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -1222,6 +1277,30 @@ charenc@~0.0.1:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
 
+charm@~0.1.0:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/charm/-/charm-0.1.2.tgz#06c21eed1a1b06aeb67553cdc53e23274bac2296"
+
+chart.js@2.7.3:
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.7.3.tgz#cdb61618830bf216dc887e2f7b1b3c228b73c57e"
+  dependencies:
+    chartjs-color "^2.1.0"
+    moment "^2.10.2"
+
+chartjs-color-string@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/chartjs-color-string/-/chartjs-color-string-0.6.0.tgz#1df096621c0e70720a64f4135ea171d051402f71"
+  dependencies:
+    color-name "^1.0.0"
+
+chartjs-color@^2.1.0:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/chartjs-color/-/chartjs-color-2.4.1.tgz#6118bba202fe1ea79dd7f7c0f9da93467296c3b0"
+  dependencies:
+    chartjs-color-string "^0.6.0"
+    color-convert "^1.9.3"
+
 chokidar@^2.0.0, chokidar@^2.0.2, chokidar@^2.0.3:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-2.0.4.tgz#356ff4e2b0e8e43e322d18a372460bbcf3accd26"
@@ -1318,7 +1397,7 @@ collection-visit@^1.0.0:
     map-visit "^1.0.0"
     object-visit "^1.0.0"
 
-color-convert@^1.9.0, color-convert@^1.9.1:
+color-convert@^1.9.0, color-convert@^1.9.1, color-convert@^1.9.3:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.3.tgz#bb71850690e1f136567de629d2d5471deda4c1e8"
   dependencies:
@@ -1403,6 +1482,10 @@ connect-history-api-fallback@^1.3.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/connect-history-api-fallback/-/connect-history-api-fallback-1.6.0.tgz#8b32089359308d111115d81cad3fceab888f97bc"
 
+consola@^2.10.1:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/consola/-/consola-2.10.1.tgz#4693edba714677c878d520e4c7e4f69306b4b927"
+
 console-browserify@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-browserify/-/console-browserify-1.1.0.tgz#f0241c45730a9fc6323b206dbf38edc741d0bb10"
@@ -1463,6 +1546,14 @@ copy-concurrently@^1.0.0:
 copy-descriptor@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
+
+core-js@^2.5.7:
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.10.tgz#8a5b8391f8cc7013da703411ce5b585706300d7f"
+
+core-js@^3.3.4:
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.3.6.tgz#6ad1650323c441f45379e176ed175c0d021eac92"
 
 core-util-is@~1.0.0:
   version "1.0.2"
@@ -1726,6 +1817,10 @@ cyclist@~0.2.2:
 date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
+
+de-indent@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
 
 debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
@@ -2308,6 +2403,12 @@ findup-sync@^2.0.0:
     micromatch "^3.0.4"
     resolve-dir "^1.0.1"
 
+flag-icon-css@^3.2.1:
+  version "3.4.5"
+  resolved "https://registry.yarnpkg.com/flag-icon-css/-/flag-icon-css-3.4.5.tgz#584d618563034e69cb9a5b7a7c8477ec8c029a49"
+  dependencies:
+    opencollective-postinstall "2.0.2"
+
 flush-write-stream@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/flush-write-stream/-/flush-write-stream-1.0.3.tgz#c5d586ef38af6097650b49bc41b55fabb19f35bd"
@@ -2320,6 +2421,10 @@ follow-redirects@^1.0.0, follow-redirects@^1.3.0:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.6.1.tgz#514973c44b5757368bad8bddfe52f81f015c94cb"
   dependencies:
     debug "=3.1.0"
+
+font-awesome@4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
 
 for-in@^0.1.3:
   version "0.1.8"
@@ -2590,7 +2695,7 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-he@1.2.x:
+he@1.2.x, he@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
 
@@ -3051,9 +3156,13 @@ isobject@^3.0.0, isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
 
-jquery@^3.2:
+jquery@3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
+
+"jquery@^1.8.3 || ^2.0 || ^3.0":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
 
 js-levenshtein@^1.1.3:
   version "1.1.6"
@@ -3068,8 +3177,8 @@ js-tokens@^3.0.2:
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
 
 js-yaml@^3.12.0, js-yaml@^3.9.0:
-  version "3.12.1"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.1.tgz#295c8632a18a23e054cf5c9d3cecafe678167600"
+  version "3.13.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
@@ -3176,6 +3285,10 @@ laravel-mix@^4.0.7:
     webpack-merge "^4.1.0"
     webpack-notifier "^1.5.1"
     yargs "^12.0.5"
+
+laravel-vue-pagination@^2.2.0:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/laravel-vue-pagination/-/laravel-vue-pagination-2.3.1.tgz#15d04db3f67a6a203077dbbe6f9aeb3cf6bffa3c"
 
 last-call-webpack-plugin@^3.0.0:
   version "3.0.0"
@@ -3549,6 +3662,16 @@ mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
+moment-timezone@^0.4.0:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.4.1.tgz#81f598c3ad5e22cdad796b67ecd8d88d0f5baa06"
+  dependencies:
+    moment ">= 2.6.0"
+
+"moment@>= 2.6.0", moment@^2.10, moment@^2.10.2:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
@@ -3624,6 +3747,10 @@ no-case@^2.2.0:
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.2.tgz#60b813396be39b3f1288a4c1ed5d1e7d28b464ac"
   dependencies:
     lower-case "^1.1.1"
+
+node-fetch@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
 
 node-forge@0.7.5:
   version "0.7.5"
@@ -3748,6 +3875,10 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
+numeral@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/numeral/-/numeral-2.0.6.tgz#4ad080936d443c2561aed9f2197efffe25f4e506"
+
 object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
@@ -3821,6 +3952,10 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
   dependencies:
     wrappy "1"
+
+opencollective-postinstall@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
 
 opn@^5.1.0:
   version "5.4.0"
@@ -3928,6 +4063,16 @@ p-try@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.0.0.tgz#85080bb87c64688fa47996fe8f7dfbe8211760b1"
 
+pace-progress@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/pace-progress/-/pace-progress-1.0.2.tgz#fdc565c57dd91725a3167b360bf2578d3c3b548d"
+
+pace@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/pace/-/pace-0.0.4.tgz#d66405d5f5bc12d25441a6e26c878dbc69e77a77"
+  dependencies:
+    charm "~0.1.0"
+
 pako@~1.0.5:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.8.tgz#6844890aab9c635af868ad5fecc62e8acbba3ea4"
@@ -4024,6 +4169,19 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+pc-bootstrap4-datetimepicker@^4.17.50:
+  version "4.17.50"
+  resolved "https://registry.yarnpkg.com/pc-bootstrap4-datetimepicker/-/pc-bootstrap4-datetimepicker-4.17.50.tgz#6c609a0cc5021e968c11901b44c50eff86cdd8ca"
+  dependencies:
+    bootstrap "^4.0.0-beta.2"
+    jquery "^1.8.3 || ^2.0 || ^3.0"
+    moment "^2.10"
+    moment-timezone "^0.4.0"
+
+perfect-scrollbar@1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/perfect-scrollbar/-/perfect-scrollbar-1.4.0.tgz#5d014ef9775e1f43058a1dbae9ed1daf0e7091f1"
+
 pify@^2.0.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
@@ -4052,9 +4210,17 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-popper.js@^1.12:
-  version "1.14.6"
-  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.6.tgz#ab20dd4edf9288b8b3b6531c47c361107b60b4b0"
+popper.js@1.14.4:
+  version "1.14.4"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.4.tgz#8eec1d8ff02a5a3a152dd43414a15c7b79fd69b6"
+
+popper.js@^1.15.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.0.tgz#2e1816bcbbaa518ea6c2e15a466f4cb9c6e2fbb3"
+
+portal-vue@^2.1.6:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/portal-vue/-/portal-vue-2.1.6.tgz#a7d4790b14a79af7fd159a60ec88c30cddc6c639"
 
 portfinder@^1.0.9:
   version "1.0.20"
@@ -4540,6 +4706,10 @@ recast@~0.11.12:
     private "~0.1.5"
     source-map "~0.5.0"
 
+reflect-metadata@^0.1.10:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
+
 regenerate-unicode-properties@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/regenerate-unicode-properties/-/regenerate-unicode-properties-7.0.0.tgz#107405afcc4a190ec5ed450ecaa00ed0cafa7a4c"
@@ -4553,6 +4723,10 @@ regenerate@^1.2.1, regenerate@^1.4.0:
 regenerator-runtime@^0.12.0:
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
+
+regenerator-runtime@^0.13.2, regenerator-runtime@^0.13.3:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.3.tgz#7cf6a77d8f5c6f60eb73c5fc1955b2ceb01e6bf5"
 
 regenerator-transform@^0.13.3:
   version "0.13.3"
@@ -4653,6 +4827,10 @@ require-main-filename@^1.0.1:
 requires-port@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
+
+resize-observer-polyfill@^1.5.0:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
 
 resolve-cwd@^2.0.0:
   version "2.0.0"
@@ -4906,6 +5084,10 @@ shellwords@^0.1.1:
 signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
+
+simple-line-icons@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/simple-line-icons/-/simple-line-icons-2.4.1.tgz#b75bc5a0d87e530928c2ccda5735274bb256f234"
 
 simple-swizzle@^0.2.2:
   version "0.2.2"
@@ -5180,6 +5362,10 @@ svgo@^1.0.0:
     unquote "~1.1.1"
     util.promisify "~1.0.0"
 
+sweetalert2@7.x:
+  version "7.33.1"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-7.33.1.tgz#7e3534d2c2962f875f419cfea5d75ee526d65cd4"
+
 tapable@^1.0.0, tapable@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-1.1.1.tgz#4d297923c5a72a42360de2ab52dadfaaec00018e"
@@ -5436,6 +5622,10 @@ uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
+v-autocomplete@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/v-autocomplete/-/v-autocomplete-1.8.2.tgz#966c7b3eda2c74dd683911114a20284cd096961f"
+
 v8-compile-cache@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.0.2.tgz#a428b28bb26790734c4fc8bc9fa106fccebf6a6c"
@@ -5454,9 +5644,44 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+vue-autofocus-directive@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/vue-autofocus-directive/-/vue-autofocus-directive-1.0.4.tgz#01f29d0440461f38c2226d7c8a7b1ad855293b5b"
+  dependencies:
+    "@babel/runtime" "^7.4.5"
+
+vue-bootstrap-datetimepicker@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/vue-bootstrap-datetimepicker/-/vue-bootstrap-datetimepicker-5.0.1.tgz#ea127ba9341a7d35b57942602cafc51226119a45"
+  dependencies:
+    pc-bootstrap4-datetimepicker "^4.17.50"
+
+vue-bootstrap-typeahead@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/vue-bootstrap-typeahead/-/vue-bootstrap-typeahead-0.2.6.tgz#8c1999a00bf4bf9fc906bae3a462482482cbc297"
+  dependencies:
+    resize-observer-polyfill "^1.5.0"
+    vue "^2.5.17"
+
+vue-class-component@^6.0.0, vue-class-component@^6.1.0:
+  version "6.3.2"
+  resolved "https://registry.yarnpkg.com/vue-class-component/-/vue-class-component-6.3.2.tgz#e6037e84d1df2af3bde4f455e50ca1b9eec02be6"
+
+vue-functional-data-merge@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-3.1.0.tgz#08a7797583b7f35680587f8a1d51d729aa1dc657"
+
 vue-hot-reload-api@^2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.1.tgz#b2d3d95402a811602380783ea4f566eb875569a2"
+
+vue-html-to-paper@^1.0.3:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/vue-html-to-paper/-/vue-html-to-paper-1.1.1.tgz#dd6865500e6b25471e0558bee9f413c262d06230"
+
+vue-js-toggle-button@^1.3.1:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/vue-js-toggle-button/-/vue-js-toggle-button-1.3.3.tgz#d603089039e41d45e607355ad2e0478c6a52aceb"
 
 vue-loader@^15.4.2:
   version "15.6.2"
@@ -5468,6 +5693,37 @@ vue-loader@^15.4.2:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-loading-template@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/vue-loading-template/-/vue-loading-template-1.3.2.tgz#2f7bd7ae5735c47029e8f1ed774ed45970897775"
+  dependencies:
+    vue "^2.5.16"
+    vue-class-component "^6.0.0"
+    vue-property-decorator "^6.0.0"
+
+vue-multiselect@^2.1.6:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/vue-multiselect/-/vue-multiselect-2.1.6.tgz#5be5d811a224804a15c43a4edbb7485028a89c7f"
+
+vue-property-decorator@^6.0.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-6.1.0.tgz#ef97bcc1bfe794ec060133ca04a5aca02e808828"
+  dependencies:
+    reflect-metadata "^0.1.10"
+    vue-class-component "^6.1.0"
+
+vue-router@^3.0.2:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.1.3.tgz#e6b14fabc0c0ee9fda0e2cbbda74b350e28e412b"
+
+vue-simple-spinner@^1.2.8:
+  version "1.2.8"
+  resolved "https://registry.yarnpkg.com/vue-simple-spinner/-/vue-simple-spinner-1.2.8.tgz#638249e9b25b43424ff906c14f1b7c7ed441ce9d"
+
+vue-snotify@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/vue-snotify/-/vue-snotify-3.2.1.tgz#1e093838b67ecb4141d6227b6b19175735f4e259"
+
 vue-style-loader@^4.1.0:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.2.tgz#dedf349806f25ceb4e64f3ad7c0a44fba735fcf8"
@@ -5475,13 +5731,34 @@ vue-style-loader@^4.1.0:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
+vue-sweetalert2@^1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/vue-sweetalert2/-/vue-sweetalert2-1.6.4.tgz#64ea097d9cdb60d2321f74df7d142112a224de1c"
+  dependencies:
+    sweetalert2 "7.x"
+
+vue-template-compiler@^2.5.22:
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.6.10.tgz#323b4f3495f04faa3503337a82f5d6507799c9cc"
+  dependencies:
+    de-indent "^1.0.2"
+    he "^1.1.0"
+
 vue-template-es2015-compiler@^1.6.0:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.8.2.tgz#dd73e80ba58bb65dd7a8aa2aeef6089cf6116f2a"
 
+vue@^2.5.16:
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
+
 vue@^2.5.17:
   version "2.5.22"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.22.tgz#3bf88041af08b8539c37b268b70ca79245e9cc30"
+
+vuelidate@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/vuelidate/-/vuelidate-0.7.4.tgz#5a0e54be09ac0192f1aa3387d74b92e0945bf8aa"
 
 watchpack@^1.5.0:
   version "1.6.0"
