@@ -145,7 +145,7 @@ class PoController extends Controller
                         $res[$value['kd_barang'].'-'.$value['nama_rak']]['rak']=$value['rak'];
                         $res[$value['kd_barang'].'-'.$value['nama_rak']]['dos']+=$value['dos'];
                         $res[$value['kd_barang'].'-'.$value['nama_rak']]['pcs']+=$value['pcs'];
-                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['total_pcs']+=$value['total_pcs'];
+                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['total_pcs']+=$value['yg_diminta'];
                     }
 
 

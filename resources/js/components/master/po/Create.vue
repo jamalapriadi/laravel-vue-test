@@ -800,7 +800,7 @@ export default {
                                         dos:parseInt(response.data.list[a].dos),
                                         pcs:parseInt(response.data.list[a].pcs),
                                         yg_diminta:parseInt(response.data.list[a].yg_diminta),
-                                        total_pcs:parseInt(response.data.list[a].realisasi_total_pcs),
+                                        total_pcs:parseInt(response.data.list[a].jumlah_stok),
                                         // harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
                                         nama_rak:response.data.list[a].nama_rak,
                                         rak:response.data.list[a].rak_id
@@ -816,7 +816,7 @@ export default {
 
                         for(var a=0; a < this.state.listBarang.length; a++){
                             this.state.totalharga+=this.state.listBarang[a].harga;
-                            this.total_barang+=parseInt(this.state.listBarang[a].total_pcs);
+                            this.total_barang+=parseInt(this.state.listBarang[a].yg_diminta);
                         }
                         // console.log(this.state.total_barang);
                         this.hitunghutang();

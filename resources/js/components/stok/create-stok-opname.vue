@@ -47,8 +47,45 @@
                         </div>
                     </div>
                 </div>
-                
             </form>
+
+
+            <br>
+            <div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="" class="control-label">Kode / Nama barang</label>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <vue-bootstrap-typeahead v-model="carikodebarang" :data="listkodebarang" placeholder="Kode Barang..." @hit="getKodeBarang($event)" ref="kodebarang"/>
+                            </div>
+                            <div class="col-lg-6">
+                                <vue-bootstrap-typeahead v-autofocus v-model="carinamabarang" :data="listcaribarang" placeholder="Nama Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label for="" class="control-label">Rak</label>
+                        <multiselect v-model="barang.rak" :options="raks" placeholder="Cari Rak" label="nm" track-by="kd" @input="changeRak(barang.rak)"></multiselect>
+                        
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label for="" class="control-label">Stok</label>
+                        <input type="text" class="form-control" v-model="barang.stok">
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <div class="btn-group">
+                            <button v-on:click="saveBarang()" class="btn btn-primary" style="margin-top:25px;">
+                                <i class="fa fa-plus"></i>
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
             <table class="table table-striped">
@@ -137,17 +174,114 @@ export default {
             message:'',
             loading:false,
             listBarang:[],
-            lokasis:[]
+            lokasis:[],
+            carinamabarang:'',
+            carikodebarang:'',
+            listkodebarang:[],
+            listcaribarang:[],
+            raks:[],
+            barang:{
+                kode:'',
+                nama:'',
+                nama_rak:'',
+                rak:'',
+                stok:0
+            },
         }
     },
     watch: {
-        
+        carinamabarang: _.debounce(function(addr){
+            this.cariBarangByNama(addr);
+        }, 500),
+
+        carikodebarang: _.debounce(function(q){
+            this.cariBarangByKode(q);
+        }, 500),
+
+
     },
     mounted() {
         this.getCode();
         this.getLokasi();
     },
     methods: {
+        async cariBarangByNama(query){
+            this.listcaribarang=[];
+            this.listCBarang=[];
+            let result=[];
+            axios.get('/data/cari-barang-by-nama?q='+query+'&lokasi='+this.state.lokasi)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listcaribarang.push(response.data[i].nm);
+
+                        this.listCBarang.push(
+                            {
+                                kd:response.data[i].kd,
+                                nm:response.data[i].nm,
+                                pcs:response.data[i].pcs
+                            }
+                        );
+                    }
+                })
+        },
+
+        async cariBarangByKode(q){
+            this.listkodebarang=[];
+            this.listCBarang=[];
+            axios.get('/data/cari-barang-by-nama?kode='+q+'&lokasi='+this.state.lokasi)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listkodebarang.push(response.data[i].kd);
+
+                        this.listCBarang.push(
+                            {
+                                kd:response.data[i].kd,
+                                nm:response.data[i].nm,
+                                pcs:response.data[i].pcs
+                            }
+                        );
+                    }
+                })
+        },
+
+        getKodeBarang(item){
+            let unique = [...new Set(this.listCBarang)]; 
+            var nama="";
+            var pcs=0;
+            
+            for(var i=0; i< unique.length; i++){
+                if(unique[i].kd == item){
+                    nama=unique[i].nm;
+                    pcs=unique[i].pcs;
+                }
+            }
+
+            this.barang.kode=item;
+            this.barang.nama=nama;
+            this.barang.stok=0;
+            this.hasilpcs=pcs;
+            this.$refs.namabarang.inputValue = nama;
+        },
+
+        getNamaBarang(item){
+            let unique = [...new Set(this.listCBarang)]; 
+            var nama="";
+            var pcs=0;
+            
+            for(var i=0; i< unique.length; i++){
+                if(unique[i].nm == item){
+                    nama=unique[i].kd;
+                    pcs=unique[i].pcs;
+                }
+            }
+
+            this.barang.nama=item;
+            this.barang.kode=nama;
+            this.barang.stok=0;
+            this.hasilpcs=pcs;
+            this.$refs.kodebarang.inputValue = nama
+        },
+
         getCode(){
             axios.get('/data/autonumber-stok-opname')
                 .then(response => {
@@ -163,13 +297,24 @@ export default {
         },
 
         changeLokasi(){
-            axios.get('/data/stok-opname-by-lokasi/'+this.state.lokasi)
+            // axios.get('/data/stok-opname-by-lokasi/'+this.state.lokasi)
+            //     .then(response => {
+            //         // this.raks=response.data;
+            //         this.state.listBarang=response.data;
+            //     })
+            axios.get('/data/list-rak?lokasi='+this.state.lokasi)
                 .then(response => {
-                    // this.raks=response.data;
-                    this.state.listBarang=response.data;
+                    this.raks=response.data;
                 })
         },
 
+        changeRak(rak){
+            console.log(rak.kd)
+            axios.get('/data/cek-stok-by-rak/'+rak.kd+'?barang='+this.barang.kode)  
+                .then(response => {
+                    this.barang.stok=response.data
+                })
+        },
         
         saveProgram(){
             if(this.state.kode==""){

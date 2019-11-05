@@ -133,6 +133,9 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('list-jenis-customer','Master\JeniscustomerController@list_jenis_customer');
     Route::get('print-order/{id}','Master\OrderController@print_order');
 
+    Route::get('cari-stok-by-barang/{id}','Master\BarangController@cari_stok_by_barang');
+    Route::get('cek-stok-by-rak/{id}','Master\BarangController@cek_stok_barang_by_rak');
+
     Route::group(['prefix'=>'laporan'],function(){
         Route::get('penjualan','Master\LaporanController@laporan_penjualan');
         Route::get('per-sales','Master\LaporanController@laporan_penjualan_per_sales');

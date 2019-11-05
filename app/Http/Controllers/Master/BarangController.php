@@ -660,4 +660,31 @@ class BarangController extends Controller
             'kurang'=>$barang_sisa
         );
     }
+
+    public function cari_stok_by_barang(Request $request, $id)
+    {
+        $stok=\App\Models\Stok::where('kd_brg',$id)
+            ->get();
+
+        if(count($stok)>0){
+            return array(
+                'success'=>true,
+                'lis'=>$stok[0]
+            );
+        }else{
+            return array(
+                'success'=>false,
+                'lis'=>array()
+            );
+        }
+    }
+
+    public function cek_stok_barang_by_rak(Request $request, $id)
+    {
+        $stok=\App\Models\Stok::where('rak_id',$id)
+            ->where('kd_brg',$request->input('barang'))
+            ->sum('pcs');
+
+        return $stok;
+    }
 }

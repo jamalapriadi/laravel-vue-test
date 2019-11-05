@@ -93,30 +93,33 @@
                     </table>
 
                     <br>
-                        <a href="#" class="btn btn-primary" v-show="tambah == false" @click="tambahItem">
-                            <i class="fa fa-plus"></i> Add New 
-                        </a>
+                    <a class="btn btn-primary text-white" v-show="tambah == false" @click="tambahItem">
+                        <i class="fa fa-plus"></i> Add New 
+                    </a>
 
-                        <div v-show="tambah == true">
+                    <div v-show="tambah == true">
+                        <fieldset>
+                            <legend>Tambah Barang</legend>
+                            
                             <div class="row">
                                 <div class="form-group col-md-3">
                                     <label for="" class="control-label">Nama Barang</label>
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <vue-bootstrap-typeahead v-model="carinamabarang" :data="listcaribarang" placeholder="Cari Barang..." @hit="getNamaBarang($event)" ref="namabarang"/>
-                                            stok <strong>{{barang.stok}}</strong> PCS
+                                            stok <strong>{{newbarang.stok}}</strong> PCS
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group col-md-2">
                                     <label for="" class="control-label">Dos</label>
-                                    <input type="text" class="form-control" v-model="barang.dos" @keyup.enter="changeDos" @input="hitungTotal($event)">
+                                    <input type="text" class="form-control" v-model="newbarang.dos" @keyup.enter="changeDos" @input="hitungTotal($event)">
                                 </div>
 
                                 <div class="form-group col-md-2">
                                     <label for="" class="control-label">PCS</label>
-                                    <input type="text" class="form-control" v-model="barang.pcs" @keyup.enter="changePcs(barang.pcs)" @input="hitungTotalPcs($event)">
+                                    <input type="text" class="form-control" v-model="newbarang.pcs" @keyup.enter="changePcs(newbarang.pcs)" @input="hitungTotalPcs($event)">
                                     <p>
                                         <small>
                                             {{hasilpcs}} jumlah per 1 dos
@@ -126,7 +129,7 @@
 
                                 <div class="form-group col-md-2">
                                     <label for="" class="control-label">Total Pcs</label>
-                                    <input type="text" class="form-control" v-model="barang.total_pcs" readonly>
+                                    <input type="text" class="form-control" v-model="newbarang.total_pcs" readonly>
                                 </div>
 
 
@@ -137,13 +140,14 @@
                                             Add
                                         </button>
 
-                                        <a @click="showModal" class="btn btn-info text-white" style="margin-top:25px;">
-                                            <i class="fa fa-list"></i> List Barang
+                                        <a @click="batalTambahBarang" class="btn btn-info text-white" style="margin-top:25px;">
+                                            <i class="fa fa-cancel"></i> Batal
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </fieldset>
+                    </div>
 
                         
                     <br><br>
@@ -398,6 +402,12 @@ import Multiselect from 'vue-multiselect'
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
 import uniq from 'lodash/uniq'
 
+var numeral = require("numeral");
+
+Vue.filter("formatNumber", function (value) {
+    return numeral(value).format("0,0"); // displaying other groupings/separators is possible, look at the docs
+});
+
 
 export default {
     components: {
@@ -520,6 +530,21 @@ export default {
                     }
                 }
             },
+            listcaribarang:[],
+            listCBarang:[],
+            carinamabarang:'',
+            newbarang:{
+                kode:'',
+                nama:'',
+                qty:'',
+                point:'',
+                dos:0,
+                pcs:0,
+                total_pcs:0,
+                harga:0,
+                stok:0
+            },
+            hasilpcs:0
         }
     },
     created(){
@@ -539,6 +564,10 @@ export default {
                 this.showData();
             }
         },
+
+        carinamabarang: _.debounce(function(addr){
+            this.cariBarangByNama(addr);
+        }, 500),
     },
     mounted() {
         this.getCode();
@@ -549,6 +578,74 @@ export default {
         // this.getLokasi();
     },
     methods: {
+        batalTambahBarang(){
+            this.tambah= false
+
+            this.newbarang={
+                kode:'',
+                nama:'',
+                qty:'',
+                point:'',
+                dos:0,
+                pcs:0,
+                total_pcs:0,
+                harga:0,
+                stok:0
+            }
+
+            this.$refs.namabarang.inputValue = ''
+        },
+        async cariBarangByNama(query){
+            this.listcaribarang=[];
+            this.listCBarang=[];
+            let result=[];
+            axios.get('/data/cari-barang-by-nama?q='+query+"&lokasi="+this.state.lokasiid)
+                .then(response => {
+                    for(var i=0; i< response.data.length; i++){
+                        this.listcaribarang.push(response.data[i].nm);
+
+                        this.listCBarang.push(
+                            {
+                                kd:response.data[i].kd,
+                                nm:response.data[i].nm,
+                                pcs:response.data[i].pcs,
+                                jual:response.data[i].jual,
+                                stok:response.data[i].stok
+                            }
+                        );
+                    }
+                })
+        },
+
+        getNamaBarang(item){
+            let unique = [...new Set(this.listCBarang)]; 
+            var nama="";
+            var pcs=0;
+            var jual=0;
+            var stok=0;
+            
+            for(var i=0; i< unique.length; i++){
+                if(unique[i].nm == item){
+                    nama=unique[i].kd;
+                    pcs=unique[i].pcs;
+                    jual=unique[i].jual;
+                    stok=unique[i].stok
+                }
+            }
+
+            this.newbarang.kode=nama;
+            this.newbarang.nama=item;
+            this.newbarang.pcs=pcs;
+            this.newbarang.dos=0;
+            this.newbarang.pcs=0;
+            this.newbarang.total_pcs=0;
+            this.newbarang.harga=jual;
+            this.hasilpcs=pcs;
+            this.newbarang.stok=stok;
+            // this.carinamabarang=nama;
+            // this.$refs.kodebarang.inputValue = nama
+        },
+
         rupiah(value) {
             let val = (value/1).toFixed().replace('.', ',')
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -936,55 +1033,102 @@ export default {
         },
 
         saveBarang(){
-            if(this.barang.kode==""){
+            if(this.newbarang.kode==""){
                 alert('Barang harus diisi');
 
                 return false;
             }
 
-            if(this.barang.nama==""){
+            if(this.newbarang.nama==""){
                 alert('Nama Barang harus diisi');
 
                 return false;
             }
 
-            if(this.barang.harga==""){
+            if(this.newbarang.harga==""){
                 alert('Harga barang harus diisi');
 
                 return false;
             }
 
-            if(this.barang.dos==""){
+            if(this.newbarang.dos==""){
                 alert('Dos harus diisi');
 
                 return false;
             }
 
-            if(this.barang.pcs==""){
+            if(this.newbarang.pcs==""){
                 alert('PCS harus diisi');
 
                 return false;
             }
 
-            if(this.barang.jumlah==""){
+            if(this.newbarang.jumlah==""){
                 alert('Jumlah harus diisi');
 
                 return false;
             }
 
+            axios.get('/data/cari-stok-by-barang/'+this.newbarang.kode)
+                .then(response => {
+                    if(response.data.success == true){
+                        this.hitungan.push(
+                            {
+                                kd_brg:this.newbarang.kode,
+                                nm:this.newbarang.nama,
+                                harga:this.newbarang.harga,
+                                jumlah:this.newbarang.total_pcs,
+                                dos:this.newbarang.dos,
+                                pcs:this.newbarang.pcs,
+                                diskon_persen:0,
+                                diskon_rupiah:0,
+                                subtotal:parseInt(this.newbarang.harga) * parseInt(this.newbarang.total_pcs)
+                            }
+                        )
 
-            this.state.listBarang.push(
-                {
-                    // kd_barang:this.barang.kode.kd,
-                    kd_barang:this.barang.kode,
-                    nm_barang:this.barang.nama,
-                    harga:this.barang.harga,
-                    dos:this.barang.dos,
-                    pcs:this.barang.pcs,
-                    diskon:this.barang.diskon,
-                    jumlah:this.barang.jumlah
-                }
-            );
+                        this.state.kodehit=[];
+                        this.state.doshit=[];
+                        this.state.pcshit=[];
+                        this.state.stokid=[];
+                        this.state.idstok=[];
+                        this.state.kodes=[];
+                        this.state.jumlah=[];
+                        this.state.jumlahhit=[];
+                        this.state.jualhit=[];
+                        this.state.subtotal=[];
+                        this.state.diskon_persen=[];
+                        this.state.diskon_rupiah=[];
+
+                        for(var c=0; c < this.hitungan.length; c++){
+                            this.state.kodehit.push(this.hitungan[c].kd_brg);
+                            this.state.doshit.push(this.hitungan[c].dos);
+                            this.state.pcshit.push(this.hitungan[c].pcs);
+                            this.state.jumlahhit[c]=this.hitungan[c].jumlah;
+                            this.state.jualhit[c]=this.hitungan[c].harga;
+                            this.state.subtotal[c]=parseFloat(this.hitungan[c].subtotal);
+                            this.state.diskon_persen[c]=0;
+                            this.state.diskon_rupiah[c]=0;
+                            // this.ubahJumlah(c);
+                        }
+
+                        this.batalTambahBarang()
+                    }
+                })
+
+
+            // this.state.listBarang.push(
+            //     {
+            //         // kd_barang:this.barang.kode.kd,
+            //         kd_barang:this.newbarang.kode,
+            //         nm_barang:this.newbarang.nama,
+            //         harga:this.newbarang.harga,
+            //         dos:this.newbarang.dos,
+            //         pcs:this.newbarang.pcs,
+            //         diskon:this.newbarang.diskon,
+            //         jumlah:this.newbarang.jumlah
+            //     }
+            // );
+            // console.log(this.state.listBarang)
 
             this.kosongBarang();
         },
@@ -1230,7 +1374,29 @@ export default {
                         alert('Internal server error');
                     }
                 })
-        }
+        },
+
+        hitungTotal(event){
+            if(this.newbarang.kode==""){
+                alert('Barang harus diisi');
+
+                return false;
+            }
+
+
+            this.newbarang.total_pcs=parseInt(this.newbarang.dos)*parseInt(this.hasilpcs) + parseInt(this.newbarang.pcs);
+        },
+
+        hitungTotalPcs(event){
+            if(this.newbarang.kode==""){
+                    alert('Barang harus diisi');
+
+                    return false;
+                }
+
+
+                this.newbarang.total_pcs=parseInt(this.newbarang.dos)*parseInt(this.hasilpcs) + parseInt(this.newbarang.pcs);
+        },
  
     },
     computed:{

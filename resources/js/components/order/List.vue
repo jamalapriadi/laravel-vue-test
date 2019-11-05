@@ -66,7 +66,7 @@
                             <!-- <td></td> -->
                             <td>{{l.ket}}</td>
                             <td>{{l.detail.length}}</td>
-                            <td>{{l.total}}</td>
+                            <td>{{l.total | formatNumber}}</td>
                             <td>
                                 <div class="btn-group">
                                     <router-link :to="{ name: 'orderDetail', params: {id: l.no_order}}" class="btn btn-info">
@@ -234,6 +234,12 @@
 
 <script>
     import { VueLoading } from 'vue-loading-template'
+
+    var numeral = require("numeral");
+
+    Vue.filter("formatNumber", function (value) {
+        return numeral(value).format("0,0"); // displaying other groupings/separators is possible, look at the docs
+    });
 
     export default {
         components: {
