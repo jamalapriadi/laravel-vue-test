@@ -393,7 +393,8 @@ class PickingController extends Controller
 
         $lis=\DB::select("select semua.kd_picking,semua.kd_brg, semua.nm, 
             semua.jual as harga,sum(semua.dos) as dos, sum(semua.pcs) as pcs,
-            sum(semua.total_pcs) as jumlah, sum(semua.total_harga) as subtotal
+            sum(semua.total_pcs) as jumlah, sum(semua.total_harga) as subtotal,
+            'old' as status
             from 
             (select a.kd_picking,a.kd_brg, a.kd_rak, b.nm, b.pcs as pcs_barang,a.dos, a.pcs,b.jual,
             (a.dos * b.pcs + a.pcs) as total_pcs,

@@ -455,7 +455,8 @@ export default {
                 jualhit:[],
                 jumlahhit:[],
                 idstok:[],
-                diskon_tambahan:0
+                diskon_tambahan:0,
+                status:[]
             },
             date: new Date(),
             options: {
@@ -486,7 +487,8 @@ export default {
                 dos:'',
                 pcs:'',
                 diskon_persen:'',
-                diskon_rupiah:''
+                diskon_rupiah:'',
+                status:'old'
             },
             listBarang:[],
             list:[],
@@ -544,7 +546,7 @@ export default {
                 harga:0,
                 stok:0
             },
-            hasilpcs:0
+            hasilpcs:0,
         }
     },
     created(){
@@ -694,6 +696,7 @@ export default {
             this.state.subtotal=[];
             this.state.diskon_persen=[];
             this.state.diskon_rupiah=[];
+            this.state.status=[]
 
             axios.get('/data/picking/'+this.state.kd_picking)
                 .then(response => {
@@ -724,6 +727,7 @@ export default {
                         this.state.subtotal[c]=parseFloat(this.hitungan[c].subtotal);
                         this.state.diskon_persen[c]=0;
                         this.state.diskon_rupiah[c]=0;
+                        this.state.status.push(this.hitungan[c].status);
                         // this.ubahJumlah(c);
                     }
 
@@ -1082,15 +1086,16 @@ export default {
                                 pcs:this.newbarang.pcs,
                                 diskon_persen:0,
                                 diskon_rupiah:0,
-                                subtotal:parseInt(this.newbarang.harga) * parseInt(this.newbarang.total_pcs)
+                                subtotal:parseInt(this.newbarang.harga) * parseInt(this.newbarang.total_pcs),
+                                status:'new'
                             }
                         )
 
                         this.state.kodehit=[];
                         this.state.doshit=[];
                         this.state.pcshit=[];
-                        this.state.stokid=[];
-                        this.state.idstok=[];
+                        // this.state.stokid=[];
+                        // this.state.idstok=[];
                         this.state.kodes=[];
                         this.state.jumlah=[];
                         this.state.jumlahhit=[];
@@ -1098,6 +1103,7 @@ export default {
                         this.state.subtotal=[];
                         this.state.diskon_persen=[];
                         this.state.diskon_rupiah=[];
+                        this.state.status=[]
 
                         for(var c=0; c < this.hitungan.length; c++){
                             this.state.kodehit.push(this.hitungan[c].kd_brg);
@@ -1108,6 +1114,7 @@ export default {
                             this.state.subtotal[c]=parseFloat(this.hitungan[c].subtotal);
                             this.state.diskon_persen[c]=0;
                             this.state.diskon_rupiah[c]=0;
+                            this.state.status.push(this.hitungan[c].status);
                             // this.ubahJumlah(c);
                         }
 

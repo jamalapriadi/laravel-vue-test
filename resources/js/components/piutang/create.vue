@@ -404,6 +404,7 @@ export default {
                         for(var a=0; a < response.data.data.length; a++){
                             this.nominal[a]=0;
                             this.keterangan[a]="";
+                            this.tanggal[a]=response.data.data[a].tgl
                         }
                     }
                 })

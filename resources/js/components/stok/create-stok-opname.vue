@@ -51,7 +51,7 @@
 
 
             <br>
-            <div>
+            <div v-if="state.lokasi">
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label for="" class="control-label">Kode / Nama barang</label>
@@ -72,8 +72,13 @@
                     </div>
 
                     <div class="form-group col-md-2">
-                        <label for="" class="control-label">Stok</label>
-                        <input type="text" class="form-control" v-model="barang.stok">
+                        <label for="" class="control-label">Qty Prog</label>
+                        <input type="number" class="form-control" v-model="barang.stok">
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label for="" class="control-label">Qty STO</label>
+                        <input type="number" class="form-control" v-model="barang.sto">
                     </div>
 
                     <div class="form-group col-md-2">
@@ -94,23 +99,24 @@
                         <th>No.</th>
                         <th>Kode Barang</th>
                         <th>Nama Barang</th>
-                        <th>Harga</th>
-                        <th>Kode Rak</th>
-                        <th>Qty STO</th>
+                        <!-- <th>Harga</th> -->
+                        <th>Rak</th>
                         <th>Qty Prog</th>
+                        <th>Qty SO</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(l,index) in state.listBarang" v-bind:key="index">
                         <td>{{ index+1 }}</td>
-                        <td>{{l.kd_brg}}</td>
-                        <td>{{l.nm}}</td>
-                        <td>{{l.harga}}</td>
-                        <td>{{l.rak_id}}</td>
-                        <td>{{l.qty_sto}}</td>
-                        <td>
+                        <td>{{l.kd_barang}}</td>
+                        <td>{{l.nm_barang}}</td>
+                        <!-- <td>{{l.harga}}</td> -->
+                        <td>{{l.rak}} - {{l.nama_rak}}</td>
+                        <td>{{l.stok}}</td>
+                        <td>{{l.sto}}</td>
+                        <!-- <td>
                             <input class="form-control" v-model="state.prog[index]">
-                        </td>
+                        </td> -->
                     </tr>
                 </tbody>
             </table>
@@ -185,7 +191,8 @@ export default {
                 nama:'',
                 nama_rak:'',
                 rak:'',
-                stok:0
+                stok:0,
+                sto:0
             },
         }
     },
@@ -314,6 +321,52 @@ export default {
                 .then(response => {
                     this.barang.stok=response.data
                 })
+        },
+
+        saveBarang(){
+            if(this.barang.kode==""){
+                alert('Barang harus diisi');
+
+                return false;
+            }
+
+            if(this.barang.nama==""){
+                alert('Nama Barang harus diisi');
+
+                return false;
+            }
+
+            if(this.barang.rak==""){
+                alert('Rak harus diisi');
+
+                return false;
+            }
+
+
+            this.state.listBarang.push(
+                {
+                    // kd_barang:this.barang.kode.kd,
+                    kd_barang:this.barang.kode,
+                    nm_barang:this.barang.nama,
+                    rak:this.barang.rak.kd,
+                    nama_rak:this.barang.rak.nm,
+                    stok:this.barang.stok,
+                    sto:this.barang.sto
+                }
+            );
+
+            this.kosongBarang();
+        },
+
+        kosongBarang(){
+            this.barang.kode='';
+            this.barang.nama='';
+            this.barang.rak='';
+            this.barang.stok=0;
+            this.barang.sto=0;
+            this.hasilpcs=0;
+            this.$refs.kodebarang.inputValue = '';
+            this.$refs.namabarang.inputValue = '';
         },
         
         saveProgram(){

@@ -54,7 +54,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        return $request->all();
+        // return $request->all();
         $rules=[
             'stokid'=>'required',
             'kode'=>'required',
@@ -76,6 +76,7 @@ class OrderController extends Controller
             );
         }else{
             $kode=$this->autonumber_order();
+            $lokasi=$request->input('lokasiid');
 
             $cus=new Order;
             $cus->no_order=$kode;
@@ -114,47 +115,127 @@ class OrderController extends Controller
             if($simpan){
                 if($request->has('kodehit')){
                     $ro=$request->input('kodehit');
+                    $status=$request->input('status');
 
                     foreach($ro as $key=>$val){
-                        $cekB=\App\Models\Barang::find($val);
+                        if($status[$key] == 'old'){
+                            $cekB=\App\Models\Barang::find($val);
 
-                        \DB::table('rorder')
-                            ->insert(
-                                [
-                                    'no_order'=>$kode,
-                                    'kd_brg'=>$val,
-                                    'dos'=>$request->input('doshit')[$key],
-                                    'pcs'=>$request->input('pcshit')[$key],
-                                    'hrg'=>$request->input('jualhit')[$key],
-                                    'diskon_persen'=>$request->input('diskon_persen')[$key],
-                                    'diskon_persen_2'=>$request->input('diskon_rupiah')[$key],
-                                    'subtotal'=>$request->input('subtotal')[$key],
-                                    'jumlah'=>$request->input('jumlahhit')[$key]
-                                ]
-                            );
+                            \DB::table('rorder')
+                                ->insert(
+                                    [
+                                        'no_order'=>$kode,
+                                        'kd_brg'=>$val,
+                                        'dos'=>$request->input('doshit')[$key],
+                                        'pcs'=>$request->input('pcshit')[$key],
+                                        'hrg'=>$request->input('jualhit')[$key],
+                                        'diskon_persen'=>$request->input('diskon_persen')[$key],
+                                        'diskon_persen_2'=>$request->input('diskon_rupiah')[$key],
+                                        'subtotal'=>$request->input('subtotal')[$key],
+                                        'jumlah'=>$request->input('jumlahhit')[$key]
+                                    ]
+                                );
 
-                        $total=($cekB->pcs * $request->input('doshit')[$key]) + $request->input('pcshit')[$key];
+                            $total=($cekB->pcs * $request->input('doshit')[$key]) + $request->input('pcshit')[$key];
 
-                        for($a=0;$a<count($program); $a++){
-                            foreach($program[$a]->detail as $key2=>$row2){
-                                if($row2->kd == $val && $total >= $row2->pivot->qty){
-                                    $point=$row2->pivot->point * round($total / $row2->pivot->qty);
-                                    
-                                    //simpan ke customer point
-                                    \DB::table('customer_point')
-                                        ->insert(
-                                            [
-                                                'customer_id'=>$request->input('kd_customer'),
-                                                'program_id'=>$program[$a]->nmr,
-                                                'no_order'=>$request->input('kode'),
-                                                'kd_barang'=>$val,
-                                                'point'=>$point,
-                                                'created_at'=>date('Y-m-d H:i:s'),
-                                                'updated_at'=>date('Y-m-d H:i:s')
-                                            ]
-                                        );
+                            for($a=0;$a<count($program); $a++){
+                                foreach($program[$a]->detail as $key2=>$row2){
+                                    if($row2->kd == $val && $total >= $row2->pivot->qty){
+                                        $point=$row2->pivot->point * round($total / $row2->pivot->qty);
+                                        
+                                        //simpan ke customer point
+                                        \DB::table('customer_point')
+                                            ->insert(
+                                                [
+                                                    'customer_id'=>$request->input('kd_customer'),
+                                                    'program_id'=>$program[$a]->nmr,
+                                                    'no_order'=>$request->input('kode'),
+                                                    'kd_barang'=>$val,
+                                                    'point'=>$point,
+                                                    'created_at'=>date('Y-m-d H:i:s'),
+                                                    'updated_at'=>date('Y-m-d H:i:s')
+                                                ]
+                                            );
+                                    }
                                 }
                             }
+                        }else{
+                            //cari stok barang  untuk barang yang tidak mempunyai stok id
+                            $newstok=\DB::select("select sum(pcs) as jml_stok from stok where kd_brg='".$val."' AND lokasi_id='".$lokasi."'");
+                            $newliststok=\DB::select("select * from stok  where kd_brg='".$val."' and pcs > 0  AND lokasi_id='".$lokasi."'");
+
+                            $final_total_diinput=(int)$request->input('jumlahhit')[$key];
+
+                            if(count($newstok) > 0){
+                                $stok_all = $newstok[0]->jml_stok;
+
+                                //bandingkan dulu qty dengan stok yang ada 
+                                if($final_total_diinput <= $stok_all){
+
+                                    //lakukan perulangan pada setiap list stok barang
+                                    foreach($newliststok as $new){
+                                        $lstok = $new->pcs;
+
+                                        //selama qty > 0 (belum habis) artinya stok pada list akan di eksekusi
+                                        if($final_total_diinput > 0){
+                                            $tmp=$final_total_diinput;
+
+                                            $final_total_diinput = $final_total_diinput-$lstok;
+
+                                            if($final_total_diinput > 0){
+                                                $stok_update = 0;
+                                            }else{
+                                                $stok_update = $final_total_diinput - $tmp;
+                                            }
+
+                                            $cekNewBarang=\App\Models\Barang::find($val);
+
+                                            if($final_total_diinput > 0){
+                                                $dosNewBarang=FLOOR($cekNewBarang->pcs/$final_total_diinput);
+                                                $pcsNewBarang=FLOOR($cekNewBarang->pcs % $final_total_diinput); 
+                                            }else{
+                                                $dosNewBarang=FLOOR($tmp/$cekNewBarang->pcs);
+                                                $pcsNewBarang=FLOOR($tmp % $cekNewBarang->pcs); 
+                                            }
+
+                                            $newTotal=($dosNewBarang * $cekNewBarang->pcs)+$pcsNewBarang;
+
+                                            \DB::table('rpicking')
+                                                ->insert(
+                                                    [
+                                                        'kd_picking'=>$request->input('kd_picking'),
+                                                        'kd_brg'=>$val,
+                                                        'kd_rak'=>$new->rak_id,
+                                                        'pdos'=>$request->input('doshit')[$key],
+                                                        'ppcs'=>$request->input('pcshit')[$key],
+                                                        'dos'=>$request->input('doshit')[$key],
+                                                        'pcs'=>$request->input('pcshit')[$key],
+                                                        'stok_id'=>$new->id
+                                                    ]
+                                                );
+
+                                            \DB::statement("UPDATE stok SET pcs = pcs-".$newTotal." 
+                                                where id='".$new->id."'");
+                                        }
+                                    }
+                                }
+                            }
+
+                            \DB::table('rorder')
+                                ->insert(
+                                    [
+                                        'no_order'=>$kode,
+                                        'kd_brg'=>$val,
+                                        'dos'=>$request->input('doshit')[$key],
+                                        'pcs'=>$request->input('pcshit')[$key],
+                                        'hrg'=>$request->input('jualhit')[$key],
+                                        'diskon_persen'=>$request->input('diskon_persen')[$key],
+                                        'diskon_persen_2'=>$request->input('diskon_rupiah')[$key],
+                                        'subtotal'=>$request->input('subtotal')[$key],
+                                        'jumlah'=>$request->input('jumlahhit')[$key]
+                                    ]
+                                );
+                            
                         }
                     }
                 }

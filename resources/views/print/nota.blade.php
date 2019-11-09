@@ -54,10 +54,12 @@
                     <label for="" class="control-label">Customer</label>
                     <div class="col-lg-9 col-md-9 col-sm-9">
                         {{$nota->picking->po->customer->nm}}
-                        <br>
-                        {{$nota->picking->po->customer->nm_toko}}
+                        {{-- <br>
+                        {{$nota->picking->po->customer->nm_toko}} --}}
                         <br>
                         {{$nota->picking->po->customer->alamat}}
+                        <br>
+                        {{$nota->picking->po->customer->tlpn}}
                     </div>
                 </div>
             </div>

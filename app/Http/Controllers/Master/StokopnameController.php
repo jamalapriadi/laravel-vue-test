@@ -78,7 +78,7 @@ class StokopnameController extends Controller
                     $prog=$request->input('prog');
 
                     foreach($listbarang as $key=>$val){
-                        if($prog[$key] > $val['qty_sto']){
+                        if($val['sto'] > $val['stok']){
                             $s=new Storing;
                             $s->no_storing=$this->autonumber_storing();
                             // $s->no_ref=request('no_ref');
@@ -88,8 +88,8 @@ class StokopnameController extends Controller
                             $simpanstoring=$s->save();
 
                             if($simpanstoring){
-                                $brg=\App\Models\Barang::find($val['kd_brg']);
-                                $sisa=$prog[$key]-$val['qty_sto'];
+                                $brg=\App\Models\Barang::find($val['kd_barang']);
+                                $sisa=$val['sto']-$val['stok'];
                                 $dos=round($sisa / $brg->pcs);
                                 $pcs=$sisa % $brg->pcs;
 
@@ -97,8 +97,8 @@ class StokopnameController extends Controller
                                     ->insert(
                                         [
                                             'no_storing'=>$s->no_storing,
-                                            'kd_brg'=>$val['kd_brg'],
-                                            'rak_id'=>$val['rak_id'],
+                                            'kd_brg'=>$val['kd_barang'],
+                                            'rak_id'=>$val['rak'],
                                             'dos'=>$dos,
                                             'pcs'=>$pcs
                                         ]
@@ -107,9 +107,9 @@ class StokopnameController extends Controller
                                 \DB::table('stok')
                                     ->insert(
                                         [
-                                            'kd_brg'=>$val['kd_brg'],
+                                            'kd_brg'=>$val['kd_barang'],
                                             'lokasi_id'=>request('lokasi'),
-                                            'rak_id'=>$val['rak_id'],
+                                            'rak_id'=>$val['rak'],
                                             'pcs'=>$sisa,
                                             'tgl'=>date('Y-m-d'),
                                             'created_at'=>date('Y-m-d H:i:s'),
@@ -117,11 +117,11 @@ class StokopnameController extends Controller
                                         ]
                                     );
                             }
-                        }else if($prog[$key] < $val['qty_sto']){
-                            $kurangnya = $val['qty_sto'] - $prog[$key];
+                        }else if($val['sto'] < $val['stok']){
+                            $kurangnya = $val['stok'] - $val['sto'];
 
                             $pilihstok=\DB::Table('stok')  
-                                ->where('kd_brg',$val['kd_brg'])
+                                ->where('kd_brg',$val['kd_barang'])
                                 ->where('lokasi_id',request('lokasi'))
                                 ->where('pcs','>',0)
                                 ->get();
@@ -151,12 +151,12 @@ class StokopnameController extends Controller
                             }
                         }else{
                             // \DB::Table('stok')
-                            //     ->where('kd_brg',$val['kd_brg'])
-                            //     ->where('rak_id',$val['rak_id'])
+                            //     ->where('kd_brg',$val['kd_barang'])
+                            //     ->where('rak_id',$val['rak'])
                             //     ->where('lokasi_id',request('lokasi'))
                             //     ->update(
                             //         [
-                            //             'pcs'=>$prog[$key]
+                            //             'pcs'=>$val['sto']
                             //         ]
                             //     );
                         }
@@ -165,10 +165,10 @@ class StokopnameController extends Controller
                             ->insert(
                                 [
                                     'no_so'=>request('kode'),
-                                    'kd_brg'=>$val['kd_brg'],
-                                    'rak_id'=>$val['rak_id'],
-                                    'qty_so'=>$val['qty_sto'],
-                                    'qty_prog'=>$prog[$key]
+                                    'kd_brg'=>$val['kd_barang'],
+                                    'rak_id'=>$val['rak'],
+                                    'qty_so'=>$val['stok'],
+                                    'qty_prog'=>$val['sto']
                                 ]
                             );
                     }
