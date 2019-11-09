@@ -172,7 +172,7 @@
                                     <input type="text" class="form-control" v-model="state.jualhit[index]"  @input="hitungJualHit($event,index)">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" v-model="state.jumlahhit[index]" readonly>
+                                    <input type="number" class="form-control" v-model="state.jumlahhit[index]">
                                 </td>
                                 <td>
                                     <div class="input-group">
@@ -228,19 +228,18 @@
                                 <router-link to="/list-picking" class="btn btn-default">
                                     <i class="fa fa-backward"></i> Back
                                 </router-link>
-
-                                <button class="btn btn-primary" v-on:click="saveProgram">
-                                    <i class="fa fa-save"></i>
-                                    Save
+                                <button class="btn btn-danger" v-on:click="batalOrder">
+                                    <i class="fa fa-trash"></i>
+                                    Batal
                                 </button>
                             </div>
                         </div>
 
                         <div class="col-lg-6">
                             <div class="float-right">
-                                <button class="btn btn-danger" v-on:click="batalOrder">
-                                    <i class="fa fa-trash"></i>
-                                    Batal
+                                <button class="btn btn-primary" v-on:click="saveProgram">
+                                    <i class="fa fa-save"></i>
+                                    Save
                                 </button>
                             </div>
                         </div>

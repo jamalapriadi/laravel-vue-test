@@ -204,8 +204,8 @@
                         <td>
                             <input type="date" class="form-control" v-model="tanggal[index]">
                         </td>
-                        <td>{{l.total}}</td>
-                        <td>{{l.sudah_dibayar}}</td>
+                        <td>{{l.total | formatNumber}}</td>
+                        <td>{{l.sudah_dibayar | formatNumber}}</td>
                         <td>
                             <input type="text" class="form-control" v-model="nominal[index]">
                         </td>
@@ -243,6 +243,12 @@ import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import Multiselect from 'vue-multiselect'
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
 import uniq from 'lodash/uniq'
+
+var numeral = require("numeral");
+
+Vue.filter("formatNumber", function (value) {
+    return numeral(value).format("0,0"); // displaying other groupings/separators is possible, look at the docs
+});
 
 export default {
     components: {
