@@ -373,8 +373,8 @@ class BarangController extends Controller
                 ->leftJoin('rak','rak.kd','=','stok.rak_id')
                 ->leftJoin('lokasi','lokasi.id','=','stok.lokasi_id')
                 ->select('brg.kd','brg.nm','brg.pcs','jual','merk_id','stok.rak_id',
-                \DB::raw("rak.nm as nama_rak"),
-                \DB::raw("lokasi.nm as nama_lokasi"),
+                    \DB::raw("rak.nm as nama_rak"),
+                    \DB::raw("lokasi.nm as nama_lokasi"),
                 'stok.lokasi_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"));
         }else{
             $barang=Barang::leftJoin('stok','stok.kd_brg','=','brg.kd')
@@ -550,6 +550,14 @@ class BarangController extends Controller
                                 $status='kurang';
                             }
 
+                            $yg_diminta_untuk_stok=($barang->pcs * $dos) + $pcs;
+
+                            if($yg_diminta_untuk_stok > $row->pcs){
+                                $jumlah_stok = $row->pcs;
+                            }else{
+                                $jumlah_stok=$yg_diminta_untuk_stok;
+                            }
+
                             $list[]=array(
                                 'success'=>true,
                                 'idstok'=>$row->id,
@@ -562,7 +570,7 @@ class BarangController extends Controller
                                 'lokasi_id'=>$row->lokasi_id,
                                 'rak_id'=>$row->rak_id,
                                 'nama_rak'=>$row->nama_rak,
-                                'jumlah_stok'=>$row->pcs,
+                                'jumlah_stok'=>$jumlah_stok,
                                 'status'=>$status,
                                 'yg_diminta'=>($barang->pcs * $dos) + $pcs,
                                 'realisasi_dosnya'=>$dos,

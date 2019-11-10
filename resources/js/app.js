@@ -42,6 +42,7 @@ import Snotify from 'vue-snotify';
 import VueHtmlToPaper from 'vue-html-to-paper';
 import LaravelPagination from 'laravel-vue-pagination'
 import autofocus from 'vue-autofocus-directive'
+import money from 'v-money'
 
 const options = {
   name: '_blank',
@@ -66,6 +67,7 @@ Vue.use(Autocomplete)
 Vue.use(ToggleButton)
 Vue.use(Snotify)
 Vue.use(VueHtmlToPaper, options);
+Vue.use(money, {precision: 4})
 Vue.directive('autofocus', autofocus)
 Vue.component('pagination', LaravelPagination);
 

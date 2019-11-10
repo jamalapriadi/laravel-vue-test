@@ -816,7 +816,7 @@ export default {
 
                         for(var a=0; a < this.state.listBarang.length; a++){
                             this.state.totalharga+=this.state.listBarang[a].harga;
-                            this.total_barang+=parseInt(this.state.listBarang[a].yg_diminta);
+                            this.total_barang+=parseInt(this.state.listBarang[a].total_pcs);
                         }
                         // console.log(this.state.total_barang);
                         this.hitunghutang();

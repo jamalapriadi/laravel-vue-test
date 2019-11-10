@@ -46,6 +46,7 @@
         "popper.js": "1.14.4",
         "simple-line-icons": "^2.4.1",
         "v-autocomplete": "^1.8.2",
+        "v-money": "^0.8.1",
         "vue-autofocus-directive": "^1.0.4",
         "vue-bootstrap-datetimepicker": "^5.0.1",
         "vue-bootstrap-typeahead": "^0.2.6",

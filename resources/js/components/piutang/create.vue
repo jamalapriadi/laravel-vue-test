@@ -207,7 +207,8 @@
                         <td>{{l.total | formatNumber}}</td>
                         <td>{{l.sudah_dibayar | formatNumber}}</td>
                         <td>
-                            <input type="text" class="form-control" v-model="nominal[index]">
+                            <!-- <input type="text" class="form-control" v-model="nominal[index]"> -->
+                            <money v-model="nominal[index]" v-bind="money"></money>
                         </td>
                         <td>
                             <input type="text" class="form-control" v-model="keterangan[index]">
@@ -243,6 +244,7 @@ import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import Multiselect from 'vue-multiselect'
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
 import uniq from 'lodash/uniq'
+import {Money} from 'v-money'
 
 var numeral = require("numeral");
 
@@ -255,7 +257,8 @@ export default {
         VueLoading,
         datePicker,
         Multiselect,
-        VueBootstrapTypeahead
+        VueBootstrapTypeahead,
+        Money
     },
     data() {
         return {
@@ -301,7 +304,15 @@ export default {
             listCnonota:[],
             nominal:[],
             keterangan:[],
-            tanggal:[]
+            tanggal:[],
+            money: {
+                decimal: ',',
+                thousands: '.',
+                // prefix: 'Rp. ',
+                // suffix: ' #',
+                precision: 0,
+                masked: false
+            }
             
         }
     },
@@ -361,13 +372,13 @@ export default {
             var bayar=this.detail.total;
 
             var sisa=this.detail.total;
-            if(this.state.detail.length>0){
-                for(var a=0; a<this.state.detail.length; a++){
-                    if(this.state.detail[a].no_order == l.no_order){
-                        this.state.detail.splice(a,1);
-                    }
-                }
-            }
+            // if(this.state.detail.length>0){
+            //     for(var a=0; a<this.state.detail.length; a++){
+            //         if(this.state.detail[a].no_order == l.no_order){
+            //             this.state.detail.splice(a,1);
+            //         }
+            //     }
+            // }
             
             // alert(sisa)
             

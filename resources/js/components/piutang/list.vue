@@ -51,8 +51,8 @@
                         <td>{{l.tgl}}</td>
                         <td>{{l.tgljt}}</td>
                         <td>{{l.sales_id}}</td>
-                        <td>{{l.total_hutang}}</td>
-                        <td>{{l.total_dibayar}}</td>
+                        <td>{{l.total_hutang | formatNumber}}</td>
+                        <td>{{l.total_dibayar | formatNumber}}</td>
                         <!-- <td>{{l.sisa_bayar}}</td>
                         <td>
                             <div v-if="l.sisa_bayar > 0">Belum Lunas</div>
@@ -80,6 +80,12 @@
 
 <script>
     import { VueLoading } from 'vue-loading-template'
+
+    var numeral = require("numeral");
+
+    Vue.filter("formatNumber", function (value) {
+        return numeral(value).format("0,0"); // displaying other groupings/separators is possible, look at the docs
+    });
 
     export default {
         components: {

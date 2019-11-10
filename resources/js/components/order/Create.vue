@@ -169,7 +169,8 @@
                                 <td>{{l.kd_brg}} / {{l.nm}}</td>
                                 <td>{{l.dos}} / {{l.pcs}}</td>
                                 <td>
-                                    <input type="text" class="form-control" v-model="state.jualhit[index]"  @input="hitungJualHit($event,index)">
+                                    <!-- <input type="text" class="form-control" v-model="state.jualhit[index]"  @input="hitungJualHit($event,index)"> -->
+                                    <money v-model="state.jualhit[index]" v-bind="money" @input="hitungJualHit($event,index)"></money>
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="state.jumlahhit[index]">
@@ -196,6 +197,7 @@
                                 </td>
                                 <td>
                                     <input type="number" class="form-control" v-model="state.subtotal[index]" readonly>
+                                    <!-- <money v-model="state.subtotal[index]" v-bind="money"></money> -->
                                 </td>
                             </tr>
                         </tbody>
@@ -208,7 +210,8 @@
                                 <th colspan="7">DISKON</th>
                                 <!-- <th>Rp. {{rupiah(diskon)}}</th> -->
                                 <th>
-                                    <input class="form-control" v-model="state.diskon_tambahan" @input="hitungDiskonTambahan()">
+                                    <!-- <input class="form-control" v-model="state.diskon_tambahan" @input="hitungDiskonTambahan()"> -->
+                                    <money v-model="state.diskon_tambahan" v-bind="money" @input="hitungDiskonTambahan()"></money>
                                 </th>
                             </tr>
                             <tr>
@@ -250,7 +253,8 @@
             </div>
 
             <!-- SOURCE -->
-            <div id="printMe" style="margin-top:10px;display:none;">
+            <!-- print -->
+            <div id="printMe" style="margin-top:10px;display:none;size: landscape;">
                 <div class="container">
                     <br><br>
                     <div class="row">
@@ -293,10 +297,12 @@
                                 <label for="" class="control-label">Customer</label>
                                 <div class="col-lg-9 col-md-9">
                                     {{dataprint.customer.nm}}
-                                    <br>
-                                    {{dataprint.customer.nm_toko}}
+                                    <!-- <br>
+                                    {{dataprint.customer.nm_toko}} -->
                                     <br>
                                     {{dataprint.customer.alamat}}
+                                    <br>
+                                    {{dataprint.customer.tlpn}}
                                 </div>
                             </div>
                         </div>
@@ -319,11 +325,11 @@
                                     <td>{{l.nm}}</td>
                                     <td>{{l.pivot.dos}}</td>
                                     <td>{{l.pivot.pcs}}</td>
-                                    <td>{{l.pivot.hrg}}</td>
+                                    <td>{{l.pivot.hrg | formatNumber}}</td>
                                     <td>{{l.pivot.diskon_persen}} %</td>
                                     <td>{{l.pivot.diskon_persen_2}} %</td>
                                     <!-- <td>{{l.pivot.diskon_rupiah}}</td> -->
-                                    <td>{{l.pivot.subtotal}}</td>
+                                    <td>{{l.pivot.subtotal | formatNumber}}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -331,11 +337,11 @@
                                     <th rowspan="2">{{dataprint.update_at}}</th>
                                     <th rowspan="2">{{user.username}}</th>
                                     <th colspan="4">DISKON TAMBAHAN</th>
-                                    <th>{{dataprint.diskon_rupiah}}</th>
+                                    <th>{{dataprint.diskon_rupiah | formatNumber}}</th>
                                 </tr>
                                 <tr>
                                     <th colspan="4">TOTAL</th>
-                                    <th>{{dataprint.total}}</th>
+                                    <th>{{dataprint.total | formatNumber}}</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -400,6 +406,7 @@ import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 import Multiselect from 'vue-multiselect'
 import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
 import uniq from 'lodash/uniq'
+import {Money} from 'v-money'
 
 var numeral = require("numeral");
 
@@ -413,10 +420,19 @@ export default {
         VueLoading,
         datePicker,
         Multiselect,
-        VueBootstrapTypeahead 
+        VueBootstrapTypeahead,
+        Money 
     },
     data() {
         return {
+            money: {
+                decimal: ',',
+                thousands: '.',
+                // prefix: 'Rp. ',
+                // suffix: ' #',
+                precision: 0,
+                masked: false
+            },
             tambah:false,
             detailPicking:[],
             state: {
@@ -1303,10 +1319,10 @@ export default {
                         this.dataprint.detail = response.data.nota.detail;
                         // this.print();
 
-                        // this.$nextTick(() => {
-                        //     this.$htmlToPaper('printMe');
-                        // });
-                        window.open("/data/print-order/"+response.data.nota.no_order, "_blank");   
+                        this.$nextTick(() => {
+                            this.$htmlToPaper('printMe');
+                        });
+                        // window.open("/data/print-order/"+response.data.nota.no_order, "_blank");   
 
                         this.getCode();
                         this.getPicking();

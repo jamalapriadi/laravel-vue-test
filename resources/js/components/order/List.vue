@@ -77,12 +77,12 @@
                                         <i class="fa fa-trash text-white"></i>
                                     </a>
 
-                                    <!-- <a class="btn btn-success" v-on:click="cetak(l.no_order, index, l.nm)" v-bind:id="'cetak'+l.no_order">
-                                        <i class="fa fa-print text-white"></i>
-                                    </a> -->
-                                    <a class="btn btn-success" :href="'/data/print-order/'+l.no_order" target="_blank">
+                                    <a class="btn btn-success" v-on:click="cetak(l.no_order, index, l.nm)" v-bind:id="'cetak'+l.no_order">
                                         <i class="fa fa-print text-white"></i>
                                     </a>
+                                    <!-- <a class="btn btn-success" :href="'/data/print-order/'+l.no_order" target="_blank">
+                                        <i class="fa fa-print text-white"></i>
+                                    </a> -->
                                 </div>
                             </td>
                         </tr>
@@ -139,10 +139,12 @@
                                 <label for="" class="control-label">Customer</label>
                                 <div class="col-lg-9 col-md-9">
                                     {{dataprint.customer.nm}}
-                                    <br>
-                                    {{dataprint.customer.nm_toko}}
+                                    <!-- <br>
+                                    {{dataprint.customer.nm_toko}} -->
                                     <br>
                                     {{dataprint.customer.alamat}}
+                                    <br>
+                                    {{dataprint.customer.tlpn}}
                                 </div>
                             </div>
                         </div>
@@ -165,11 +167,11 @@
                                     <td>{{l.nm}}</td>
                                     <td>{{l.pivot.dos}}</td>
                                     <td>{{l.pivot.pcs}}</td>
-                                    <td>{{l.pivot.hrg}}</td>
+                                    <td>{{l.pivot.hrg | formatNumber}}</td>
                                     <td>{{l.pivot.diskon_persen}} %</td>
                                     <td>{{l.pivot.diskon_persen_2}} %</td>
                                     <!-- <td>{{l.pivot.diskon_rupiah}}</td> -->
-                                    <td>{{l.pivot.subtotal}}</td>
+                                    <td>{{l.pivot.subtotal | formatNumber}}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -177,11 +179,11 @@
                                     <th rowspan="2">{{dataprint.update_at}}</th>
                                     <th rowspan="2">{{user.username}}</th>
                                     <th colspan="4">DISKON TAMBAHAN</th>
-                                    <th>{{dataprint.diskon_rupiah}}</th>
+                                    <th>{{dataprint.diskon_rupiah | formatNumber}}</th>
                                 </tr>
                                 <tr>
                                     <th colspan="4">TOTAL</th>
-                                    <th>{{dataprint.total}}</th>
+                                    <th>{{dataprint.total | formatNumber}}</th>
                                 </tr>
                             </tfoot>
                         </table>
