@@ -525,4 +525,23 @@ class PickingController extends Controller
 
         return $newId;
     }
+
+    public function cari_barang_in_picking(Request $request,$id)
+    {
+        $picking=Picking::with('po')->find($id);
+        $lokasi=$request->input('lokasi');
+
+        $rpicking=\DB::table('rpicking as a')
+            ->leftJoin('stok as b','b.kd_brg','=','a.kd_brg')
+            ->leftJoin('brg as c','c.kd','=','a.kd_brg')
+            ->where('a.kd_picking',$id)
+            ->where('b.lokasi_id',$lokasi)
+            ->select(
+                'a.kd_brg',
+                'c.nm',
+                \DB::Raw("sum(b.pcs) as jml_stok")
+            )->get();
+
+        return $rpicking;
+    }
 }

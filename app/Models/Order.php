@@ -59,7 +59,26 @@ class Order extends Model
     }
 
     public function piutang(){
-        return $this->belongsToMany('App\Models\Piutang','rpiutang','no_piutang','no_order');
+        return $this->belongsToMany('App\Models\Piutang','rpiutang','no_order','no_piutang')
+            ->withPivot(
+                [
+                    'no_piutang',
+                    'jns_pembayaran',
+                    'bank',
+                    'no_cek_bg',
+                    'no_order',
+                    'tgl_jt_transfer',
+                    'nominal',
+                    'keterangan',
+                    'created_at',
+                    'updated_at'
+                ]
+            );
     }
+    
+
+    // public function rpiutang(){
+    //     return $this->hasMany('App\Models')
+    // }
 
 }

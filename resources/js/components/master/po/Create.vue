@@ -146,14 +146,26 @@
                         <td>{{l.dos}}</td>
                         <td>{{l.pcs}}</td>
                         <td>
-                            <!-- <ol v-if="l.rak.length > 0">
-                                <li v-for="(k,idx) in l.rak" v-bind:key="idx">{{k.rak}}</li>
-                            </ol> -->
-                            <label v-if="l.rak!=''">{{l.nama_rak}}</label>
-                            <label class="label label-info" v-else>Rak tidak ditemukan</label>
+                            <!-- <label v-if="l.rak!=''">{{l.nama_rak}}</label>
+                            <label class="label label-info" v-else>Rak tidak ditemukan</label> -->
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Rak</th>
+                                        <th>Stok</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(k,idx) in l.list" :key="idx">
+                                        <td>{{k.nama_rak}}</td>
+                                        <td>{{k.jumlah_stok}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </td>
-                        <td>{{l.yg_diminta}}</td>
                         <td>{{l.total_pcs}}</td>
+                        <td>{{l.stok}}</td>
                         <td>
                             <a @click="deleteBarang(index)" class="btn btn-danger text-white">
                                 <i class="fa fa-trash"></i>
@@ -370,7 +382,8 @@ export default {
                 kurang:[],
                 status_kurang:'Y',
                 tidakdistok:[],
-                tampil:[]
+                tampil:[],
+                asli:[] //untuk mendapatkan nilai inputan dari user
             },
             siapsimpan:true,
             raks:[],
@@ -787,45 +800,67 @@ export default {
                 return false;
             }
 
-            axios.get('/data/fifo-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs+'&lokasi='+this.state.lokasi)
-                .then(response => {
-                    if(response.data.success==true){
-                        if(response.data.list.length > 0){
-                            for(var a=0; a< response.data.list.length; a++){
-                                this.state.listBarang.push(
-                                    {
-                                        // kd_barang:this.barang.kode.kd,
-                                        kd_barang:response.data.list[a].kd,
-                                        nm_barang:response.data.list[a].nm,
-                                        dos:parseInt(response.data.list[a].dos),
-                                        pcs:parseInt(response.data.list[a].pcs),
-                                        yg_diminta:parseInt(response.data.list[a].yg_diminta),
-                                        total_pcs:parseInt(response.data.list[a].jumlah_stok),
-                                        // harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
-                                        nama_rak:response.data.list[a].nama_rak,
-                                        rak:response.data.list[a].rak_id
-                                    }
-                                );
-                            }
-                        }
-
-                        this.state.kurang=response.data.kurang
-
-                        this.state.totalharga=0;
-                        this.total_barang=0;
-
-                        for(var a=0; a < this.state.listBarang.length; a++){
-                            this.state.totalharga+=this.state.listBarang[a].harga;
-                            this.total_barang+=parseInt(this.state.listBarang[a].total_pcs);
-                        }
-                        // console.log(this.state.total_barang);
-                        this.hitunghutang();
-
-                        this.kosongBarang();
-                    }else{
-                        alert('silahkan lengkapi data');
+            axios.get('/data/fifo-barang/'+this.barang.kode,
+                {
+                    params:{
+                        dos: this.barang.dos,
+                        pcs: this.barang.pcs,
+                        lokasi: this.state.lokasi,
+                        total_pcs: this.barang.total_pcs,
+                        barang: this.barang
                     }
-                });
+                }
+            ).then(response => {
+                if(response.data.success==true){
+                    this.state.listBarang.push(response.data.barang)
+
+                    // if(response.data.list.length > 0){
+                    //     for(var a=0; a< response.data.list.length; a++){
+                    //         this.state.listBarang.push(
+                    //             {
+                    //                 // kd_barang:this.barang.kode.kd,
+                    //                 kd_barang:response.data.list[a].kd,
+                    //                 nm_barang:response.data.list[a].nm,
+                    //                 dos:parseInt(response.data.list[a].dos),
+                    //                 pcs:parseInt(response.data.list[a].pcs),
+                    //                 yg_diminta:parseInt(response.data.list[a].yg_diminta),
+                    //                 total_pcs:parseInt(response.data.list[a].jumlah_stok),
+                    //                 // harga:parseInt(this.barang.harga) * parseInt(this.barang.total_pcs),
+                    //                 nama_rak:response.data.list[a].nama_rak,
+                    //                 rak:response.data.list[a].rak_id
+                    //             }
+                    //         );
+                    //     }
+
+                    //     //simpan inputan asli dari user
+                    //     this.state.asli.push(
+                    //         {
+                    //             kd_barang: this.barang.kode,
+                    //             nm_barang: this.barang.nama,
+                    //             dos: this.barang.dos,
+                    //             pcs: this.barang.pcs,
+                    //             total_pcs : this.barang.total_pcs
+                    //         }
+                    //     )
+                    // }
+
+                    this.state.kurang=response.data.kurang
+
+                    this.state.totalharga=0;
+                    this.total_barang=0;
+
+                    for(var a=0; a < this.state.listBarang.length; a++){
+                        this.state.totalharga+=this.state.listBarang[a].harga;
+                        this.total_barang+=parseInt(this.state.listBarang[a].stok);
+                    }
+                    
+                    this.hitunghutang();
+
+                    this.kosongBarang();
+                }else{
+                    alert('silahkan lengkapi data');
+                }
+            });
 
             // axios.get('/data/fifo-barang/'+this.barang.kode+'?dos='+this.barang.dos+'&pcs='+this.barang.pcs+'&lokasi='+this.state.lokasi)
             //     .then(response => {

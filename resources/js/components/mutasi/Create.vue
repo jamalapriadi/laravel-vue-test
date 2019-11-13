@@ -378,7 +378,13 @@ export default {
             this.listcaribarang=[];
             this.listCBarang=[];
             let result=[];
-            axios.get('/data/cari-barang-by-nama-2?q='+query+"&rak="+this.state.rak_lama.kd)
+            axios.get('/data/cari-barang-by-nama-2',{
+                params:{
+                    q:query,
+                    rak:this.state.rak_lama.kd,
+                    lokasi:this.state.gudang_lama.id
+                }
+            })
                 .then(response => {
                     for(var i=0; i< response.data.length; i++){
                         this.listcaribarang.push(response.data[i].nm);
@@ -398,7 +404,13 @@ export default {
         async cariBarangByKode(q){
             this.listkodebarang=[];
             this.listCBarang=[];
-            axios.get('/data/cari-barang-by-nama-2?q='+q+"&rak="+this.state.rak_lama.kd)
+            axios.get('/data/cari-barang-by-nama-2',{
+                params:{
+                    q:query,
+                    rak:this.state.rak_lama.kd,
+                    lokasi:this.state.gudang_lama.id
+                }
+            })
                 .then(response => {
                     for(var i=0; i< response.data.length; i++){
                         this.listkodebarang.push(response.data[i].kd);

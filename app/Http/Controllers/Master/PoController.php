@@ -128,83 +128,88 @@ class PoController extends Controller
                 if($request->has('listBarang')){
                     $listbarang=request('listBarang');
 
-                    $res=array();
-                    foreach($listbarang as $value){
-                        $res[$value['kd_barang'].'-'.$value['nama_rak']]=array(
-                            'kd_barang'=>'',
-                            'rak'=>'',
-                            'dos'=>0,
-                            'pcs'=>0,
-                            'total_pcs'=>0
-                        );
-                    }
-
-                    
-                    foreach($listbarang as $value){
-                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['kd_barang']=$value['kd_barang'];
-                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['rak']=$value['rak'];
-                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['dos']+=$value['dos'];
-                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['pcs']+=$value['pcs'];
-                        $res[$value['kd_barang'].'-'.$value['nama_rak']]['total_pcs']+=$value['yg_diminta'];
-                    }
-
-
-                    foreach($res as $key=>$val){
-                        //cek stok
-                        $cksstok=\DB::select("SELECT SUM(a.pcs) AS stok FROM stok a
-                                WHERE a.kd_brg='".$val['kd_barang']."'
-                                AND a.lokasi_id='".request('lokasi')."'
-                                AND a.rak_id='".$val['rak']."'
-                                GROUP BY a.kd_brg");
-                        
-                        if($val['total_pcs'] > 0){
-                            $jumlah=$val['total_pcs'] * -1;        
-
-                            if(count($cksstok) > 0){
-                                if($cksstok[0]->stok > 0){
-                                    $selisih= $cksstok[0]->stok - $val['total_pcs'];
-    
-                                    if($selisih >= 0){
-                                        $jumlah=$val['total_pcs'];
-                                    }else{
-                                        $jumlah=$cksstok[0]->stok;
-                                    }
-                                }
-                            }
-                            
-                        }else{
-                            $jumlah=0;
-
-                            $updatePo=Po::find($kode);
-                            $updatePo->no_ref_po=$kode;
-                            $updatePo->save();
-                        }
-
-                        \DB::table('rpo')
+                    foreach($listbarang as $listbrg){
+                        \DB::table('po_detail_input')
                             ->insert(
                                 [
                                     'no_po'=>$kode,
-                                    'kd_brg'=>$val['kd_barang'],
-                                    'dos'=>$val['dos'],
-                                    'pcs'=>$val['pcs'],
-                                    'total_pcs'=>$val['total_pcs'],
-                                    'lokasi_id'=>request('lokasi'),
-                                    'rak_id'=>$val['rak'],
-                                    'jumlah'=>$jumlah
+                                    'kd_brg'=>$listbrg['kd_barang'],
+                                    'dos'=>$listbrg['dos'],
+                                    'pcs'=>$listbrg['pcs'],
+                                    'total_pcs'=>$listbrg['total_pcs'],
+                                    'kurangnya'=>$listbrg['kurang'],
+                                    'lokasi_id'=>request('lokasi')
                                 ]
                             );
 
-                        // $cksstok=\App\Models\Stok::find($request->input('idstok')[$key]);
-                        // if($cksstok!=null){
-                        //     if($cksstok->pcs > $totalpcnya){
-                        //         \DB::statement("UPDATE stok SET pcs = pcs-".$totalpcnya." 
-                        //             where id='".$request->input('idstok')[$key]."'");
-                        //     }else{
-                        //         $cksstok->pcs=0;
-                        //         $cksstok->save();
-                        //     }
-                        // }
+                        $res=array();
+                        foreach($listbrg['list'] as $value){
+                            $res[$value['kd'].'-'.$value['nama_rak']]=array(
+                                'kd_barang'=>'',
+                                'rak'=>'',
+                                'dos'=>0,
+                                'pcs'=>0,
+                                'total_pcs'=>0
+                            );
+                        }
+
+                        
+                        foreach($listbrg['list'] as $value){
+                            $res[$value['kd'].'-'.$value['nama_rak']]['kd_barang']=$value['kd'];
+                            $res[$value['kd'].'-'.$value['nama_rak']]['rak']=$value['rak_id'];
+                            $res[$value['kd'].'-'.$value['nama_rak']]['dos']+=$value['dos'];
+                            $res[$value['kd'].'-'.$value['nama_rak']]['pcs']+=$value['pcs'];
+                            $res[$value['kd'].'-'.$value['nama_rak']]['total_pcs']+=$value['yg_diminta'];
+                        }
+
+
+                        foreach($res as $key=>$val){
+                            //cek stok
+                            $cksstok=\DB::select("SELECT SUM(a.pcs) AS stok FROM stok a
+                                    WHERE a.kd_brg='".$val['kd_barang']."'
+                                    AND a.lokasi_id='".request('lokasi')."'
+                                    AND a.rak_id='".$val['rak']."'
+                                    GROUP BY a.kd_brg");
+                            
+                            if($val['total_pcs'] > 0){
+                                $jumlah=$val['total_pcs'] * -1;        
+
+                                if(count($cksstok) > 0){
+                                    if($cksstok[0]->stok > 0){
+                                        $selisih= $cksstok[0]->stok - $val['total_pcs'];
+        
+                                        if($selisih >= 0){
+                                            $jumlah=$val['total_pcs'];
+                                        }else{
+                                            $jumlah=$cksstok[0]->stok;
+                                        }
+                                    }
+                                }
+                                
+                            }else{
+                                $jumlah=0;
+
+                                $updatePo=Po::find($kode);
+                                $updatePo->no_ref_po=$kode;
+                                $updatePo->save();
+                            }
+
+                            \DB::table('rpo')
+                                ->insert(
+                                    [
+                                        'no_po'=>$kode,
+                                        'kd_brg'=>$val['kd_barang'],
+                                        'dos'=>$val['dos'],
+                                        'pcs'=>$val['pcs'],
+                                        'total_pcs'=>$val['total_pcs'],
+                                        'lokasi_id'=>request('lokasi'),
+                                        'rak_id'=>$val['rak'],
+                                        'jumlah'=>$jumlah
+                                    ]
+                                );
+                        }
                     }
+                    
                 }
 
                 if($request->has('kurang')){
@@ -353,6 +358,7 @@ class PoController extends Controller
         $po=Po::with(
             [
                 'detail',
+                'detailasli',
                 'customer',
                 'customer.kota',
                 'perusahaan',
@@ -439,6 +445,7 @@ class PoController extends Controller
         $po=Po::with(
             [
                 'detail',
+                'detailasli',
                 'detail.stok',
                 'customer',
                 'perusahaan',
@@ -610,11 +617,11 @@ class PoController extends Controller
                 (
                     SELECT a.id, a.kd_brg, b.nm,b.pcs AS pcs_per_dos,
                     SUM(a.pcs) AS jumlah_stok,
-                    (SELECT SUM(aa.total_pcs) FROM rpo aa WHERE aa.no_po='".$id."' AND aa.kd_brg=a.kd_brg GROUP BY a.kd_brg) AS yang_diminta,
-                    SUM(a.pcs) - (SELECT SUM(aa.total_pcs) FROM rpo aa WHERE aa.no_po='".$id."' AND aa.kd_brg=a.kd_brg GROUP BY a.kd_brg ) AS sisa
+                    (SELECT SUM(aa.total_pcs) FROM po_detail_input aa WHERE aa.no_po='".$id."' AND aa.kd_brg=a.kd_brg GROUP BY a.kd_brg) AS yang_diminta,
+                    SUM(a.pcs) - (SELECT SUM(aa.total_pcs) FROM po_detail_input aa WHERE aa.no_po='".$id."' AND aa.kd_brg=a.kd_brg GROUP BY a.kd_brg ) AS sisa
                     FROM stok a
                     LEFT JOIN brg b ON b.kd=a.kd_brg
-                    WHERE a.kd_brg IN (SELECT a.kd_brg FROM rpo a WHERE a.no_po='".$id."')
+                    WHERE a.kd_brg IN (SELECT a.kd_brg FROM po_detail_input a WHERE a.no_po='".$id."')
                     AND a.lokasi_id='".$po->lokasi_id."'
                     and a.pcs > 0
                     GROUP BY a.kd_brg

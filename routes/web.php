@@ -41,6 +41,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::resource('order','Master\OrderController');
     Route::post('cancel-order','Master\OrderController@cancel_order');
     Route::resource('picking','Master\PickingController');
+    Route::get('cari-barang-in-picking/{id}','Master\PickingController@cari_barang_in_picking');
     Route::resource('po','Master\PoController');
     Route::resource('program','Master\ProgramController');
     Route::resource('rak','Master\RakController');

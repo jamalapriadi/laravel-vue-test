@@ -338,6 +338,7 @@ class BarangController extends Controller
 
             $barang=Barang::leftJoin('stok','stok.kd_brg','=','brg.kd')
                 ->select('kd','nm','brg.pcs','jual','merk_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"))
+                ->where('stok.lokasi_id',$lokasi)
                 ->groupBy('kd');
         }else{
             $barang=Barang::select('kd','nm','pcs','jual','merk_id',\DB::raw("'0' as stok"));
@@ -370,20 +371,11 @@ class BarangController extends Controller
             $lokasi=request('lokasi');
 
             $barang=Barang::leftJoin('stok','stok.kd_brg','=','brg.kd')
-                ->leftJoin('rak','rak.kd','=','stok.rak_id')
-                ->leftJoin('lokasi','lokasi.id','=','stok.lokasi_id')
-                ->select('brg.kd','brg.nm','brg.pcs','jual','merk_id','stok.rak_id',
-                    \DB::raw("rak.nm as nama_rak"),
-                    \DB::raw("lokasi.nm as nama_lokasi"),
-                'stok.lokasi_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"));
+                ->select('kd','nm','brg.pcs','jual','merk_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"))
+                ->where('stok.lokasi_id',$lokasi)
+                ->groupBy('kd');
         }else{
-            $barang=Barang::leftJoin('stok','stok.kd_brg','=','brg.kd')
-                ->leftJoin('rak','rak.kd','=','stok.rak_id')
-                ->leftJoin('lokasi','lokasi.id','=','stok.lokasi_id')
-                ->select('brg.kd','brg.nm','brg.pcs','jual','merk_id','stok.rak_id',
-                \DB::raw("rak.nm as nama_rak"),
-                \DB::raw("lokasi.nm as nama_lokasi"),
-                'stok.lokasi_id',\DB::raw("IFNULL(SUM(stok.pcs),0) as stok"));
+            $barang=Barang::select('kd','nm','pcs','jual','merk_id',\DB::raw("'0' as stok"));
         }
 
         if($request->has('q')){
@@ -398,7 +390,7 @@ class BarangController extends Controller
             $barang=$barang->where('merk_id',$request->input('merk'));
         }
 
-        if($request->has('rak')){
+        if($request->has('rak') && $request->input('rak')!=""){
             $rak=request('rak');
             $barang=$barang->whereRaw("brg.kd in (select kd_brg from stok where rak_id=$rak)")
                 ->where('stok.rak_id',$rak);
@@ -506,6 +498,7 @@ class BarangController extends Controller
             $req_dos=request('dos');
             $req_pcs=request('pcs');
             $lokasi=request('lokasi');
+            $req_total_pcs=request('total_pcs');
 
             //jumlah pcs yang diminta
             $qty=($barang->pcs*$req_dos) + $req_pcs;
@@ -521,6 +514,14 @@ class BarangController extends Controller
             foreach($allstok as $row)
             {
                 $stok_all+=$row->pcs;
+            }
+
+            if($stok_all >= $total_pcsnya){
+                $tampil_stok_tersedia=$total_pcsnya;
+                $kurang_stok=0;
+            }else{
+                $kurang_stok=$total_pcsnya-$stok_all;
+                $tampil_stok_tersedia=$stok_all;
             }
 
             $list=array();
@@ -663,6 +664,18 @@ class BarangController extends Controller
 
         return array(
             'success'=>true,
+            'barang'=>array(
+                'kd_barang'=>$barang->kd,
+                'nm_barang'=>$barang->nm,
+                'pcs'=>$req_pcs,
+                'dos'=>$req_dos,
+                'harga'=>$barang->jual,
+                'total_pcs'=>$req_total_pcs,
+                'stok_asli'=>$stok_all,
+                'stok'=>$tampil_stok_tersedia,
+                'kurang'=>$kurang_stok,
+                'list'=>$list
+            ),
             'list'=>$list,
             'status_stok'=>$status_stok,
             'kurang'=>$barang_sisa

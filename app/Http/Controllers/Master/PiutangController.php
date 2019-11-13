@@ -65,7 +65,7 @@ class PiutangController extends Controller
             $p->tgl_pembayaran=date('Y-m-d',strtotime(request('tanggal')));
             $p->customer_id=request('customer');
             // $p->jenis=request('jenis');
-            $p->total_bayar=request('nominal');
+            $p->total_bayar=request('total');
             $p->keterangan=request('keterangan');
             $p->insert_user=auth()->user()->username;
             $p->update_user=auth()->user()->username;
@@ -85,7 +85,7 @@ class PiutangController extends Controller
                         \DB::table('rpiutang')
                             ->insert(
                                 [
-                                    'no_piutang'=>$request->input('kode'),
+                                    'no_piutang'=>$kode,
                                     'jns_pembayaran'=>$val['jns_pembayaran'],
                                     'bank'=>$val['bank'],
                                     'no_cek_bg'=>$val['no_cek_bg'],

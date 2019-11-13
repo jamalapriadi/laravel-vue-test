@@ -616,7 +616,7 @@ export default {
             this.listcaribarang=[];
             this.listCBarang=[];
             let result=[];
-            axios.get('/data/cari-barang-by-nama?q='+query+"&lokasi="+this.state.lokasiid)
+            axios.get('/data/cari-barang-in-picking/'+this.state.kd_picking+'?q='+query+"&lokasi="+this.state.lokasiid)
                 .then(response => {
                     for(var i=0; i< response.data.length; i++){
                         this.listcaribarang.push(response.data[i].nm);

@@ -123,7 +123,7 @@
                                 <td>{{ index + 1 }}</td>
                                 <td>{{l.nm}}</td>
                                 <td>{{l.dos}} Dos / {{l.pcs}} Pcs</td>
-                                <td>{{l.jumlah}}</td>
+                                <td>{{l.jumlah_stok}}</td>
                                 <td>
                                     <select name="rak" id="rak" class="form-control" v-model="state.rak[index]">
                                         <option value="" disabled selected>--Pilih Rak--</option>

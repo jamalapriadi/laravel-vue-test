@@ -31,6 +31,21 @@ class Po extends Model
             );
     }
 
+    public function detailasli(){
+        return $this->belongsToMany('App\Models\Barang','po_detail_input','no_po','kd_brg','no_po','kd')
+            ->withPivot(
+                [
+                    'no_po',
+                    'kd_brg',
+                    'dos',
+                    'pcs',
+                    'total_pcs',
+                    'lokasi_id',
+                    'kurangnya'
+                ]
+            );
+    }
+
     public function customer()
     {
         return $this->belongsTo('App\Models\Customer','customer_id','kd');
