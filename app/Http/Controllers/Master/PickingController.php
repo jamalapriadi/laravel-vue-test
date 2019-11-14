@@ -136,8 +136,25 @@ class PickingController extends Controller
                                 ->where('no_po',request('no_po'))
                                 ->delete();
 
+                            \DB::table('po_detail_input')
+                                ->where('no_po',request('no_po'))
+                                ->delete();
+
 
                             foreach($tambahan as $key=>$val){
+                                \DB::table('po_detail_input')
+                                    ->insert(
+                                        [
+                                            'no_po'=>request('no_po'),
+                                            'kd_brg'=>$val['kd_brg'],
+                                            'dos'=>$val['dos'],
+                                            'pcs'=>$val['pcs'],
+                                            'total_pcs'=>$val['total_pcs'],
+                                            'kurangnya'=>$val['total_pcs'],
+                                            'lokasi_id'=>$posekarang->lokasi_id
+                                        ]
+                                    );
+
                                 \DB::table('rpo')
                                     ->insert(
                                         [
@@ -528,18 +545,19 @@ class PickingController extends Controller
 
     public function cari_barang_in_picking(Request $request,$id)
     {
-        $picking=Picking::with('po')->find($id);
-        $lokasi=$request->input('lokasi');
+        $picking=Picking::with('po','detail')->find($id);
+        $lokasi=$picking->po->lokasi_id;
 
         $rpicking=\DB::table('rpicking as a')
-            ->leftJoin('stok as b','b.kd_brg','=','a.kd_brg')
-            ->leftJoin('brg as c','c.kd','=','a.kd_brg')
+            ->leftJoin('brg as b','b.kd','=','a.kd_brg')
+            ->leftJoin('stok as c','c.kd_brg','=','a.kd_brg')
             ->where('a.kd_picking',$id)
-            ->where('b.lokasi_id',$lokasi)
             ->select(
-                'a.kd_brg',
-                'c.nm',
-                \DB::Raw("sum(b.pcs) as jml_stok")
+                \DB::raw('a.kd_brg as kd'),
+                'b.nm',
+                'b.pcs',
+                'b.jual',
+                \DB::raw("sum(c.pcs) as stok")
             )->get();
 
         return $rpicking;

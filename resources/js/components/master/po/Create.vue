@@ -844,7 +844,19 @@ export default {
                     //     )
                     // }
 
-                    this.state.kurang=response.data.kurang
+                    if(response.data.kurang.length > 0){
+                        for(var a=0; a< response.data.kurang.length; a++){
+                            this.state.kurang.push(
+                                {
+                                    kd_brg: response.data.kurang[a].kd_brg,
+                                    nm: response.data.kurang[a].nm,
+                                    dos: response.data.kurang[a].dos,
+                                    pcs: response.data.kurang[a].pcs,
+                                    kurangnya: response.data.kurang[a].kurangnya
+                                }
+                            )   
+                        } 
+                    }
 
                     this.state.totalharga=0;
                     this.total_barang=0;

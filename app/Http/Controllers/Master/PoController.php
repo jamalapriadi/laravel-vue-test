@@ -232,6 +232,21 @@ class PoController extends Controller
 
                         if($simpan2){
                             foreach($kurang as $val){
+
+                                \DB::table('po_detail_input')
+                                    ->insert(
+                                        [
+                                            'no_po'=>$newPo->no_po,
+                                            'kd_brg'=>$val['kd_brg'],
+                                            'dos'=>$val['dos'],
+                                            'pcs'=>$val['pcs'],
+                                            'total_pcs'=>$val['kurangnya'],
+                                            'kurangnya'=>$val['kurangnya'],
+                                            'lokasi_id'=>request('lokasi')
+                                        ]
+                                    );
+
+
                                 \DB::table('rpo')
                                     ->insert(
                                         [
