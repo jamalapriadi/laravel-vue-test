@@ -31,42 +31,29 @@
                 <thead>
                     <tr>
                         <th width="5%">No.</th>
-                        <th>No. Order</th>
-                        <th>Kd. Picking</th>
-                        <th>Tgl</th>
-                        <th>Tgl Jatuh Tempo</th>
-                        <th>Sales</th>
-                        <th>Total Hutang</th>
+                        <th>No. Piutang</th>
+                        <th>Tgl. Pembayaran</th>
+                        <th>Customer</th>
                         <th>Total Bayar</th>
-                        <!-- <th>Sisa</th>
-                        <th></th> -->
                         <th width="17%"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(l, index) in list" v-bind:key="index">
+                    <tr v-for="(l, index) in list.data" v-bind:key="index">
                         <td>{{index+1}}</td>
-                        <td>{{l.no_order}}</td>
-                        <td>{{l.kd_picking}}</td>
-                        <td>{{l.tgl}}</td>
-                        <td>{{l.tgljt}}</td>
-                        <td>{{l.sales_id}}</td>
-                        <td>{{l.total_hutang | formatNumber}}</td>
-                        <td>{{l.total_dibayar | formatNumber}}</td>
-                        <!-- <td>{{l.sisa_bayar}}</td>
-                        <td>
-                            <div v-if="l.sisa_bayar > 0">Belum Lunas</div>
-                            <div v-if="l.sisa_bayar == 0">Lunas</div>
-                        </td> -->
+                        <td>{{l.no_piutang}}</td>
+                        <td>{{l.tgl_pembayaran}}</td>
+                        <td>{{l.customer.nm}}</td>
+                        <td>{{l.total_bayar}}</td>
                         <td>
                             <div class="btn-group">
-                                <router-link :to="{ name: 'piutangDetail', params: {id: l.no_order}}" class="btn btn-info">
+                                <router-link :to="{ name: 'piutangDetail', params: {id: l.no_piutang}}" class="btn btn-info">
                                     <i class="fa fa-list text-white"></i>
                                 </router-link>
 
-                                <!-- <a class="btn btn-danger" v-on:click="hapus(l.no_order, index, l.nm)" v-bind:id="'delete'+l.no_order">
+                                <a class="btn btn-danger" v-on:click="hapus(l.no_piutang, index)" v-bind:id="'delete'+l.no_piutang">
                                     <i class="fa fa-trash text-white"></i>
-                                </a> -->
+                                </a>
                             </div>
                         </td>
                     </tr>
@@ -148,7 +135,7 @@
                     })
             },
 
-            hapus(id,index,name){
+            hapus(id,index){
                 this.$swal({
                     title: 'Are you sure?',
                     text: 'You can\'t revert your action',

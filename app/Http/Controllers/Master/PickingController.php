@@ -48,6 +48,7 @@ class PickingController extends Controller
      */
     public function store(Request $request)
     {
+        return $request->all();
         $rules=[
             'kode'=>'required',
             'no_po'=>'required',

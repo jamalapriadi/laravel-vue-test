@@ -11,31 +11,39 @@ class PiutangController extends Controller
 {
     public function index(Request $request)
     {
-        $sql=\DB::select("SELECT 
-        b.no_po,
-        c.customer_id,
-        a.no_order,
-        a.kd_picking,
-        a.kd_trans,
-        a.tgl,
-        a.tgljt,
-        a.ket,
-        a.sales_id,
-        a.perusahaan_id,
-        a.total AS total_hutang,
-        IFNULL((
-            SELECT SUM(aa.total_bayar) FROM piutang aa
-            WHERE aa.customer_id=c.customer_id
-            GROUP BY aa.customer_id
-        ),0) AS total_dibayar
-        FROM orders a
-        LEFT JOIN picking b ON b.kd_picking=a.kd_picking
-        LEFT JOIN po c ON c.no_po=b.no_po
-        WHERE a.kd_trans='Kredit'
-        and a.perusahaan_id=".auth()->user()->perusahaan_id);
+        // $sql=\DB::select("SELECT 
+        // b.no_po,
+        // c.customer_id,
+        // a.no_order,
+        // a.kd_picking,
+        // a.kd_trans,
+        // a.tgl,
+        // a.tgljt,
+        // a.ket,
+        // a.sales_id,
+        // a.perusahaan_id,
+        // a.total AS total_hutang,
+        // IFNULL((
+        //     SELECT SUM(aa.total_bayar) FROM piutang aa
+        //     WHERE aa.customer_id=c.customer_id
+        //     GROUP BY aa.customer_id
+        // ),0) AS total_dibayar
+        // FROM orders a
+        // LEFT JOIN picking b ON b.kd_picking=a.kd_picking
+        // LEFT JOIN po c ON c.no_po=b.no_po
+        // WHERE a.kd_trans='Kredit'
+        // and a.perusahaan_id=".auth()->user()->perusahaan_id);
 
 
-        return $sql;
+        // return $sql;
+
+        $piutang=Piutang::with(
+            [
+                'customer'
+            ]
+        );
+
+        return $piutang->paginate(25);
     }
 
     public function store(Request $request)
@@ -138,7 +146,12 @@ class PiutangController extends Controller
 
     public function show(Request $request,$id)
     {
-        $p=Piutang::find($id);
+        $p=Piutang::with(
+            [
+                'customer',
+                'detail'
+            ]
+        )->find($id);
 
         return $p;
     }

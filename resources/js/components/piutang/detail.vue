@@ -2,42 +2,26 @@
     <div class="container">
         <div class="card card-accent-primary">
             <div class="card-header">
-                Detail Order
+                Detail Pembayaran Piutang
             </div>
             <div class="card-body">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>No. Order</th>
+                            <th>No. Piutang</th>
                             <th>{{state.kode}}</th>
                         </tr>
                         <tr>
-                            <th>Kd. Picking</th>
-                            <th>{{state.kd_picking}}</th>
-                        </tr>
-                        <tr>
                             <th>Tanggal</th>
-                            <th>{{state.tanggal}}</th>
+                            <th>{{state.tgl_pembayaran}}</th>
                         </tr>
                         <tr>
-                            <th>Kd. Trans</th>
-                            <th>{{state.kd_trans}}</th>
-                        </tr>
-                        <tr v-if="state.kd_trans=='Kredit'">
-                            <th>Tanggal Jatuh Tempo</th>
-                            <th>{{state.tanggaljt}}</th>
+                            <th>Customer</th>
+                            <th>{{state.customer.nm}}</th>
                         </tr>
                         <tr>
-                            <th>Sales</th>
-                            <th>{{state.sales}}</th>
-                        </tr>
-                        <tr>
-                            <th>Perusahaan</th>
-                            <th>{{state.perusahaan}}</th>
-                        </tr>
-                        <tr>
-                            <th>Total Hutang</th>
-                            <th>{{state.total}}</th>
+                            <th>Total Bayar</th>
+                            <th>{{state.total_bayar | formatNumber}}</th>
                         </tr>
                     </thead>
                 </table>
@@ -49,17 +33,21 @@
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>No. Pembayaran</th>
-                                    <th>Tgl. Pembayaran</th>
-                                    <th>Total</th>
+                                    <th>No. Order</th>
+                                    <th>Jenis Pembayaran</th>
+                                    <th>Bank</th>
+                                    <th>No. Cek</th>
+                                    <th>Nominal</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(l,index) in state.listBarang" v-bind:key="index">
                                     <td>{{index+1}}</td>
-                                    <td>{{l.no_piutang}}</td>
-                                    <td>{{l.tgl_pembayaran}}</td>
-                                    <td>{{l.total_bayar}}</td>
+                                    <td>{{l.no_order}}</td>
+                                    <td>{{l.pivot.jns_pembayaran}}</td>
+                                    <td>{{l.pivot.bank}}</td>
+                                    <td>{{l.pivot.no_cek_bg}}</td>
+                                    <td>{{l.pivot.nominal | formatNumber}}</td>
                                 </tr>
                             </tbody>
                             <!-- <tfoot>
@@ -87,6 +75,12 @@
 </template>
 
 <script>
+var numeral = require("numeral");
+
+Vue.filter("formatNumber", function (value) {
+    return numeral(value).format("0,0"); // displaying other groupings/separators is possible, look at the docs
+});
+
 export default {
     data() {
         return {
@@ -94,16 +88,10 @@ export default {
             url: window.location.origin + window.location.pathname,
             state: {
                 kode:'',
-                kd_picking:'',
-                nama: '',
+                tgl_pembayaran:'',
+                customer: {},
                 customer:'',
-                tanggal:new Date(),
-                tanggaljt:new Date(),
-                perusahaan:'',
-                keterangan:'',
-                lokasi:'',
-                sales:'',
-                kd_trans:'Tunai',
+                total_bayar:0,
                 listBarang:[]
             },
             message:'',
@@ -116,19 +104,31 @@ export default {
             let id= app.$route.params.id;
             this.kelompokId = id;
 
-            axios.get('/data/piutang-by-order/'+id)
+            // axios.get('/data/piutang-by-order/'+id)
+            //     .then(response => {
+            //         this.state.kode= response.data.no_order;
+            //         this.state.kd_picking=response.data.kd_picking;
+            //         this.state.customer= response.data.picking.po.customer.nm;
+            //         this.state.tanggal= response.data.tgl;
+            //         this.state.tanggaljt= response.data.tgljt;
+            //         this.state.sales= response.data.sales.nm;
+            //         this.state.perusahaan= response.data.perusahaan.nama;
+            //         this.state.keterangan= response.data.ket;
+            //         this.state.kd_trans= response.data.kd_trans;
+            //         this.state.listBarang= response.data.piutang;
+            //         this.state.total= response.data.total;
+            //     })
+            //     .catch( error => {
+            //         alert('data tidak dapat di load');
+            //     })
+
+            axios.get('/data/piutang/'+id)
                 .then(response => {
-                    this.state.kode= response.data.no_order;
-                    this.state.kd_picking=response.data.kd_picking;
-                    this.state.customer= response.data.picking.po.customer.nm;
-                    this.state.tanggal= response.data.tgl;
-                    this.state.tanggaljt= response.data.tgljt;
-                    this.state.sales= response.data.sales.nm;
-                    this.state.perusahaan= response.data.perusahaan.nama;
-                    this.state.keterangan= response.data.ket;
-                    this.state.kd_trans= response.data.kd_trans;
-                    this.state.listBarang= response.data.piutang;
-                    this.state.total= response.data.total;
+                    this.state.kode= response.data.no_piutang;
+                    this.state.tgl_pembayaran=response.data.tgl_pembayaran;
+                    this.state.customer= response.data.customer;
+                    this.state.total_bayar= response.data.total_bayar;
+                    this.state.listBarang= response.data.detail;
                 })
                 .catch( error => {
                     alert('data tidak dapat di load');
