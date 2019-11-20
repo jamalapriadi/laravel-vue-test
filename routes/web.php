@@ -96,6 +96,7 @@ Route::group(['prefix'=>'data','middleware'=>'auth'],function(){
     Route::get('list-picking-not-in-order','Master\PickingController@list_picking_not_in_order');
     Route::get('stok-dirak','Master\StoringController@stok_di_rak');
     Route::get('po-by-id/{id}','Master\PoController@po_by_id');
+    Route::post('cek-validasi-di-picking/{id}','Master\PickingController@cek_validasi_di_picking');
 
     Route::resource('piutang','Master\PiutangController');
     Route::get('piutang-by-order/{id}','Master\PiutangController@piutang_by_order');

@@ -563,4 +563,61 @@ class PickingController extends Controller
 
         return $rpicking;
     }
+
+    public function cek_validasi_di_picking(Request $request, $id)
+    {
+        $rules=[
+            'kode_barang'=>'required'
+        ];
+
+        $validasi=\Validator::make($request->all(), $rules);
+
+        if($validasi->fails()){
+            $data=array(
+                'success'=>false,
+                'message'=>'Validasi errors',
+                'errors'=>$validasi->errors()->all()
+            );
+        }else{
+            $kode_barang=$request->input('kode_barang');
+            $total_pcs=$request->input('total_pcs');
+            $hitungan=$request->input('hitungan');
+
+            foreach($hitungan as $row){
+                if($row['kd_brg'] == $kode_barang){
+                    $total_pcs+=$row['jumlah'];
+                }
+            }
+
+            //cek jumlah barang berdasarkan kd picking dan jml barang
+            $cekJumlahPicking=\DB::table('rpicking')
+                ->where('kd_picking',$id)
+                ->where('kd_brg',$kode_barang)
+                ->get();
+
+            $totalRPicking=0;
+            foreach($cekJumlahPicking as $row){
+                $brg=\App\Models\Barang::find($row->kd_brg);
+
+                $jum=($brg->pcs * $row->dos) + $row->pcs;
+
+                $totalRPicking+=$jum;
+            }
+
+            if($totalRPicking >= $total_pcs){
+                $data=array(
+                    'success'=>true,
+                    'message'=>'Can input',
+                    'list'=>$total_pcs
+                );
+            }else{
+                $data=array(
+                    'success'=>false,
+                    'message'=>'Jumlah Stok tidak sesuai'
+                );
+            }
+        }
+
+        return $data;
+    }
 }

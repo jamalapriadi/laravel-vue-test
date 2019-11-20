@@ -169,11 +169,11 @@
                                 <td>{{l.kd_brg}} / {{l.nm}}</td>
                                 <td>{{l.dos}} / {{l.pcs}}</td>
                                 <td>
-                                    <!-- <input type="text" class="form-control" v-model="state.jualhit[index]"  @input="hitungJualHit($event,index)"> -->
-                                    <money v-model="state.jualhit[index]" v-bind="money" @input="hitungJualHit($event,index)"></money>
+                                    <input type="text" class="form-control" v-model="state.jualhit[index]"  @input="hitungJualHit($event,index)">
+                                    <!-- <money v-model="state.jualhit[index]" v-bind="money" @input="hitungJualHit($event,index)"></money> -->
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" v-model="state.jumlahhit[index]">
+                                    <input type="number" class="form-control" v-model="state.jumlahhit[index]" @input="hitungJumlahHit($event,index)">
                                 </td>
                                 <td>
                                     <div class="input-group">
@@ -612,6 +612,7 @@ export default {
 
             this.$refs.namabarang.inputValue = ''
         },
+
         async cariBarangByNama(query){
             this.listcaribarang=[];
             this.listCBarang=[];
@@ -856,6 +857,10 @@ export default {
             this.total();
         },
 
+        hitungJumlahHit(event,index){
+            this.hitungan[index].jumlah=this.state.jumlahhit[index]
+        },
+
         hitungTotalRupiah(event, index){
             var jumlah=parseFloat(this.state.jumlahhit[index]);
             var harga=parseFloat(this.state.jualhit[index])
@@ -1076,19 +1081,17 @@ export default {
                 return false;
             }
 
-            if(this.newbarang.pcs==""){
-                alert('PCS harus diisi');
-
-                return false;
-            }
-
             if(this.newbarang.jumlah==""){
                 alert('Jumlah harus diisi');
 
                 return false;
             }
 
-            axios.get('/data/cari-stok-by-barang/'+this.newbarang.kode)
+            axios.post('/data/cek-validasi-di-picking/'+this.state.kd_picking,{
+                kode_barang:this.newbarang.kode,
+                total_pcs:this.newbarang.total_pcs,
+                hitungan:this.hitungan
+            })
                 .then(response => {
                     if(response.data.success == true){
                         this.hitungan.push(
@@ -1134,23 +1137,10 @@ export default {
                         }
 
                         this.batalTambahBarang()
+                    }else{
+                        alert(response.data.message)
                     }
                 })
-
-
-            // this.state.listBarang.push(
-            //     {
-            //         // kd_barang:this.barang.kode.kd,
-            //         kd_barang:this.newbarang.kode,
-            //         nm_barang:this.newbarang.nama,
-            //         harga:this.newbarang.harga,
-            //         dos:this.newbarang.dos,
-            //         pcs:this.newbarang.pcs,
-            //         diskon:this.newbarang.diskon,
-            //         jumlah:this.newbarang.jumlah
-            //     }
-            // );
-            // console.log(this.state.listBarang)
 
             this.kosongBarang();
         },
