@@ -604,16 +604,20 @@ class PickingController extends Controller
                 $totalRPicking+=$jum;
             }
 
-            if($totalRPicking >= $total_pcs){
+            if($totalRPicking == $total_pcs){
                 $data=array(
                     'success'=>true,
                     'message'=>'Can input',
-                    'list'=>$total_pcs
+                    'list'=>$total_pcs,
+                    'r_picking'=>$totalRPicking,
+                    'total_pcs'=>$total_pcs
                 );
             }else{
                 $data=array(
                     'success'=>false,
-                    'message'=>'Jumlah Stok tidak sesuai'
+                    'message'=>'Jumlah Stok tidak sesuai',
+                    'r_picking'=>$totalRPicking,
+                    'total_pcs'=>$total_pcs
                 );
             }
         }

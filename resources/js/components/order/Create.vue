@@ -114,12 +114,12 @@
 
                                 <div class="form-group col-md-2">
                                     <label for="" class="control-label">Dos</label>
-                                    <input type="text" class="form-control" v-model="newbarang.dos" @keyup.enter="changeDos" @input="hitungTotal($event)">
+                                    <input type="text" class="form-control" v-model="newbarang.dos" @keyup.enter="changeDos" @input="hitungTotalNewBarang($event)">
                                 </div>
 
                                 <div class="form-group col-md-2">
                                     <label for="" class="control-label">PCS</label>
-                                    <input type="text" class="form-control" v-model="newbarang.pcs" @keyup.enter="changePcs(newbarang.pcs)" @input="hitungTotalPcs($event)">
+                                    <input type="text" class="form-control" v-model="newbarang.pcs" @keyup.enter="changePcs(newbarang.pcs)" @input="hitungTotalPcsNewBarang($event)">
                                     <p>
                                         <small>
                                             {{hasilpcs}} jumlah per 1 dos
@@ -187,12 +187,12 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="number" class="form-control" v-model="state.diskon_rupiah[index]" @keyup.enter="ubahJumlahDiskonRupiah(index)" @input="hitungTotalRupiah($event, index)">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">
-                                                %
+                                                Rp.
                                             </span>
                                         </div>
+                                        <input type="number" class="form-control" v-model="state.diskon_rupiah[index]" @keyup.enter="ubahJumlahDiskonRupiah(index)" @input="hitungTotalRupiah($event, index)">
                                     </div>
                                 </td>
                                 <td>
@@ -858,7 +858,23 @@ export default {
         },
 
         hitungJumlahHit(event,index){
-            this.hitungan[index].jumlah=this.state.jumlahhit[index]
+            var jumlah=parseFloat(this.state.jumlahhit[index]);
+            var harga=parseFloat(this.state.jualhit[index])
+            var subtotal=harga * jumlah;
+            var diskon_pertama=parseFloat(this.state.diskon_persen[index]);
+            var diskon_kedua=parseFloat(this.state.diskon_rupiah[index]);
+            var nilai_diskon_pertama=parseFloat(subtotal * diskon_pertama / 100);
+            var hasil_hitung_diskon_pertama=parseFloat(subtotal - nilai_diskon_pertama);
+            var hasil_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama * diskon_kedua / 100);
+            var hasil_hitung_diskon_kedua=parseFloat(hasil_hitung_diskon_pertama - hasil_diskon_kedua);
+            var hasil_akhir=parseFloat(hasil_hitung_diskon_kedua);
+
+            
+            
+            this.state.subtotal[index]=parseInt(hasil_hitung_diskon_kedua);
+            this.hitungan[index].jumlah=this.state.jumlahhit[index];
+
+            this.total();
         },
 
         hitungTotalRupiah(event, index){
@@ -1388,7 +1404,7 @@ export default {
                 })
         },
 
-        hitungTotal(event){
+        hitungTotalNewBarang(event){
             if(this.newbarang.kode==""){
                 alert('Barang harus diisi');
 
@@ -1399,7 +1415,7 @@ export default {
             this.newbarang.total_pcs=parseInt(this.newbarang.dos)*parseInt(this.hasilpcs) + parseInt(this.newbarang.pcs);
         },
 
-        hitungTotalPcs(event){
+        hitungTotalPcsNewBarang(event){
             if(this.newbarang.kode==""){
                     alert('Barang harus diisi');
 
