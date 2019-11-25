@@ -582,8 +582,8 @@ class BarangController extends Controller
                     }   
                 }else{
                     foreach($allstok as $row){
-                        $dos=FLOOR($stok_all/$barang->pcs);
-                        $pcs=FLOOR($stok_all % $barang->pcs); 
+                        $dos=FLOOR($row->pcs/$barang->pcs);
+                        $pcs=FLOOR($row->pcs % $barang->pcs); 
                         $status='stok tidak mencukupi';
 
                         $list[]=array(

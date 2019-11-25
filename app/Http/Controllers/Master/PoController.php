@@ -144,67 +144,17 @@ class PoController extends Controller
 
                         $res=array();
                         foreach($listbrg['list'] as $value){
-                            $res[$value['kd'].'-'.$value['nama_rak']]=array(
-                                'kd_barang'=>'',
-                                'rak'=>'',
-                                'dos'=>0,
-                                'pcs'=>0,
-                                'total_pcs'=>0
-                            );
-                        }
-
-                        
-                        foreach($listbrg['list'] as $value){
-                            $res[$value['kd'].'-'.$value['nama_rak']]['kd_barang']=$value['kd'];
-                            $res[$value['kd'].'-'.$value['nama_rak']]['rak']=$value['rak_id'];
-                            $res[$value['kd'].'-'.$value['nama_rak']]['dos']+=$value['dos'];
-                            $res[$value['kd'].'-'.$value['nama_rak']]['pcs']+=$value['pcs'];
-                            $res[$value['kd'].'-'.$value['nama_rak']]['total_pcs']+=$value['yg_diminta'];
-                        }
-
-
-                        foreach($res as $key=>$val){
-                            //cek stok
-                            $cksstok=\DB::select("SELECT SUM(a.pcs) AS stok FROM stok a
-                                    WHERE a.kd_brg='".$val['kd_barang']."'
-                                    AND a.lokasi_id='".request('lokasi')."'
-                                    AND a.rak_id='".$val['rak']."'
-                                    GROUP BY a.kd_brg");
-                            
-                            if($val['total_pcs'] > 0){
-                                $jumlah=$val['total_pcs'] * -1;        
-
-                                if(count($cksstok) > 0){
-                                    if($cksstok[0]->stok > 0){
-                                        $selisih= $cksstok[0]->stok - $val['total_pcs'];
-        
-                                        if($selisih >= 0){
-                                            $jumlah=$val['total_pcs'];
-                                        }else{
-                                            $jumlah=$cksstok[0]->stok;
-                                        }
-                                    }
-                                }
-                                
-                            }else{
-                                $jumlah=0;
-
-                                $updatePo=Po::find($kode);
-                                $updatePo->no_ref_po=$kode;
-                                $updatePo->save();
-                            }
-
                             \DB::table('rpo')
                                 ->insert(
                                     [
                                         'no_po'=>$kode,
-                                        'kd_brg'=>$val['kd_barang'],
-                                        'dos'=>$val['dos'],
-                                        'pcs'=>$val['pcs'],
-                                        'total_pcs'=>$val['total_pcs'],
+                                        'kd_brg'=>$value['kd'],
+                                        'dos'=>$value['realisasi_dosnya'],
+                                        'pcs'=>$value['realisasi_pcsnya'],
+                                        'total_pcs'=>$value['realisasi_total_pcs'],
                                         'lokasi_id'=>request('lokasi'),
-                                        'rak_id'=>$val['rak'],
-                                        'jumlah'=>$jumlah
+                                        'rak_id'=>$value['rak_id'],
+                                        'jumlah'=>$value['realisasi_total_pcs']
                                     ]
                                 );
                         }
