@@ -446,11 +446,19 @@ class PoController extends Controller
             $total_pcsnya=($barang->pcs*$req_dos) + $req_pcs;
 
             //cek jumlah stok yang tersedia berdasarkan lokasi
-            $allstok=\DB::select("SELECT a.*, b.nm as nama_rak FROM stok a
-                LEFT JOIN rak as b on b.kd=a.rak_id
-                WHERE a.lokasi_id=$lokasi
-                AND a.rak_id='$rakid'
-                AND a.kd_brg='$kodebrg'");
+            if($po->no_ref_po!=null){
+                $allstok=\DB::select("SELECT a.*, b.nm as nama_rak FROM stok a
+                    LEFT JOIN rak as b on b.kd=a.rak_id
+                    WHERE a.lokasi_id=$lokasi
+                    AND a.kd_brg='$kodebrg'");
+            }else{
+                $allstok=\DB::select("SELECT a.*, b.nm as nama_rak FROM stok a
+                    LEFT JOIN rak as b on b.kd=a.rak_id
+                    WHERE a.lokasi_id=$lokasi
+                    AND a.rak_id='$rakid'
+                    AND a.kd_brg='$kodebrg'");
+            }
+            
 
             $stok_all=0;
             foreach($allstok as $val)
