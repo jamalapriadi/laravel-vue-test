@@ -55,6 +55,32 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         // return $request->all();
+        $kodehit=$request->input('kodehit');
+        $kd_picking=$request->input('kd_picking');
+        $data=array();
+
+        foreach($kodehit as $key=>$val){
+            $cekJumlahPicking=\DB::table('rpicking')
+                ->where('kd_picking',$kd_picking)
+                ->where('kd_brg',$val)
+                ->get();
+
+            foreach($cekJumlahPicking as $key2=>$row){
+                $brg=\App\Models\Barang::find($row->kd_brg);
+
+                $data[]=array(
+                    'kd_barang'=>$row->kd_brg,
+                    'total_picking'=>($brg->pcs * $row->dos) + $row->pcs
+                );   
+            }
+
+            // $data[]=array(
+            //     'kd_barang'=>$val,
+            //     'jumlah'=>$request->input('jumlahhit')[$key]
+            // );
+        }
+
+        return $data;
         $rules=[
             'stokid'=>'required',
             'kode'=>'required',
