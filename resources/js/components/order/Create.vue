@@ -1335,7 +1335,8 @@ export default {
                         this.message = 'Data has been saved.';
                         this.loading = false;
                     }else{
-                        alert('Internal server error');
+                        this.loading = false;
+                        this.$swal('Error', response.data.pesan , 'error');
                     }
                 })
         },

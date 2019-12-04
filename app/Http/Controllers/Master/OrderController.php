@@ -55,32 +55,6 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         // return $request->all();
-        $kodehit=$request->input('kodehit');
-        $kd_picking=$request->input('kd_picking');
-        $data=array();
-
-        foreach($kodehit as $key=>$val){
-            $cekJumlahPicking=\DB::table('rpicking')
-                ->where('kd_picking',$kd_picking)
-                ->where('kd_brg',$val)
-                ->get();
-
-            foreach($cekJumlahPicking as $key2=>$row){
-                $brg=\App\Models\Barang::find($row->kd_brg);
-
-                $data[]=array(
-                    'kd_barang'=>$row->kd_brg,
-                    'total_picking'=>($brg->pcs * $row->dos) + $row->pcs
-                );   
-            }
-
-            // $data[]=array(
-            //     'kd_barang'=>$val,
-            //     'jumlah'=>$request->input('jumlahhit')[$key]
-            // );
-        }
-
-        return $data;
         $rules=[
             'stokid'=>'required',
             'kode'=>'required',
@@ -101,6 +75,66 @@ class OrderController extends Controller
                 'errors'=>$validasi->errors()->all()
             );
         }else{
+            //validasi dulu antara yang di picking dan yang diinput
+            $kodehit=$request->input('kodehit');
+            $kd_picking=$request->input('kd_picking');
+            $data=array();
+            $listnya=array();
+
+            foreach($kodehit as $key=>$val){
+                $listnya[]=$val;
+
+                $data[]=array(
+                    'kd_barang'=>$val,
+                    'jumlah'=>$request->input('jumlahhit')[$key]
+                );
+            }
+            
+            $unique_list=array_unique($listnya);
+
+            $hasil=array();
+
+            foreach($unique_list as $key=>$val){
+                $jumlah=0;
+                for($a=0; $a<count($data); $a++){
+                    if($data[$a]['kd_barang'] == $val){
+                        $jumlah+=$data[$a]['jumlah'];
+                    }
+                }
+
+                $cekJumlahPicking=\DB::table('rpicking')
+                    ->where('kd_picking',$kd_picking)
+                    ->where('kd_brg',$val)
+                    ->get();
+
+                $total_picking=0;
+                foreach($cekJumlahPicking as $key2=>$row){
+                    $brg=\App\Models\Barang::find($row->kd_brg);
+
+                    $total_picking+=($brg->pcs * $row->dos) + $row->pcs;
+                }
+
+                if($total_picking == $jumlah){
+                    
+                }else{
+                    $hasil[]=array(
+                        'kd_barang'=>$val,
+                        'total_picking'=>$total_picking,
+                        'jumlah'=>$jumlah,
+                        'status'=>'ok'
+                    );
+                }
+            }
+
+            if(count($hasil) > 0){
+                return array(
+                    'success'=>false,
+                    'pesan'=>'Total Barang di picking dan yang diinput tidak sesuai',
+                    'lis'=>$hasil
+                );
+            }
+
+
             $kode=$this->autonumber_order();
             $lokasi=$request->input('lokasiid');
 
