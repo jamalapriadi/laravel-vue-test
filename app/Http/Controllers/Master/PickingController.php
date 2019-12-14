@@ -185,6 +185,9 @@ class PickingController extends Controller
                     $detail_no_ref_po=array();
 
                     foreach($kodes as $key=>$val){
+                        //bergerak dari sini
+
+
                         if($idstok[$key]!=null){
                             $cekDiStok=\App\Models\Stok::find($idstok[$key]);
 
@@ -201,7 +204,7 @@ class PickingController extends Controller
                                 }
     
                                 if($request->input('pcs')[$key]!=0){
-                                    $final_pcs=$request->input('jumlah')[$key] - $request->input('pcs')[$key];
+                                    $final_pcs=$request->input('ppcs')[$key] - $request->input('pcs')[$key];
                                 }else{
                                     $final_pcs=0;
                                 }
@@ -282,6 +285,9 @@ class PickingController extends Controller
                                             'lokasi_id'=>request('lokasi'),
                                             'jumlah'=>$final_total_diinput
                                         );
+
+
+                                        $kurangan_pcs = $totalpcnya - $total_diinput;
     
                                         \DB::table('rpicking')
                                             ->insert(
@@ -336,9 +342,10 @@ class PickingController extends Controller
                                     }
                                 }
                             }
-
                             
                         }
+
+
                     }
 
                     if(count($detail_no_ref_po)>0){
@@ -392,7 +399,8 @@ class PickingController extends Controller
                     'pesan'=>'Data berhasil disimpan',
                     'errors'=>'',
                     'adahutang'=>false,
-                    'nota'=>$nota
+                    'nota'=>$nota,
+                    'jumlah_ref_po_baru'=>count($detail_no_ref_po)
                 );
             }else{
                 $data=array(
