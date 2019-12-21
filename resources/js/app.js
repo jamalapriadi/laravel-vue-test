@@ -49,7 +49,10 @@ const options = {
   specs: [
     'fullscreen=yes',
     'titlebar=yes',
-    'scrollbars=yes'
+    'scrollbars=yes',
+    'width=812',
+    'height=529',
+    'size=landscape'
   ],
   styles: [
     'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
