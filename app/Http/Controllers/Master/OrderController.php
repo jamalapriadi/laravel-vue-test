@@ -794,9 +794,9 @@ class OrderController extends Controller
 
     public function print_order($id)
     {
-        $user=\App\User::with('perusahaan')->find(auth()->user()->id);
+        $data['user']=\App\User::with('perusahaan')->find(auth()->user()->id);
 
-        $nota=Order::with(
+        $data['nota']=Order::with(
             [
                 'picking',
                 'picking.po.customer',
@@ -808,6 +808,18 @@ class OrderController extends Controller
                 'sales'
             ]
         )->find($id);
+
+        // $data['user']=$user;
+        // $data['nota']=$nota;
+        // $data=array();
+        
+        // $customPaper = array(0,0,567.00,583.80);
+        $customPaper = array(0,0,567.00,683.80);
+
+        $pdf = \PDF::loadView('print.nota', $data)
+            ->setPaper($customPaper, 'landscape');
+            // ->setPaper('a4', 'landscape');
+        return $pdf->stream();
 
         return view('print.nota')
                 ->with('nota',$nota)
