@@ -136,14 +136,14 @@ export default {
 
             axios.get('/data/po/'+id)
                 .then(response => {
-                    this.state.kode= response.data.no_po;
-                    this.state.customer= response.data.customer.nm;
-                    this.state.tanggal= response.data.tgl;
-                    this.state.perusahaan= response.data.perusahaan.nama;
-                    this.state.lokasi = response.data.lokasi.nm;
-                    this.state.keterangan= response.data.ket;
-                    this.state.info= response.data.info;
-                    this.state.listBarang= response.data.detail;
+                    this.state.kode= response.data.po.no_po;
+                    this.state.customer= response.data.po.customer.nm;
+                    this.state.tanggal= response.data.po.tgl;
+                    this.state.perusahaan= response.data.po.perusahaan.nama;
+                    this.state.lokasi = response.data.po.lokasi.nm;
+                    this.state.keterangan= response.data.po.ket;
+                    // this.state.info= response.data.po.info;
+                    this.state.listBarang= response.data.po.detail;
                 })
                 .catch( error => {
                     alert('data tidak dapat di load');

@@ -817,8 +817,13 @@ class OrderController extends Controller
         $customPaper = array(0,0,567.00,683.80);
 
         $pdf = \PDF::loadView('print.nota', $data)
-            ->setPaper($customPaper, 'landscape');
-            // ->setPaper('a4', 'landscape');
+            ->setOptions(
+                [
+                    'isHtml5ParserEnabled'=>true
+                ]
+            )
+            // ->setPaper($customPaper, 'landscape');
+            ->setPaper('a5', 'landscape');
         return $pdf->stream();
 
         return view('print.nota')
