@@ -1303,32 +1303,32 @@ export default {
                         this.tampilDetail=false;
 
                         // console.log(this.state);
-                        this.dataprint={
-                            perusahaan:response.data.nota.perusahaan.nama,
-                            telp:response.data.nota.picking.po.customer.tlpn,
-                            sales:response.data.nota.sales.nm,
-                            no_order:response.data.nota.no_order,
-                            tanggal:response.data.nota.tgl,
-                            tanggaljt:response.data.nota.tgljt,
-                            customer:response.data.nota.picking.po.customer,
-                            diskon_rupiah:response.data.nota.diskon_rupiah,
-                            total:response.data.nota.total,
-                            kd_trans:response.data.nota.kd_trans,
-                            kd_picking:response.data.nota.kd_picking,
-                            status_pembayaran:response.data.nota.status_pembayaran,
-                            // detail:response.data.nota.detail,
-                            keterangan:response.data.keterangan,
-                            total:response.data.nota.total,
-                            update_at: response.data.nota.updated_at,
-                        }
+                        // this.dataprint={
+                        //     perusahaan:response.data.nota.perusahaan.nama,
+                        //     telp:response.data.nota.picking.po.customer.tlpn,
+                        //     sales:response.data.nota.sales.nm,
+                        //     no_order:response.data.nota.no_order,
+                        //     tanggal:response.data.nota.tgl,
+                        //     tanggaljt:response.data.nota.tgljt,
+                        //     customer:response.data.nota.picking.po.customer,
+                        //     diskon_rupiah:response.data.nota.diskon_rupiah,
+                        //     total:response.data.nota.total,
+                        //     kd_trans:response.data.nota.kd_trans,
+                        //     kd_picking:response.data.nota.kd_picking,
+                        //     status_pembayaran:response.data.nota.status_pembayaran,
+                        //     // detail:response.data.nota.detail,
+                        //     keterangan:response.data.keterangan,
+                        //     total:response.data.nota.total,
+                        //     update_at: response.data.nota.updated_at,
+                        // }
                         
-                        this.dataprint.detail = response.data.nota.detail;
-                        // this.print();
+                        // this.dataprint.detail = response.data.nota.detail;
+                        // // this.print();
 
-                        this.$nextTick(() => {
-                            this.$htmlToPaper('printMe');
-                        });
-                        // window.open("/data/print-order/"+response.data.nota.no_order, "_blank");   
+                        // this.$nextTick(() => {
+                        //     this.$htmlToPaper('printMe');
+                        // });
+                        window.open("/data/print-order/"+response.data.nota.no_order, "_blank");   
 
                         this.getCode();
                         this.getPicking();

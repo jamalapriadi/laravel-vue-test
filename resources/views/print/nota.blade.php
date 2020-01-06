@@ -21,16 +21,10 @@
             border-spacing: 0px;
             border-collapse: separate;
         }
-        .page-break {
-            page-break-after: always;
-        }
+        
     </style>
     
-    <style>
-        .page-break {
-            page-break-after: always;
-        }
-    </style>
+   
 </head>
 <body style=" margin-left:-5%; margin-right:2%;margin-top:-5%;height:100%;">
     @php
@@ -58,32 +52,30 @@
                 </td>
             </tr>
             <tr>
-                <td style="padding:0;font-size:12px;">No HP : {{$nota->perusahaan->ket->no_hp}}</td>
-                 <td width=300px; style="padding:0;font-size:12px;" >Customer : {{$nota->picking->po->customer->nm}}</td>
+                
+                 <td style="padding:0;font-size:12px;" >Customer : {{$nota->picking->po->customer->nm}}</td>
+                    
               
             </tr>
         </table>
     
         <table width="100%" style="font-size:12px;">
             <tr>
-                <td style="padding:0;" width="15%">Nomor</td>
+                <td style="padding:0;" width="15%">Nomor</td>     
                 <td style="padding:0;" width="25%">: {{$nota->no_order}}</td>
-                <td style="padding-left:-100px;" >{{$nota->picking->po->customer->alamat}}, {{$nota->picking->po->customer->tlpn}}</td>
+        
                
             </tr>
             <tr>
                 <td style="padding:0;">Tanggal</td>
-                <td width=250px; style="padding:0;">: {{$nota->tgl}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tanggal Jt. {{$nota->tgljt}}</td>
-                <td></td>
-                <td>
-                    &nbsp;
-                    
-                    
-                </td>
+                <td width=195px; style="padding:0;">: {{$nota->tgl}} </td>
+                <td width=357px; style="font-size:12px" >Alamat : {{$nota->picking->po->customer->alamat}} {{$nota->picking->po->customer->tlpn}}</td>
+                <td> Tanggal Jt. {{$nota->tgljt}}</td>
+              
             </tr>
         </table>
         
-        <table class="table table-striped" style="font-size:12px;width:100%;height:210px;">
+        <table class="table table-striped" style="font-size:12px;width:100%;height:230px;">
             
                 <tr>
                     <th width=300px; style="padding:2px;">Nama Barang</th>
@@ -98,12 +90,12 @@
                 @if($a==1)
                     @php
                         $mulai=0;
-                        $selesai = 8;
+                        $selesai = 10;
                     @endphp
                 @else
                     @php
                         $mulai= $selesai;
-                        $selesai = $mulai + 8;
+                        $selesai = $mulai + 10;
                     @endphp
                 @endif
             
@@ -121,7 +113,9 @@
                     @endif
                 @endforeach
             </table>
-           <table class="table table-striped" style="font-size:12px;width:100%;margin-bottom:-3px;">
+            
+            @if($a == $jumlah_halaman)
+            <table class="table table-striped" style="font-size:12px;width:100%;margin-bottom:-3px;margin-top:-15px">
                 <tr>
                     <th width=150px; style="padding:2px;" rowspan="2">{{auth()->user()->username}}</th>
                     <th style="padding:2px;" rowspan="2">{{$nota->update_at}}</th>
@@ -134,38 +128,42 @@
                     <th style="padding:2px;">TOTAL</th>
                     <th style="padding:2px; text-align:right;">{{number_format($nota->total)}}</th>
                 </tr>
-        </table>
+            </table>
+            @endif
+            
     
-    
-        <table class="table" style="font-size:12px;">
-            <tr>
-                <td style="padding:2px;" width="40%">
-                    No. HP : {{$user->perusahaan->ket->no_hp}} (WHATSAPP) 
-                    <br>
-                    Email : {{$user->perusahaan->ket->email}}
-                </td>
-                <td style="padding:2px;text-align:center;" width="30%">
-                    Penerima
-    
-                    <br>
-                    <br>
-                    <br>
-                    {{$nota->picking->po->customer->nm}}
-                </td>
-                <td style="padding:2px;text-align:center;" width="30%">
-                    Hormat Kami
-    
-                    <br>
-                    <br>
-                    <br>
-                    ......................
-                </td>
-            </tr>
-        </table>
+        
+            <table class="table" style="font-size:12px;">
+                <tr>
+                    <td style="padding:2px;" width="40%">
+                        No. HP : {{$user->perusahaan->ket->no_hp}} (WHATSAPP) 
+                        <br>
+                        Email : {{$user->perusahaan->ket->email}}
+                    </td>
+                    <td style="padding:2px;text-align:center;" width="30%">
+                        Penerima
+                        <br>
+                        <br>
+                        <br>
+                        {{$nota->picking->po->customer->nm}}
+                    </td>
+                    <td style="padding:2px;text-align:center;" width="30%">
+                        Hormat Kami
+                        <br>
+                        <br>
+                        <br>
+                        ......................
+                    </td>
+                </tr>
+            </table>
+            
+            
+        
         
         @if($a != $jumlah_halaman)
             <div class="page-break"></div>
         @endif
+        
     @endfor
     
 </body>
