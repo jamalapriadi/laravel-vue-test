@@ -738,7 +738,8 @@ class PoController extends Controller
             ->get();
 
         $po=Po::where('customer_id',$id)
-            ->where('perusahaan_id',auth()->user()->perusahaan_id);
+            ->where('perusahaan_id',auth()->user()->perusahaan_id)
+            ->where('status_konfirmasi','<>','Please Confirm');
 
         if($request->has('status')){
             $status=$request->input('status');

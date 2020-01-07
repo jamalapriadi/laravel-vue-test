@@ -115,20 +115,28 @@
             </table>
             
             @if($a == $jumlah_halaman)
-            <table class="table table-striped" style="font-size:12px;width:100%;margin-bottom:-3px;margin-top:-15px">
-                <tr>
-                    <th width=150px; style="padding:2px;" rowspan="2">{{auth()->user()->username}}</th>
-                    <th style="padding:2px;" rowspan="2">{{$nota->update_at}}</th>
-                                    <th width=200px; style="padding:2px;" colspan="3">Page {{$a}} of {{$jumlah_halaman}}</th>
-                    <th style="padding:2px;">DISKON TAMBAHAN</th>
-                    <th style="padding:2px; text-align:right;">{{number_format($nota->diskon_rupiah)}}</th>
-                </tr>
-                <tr>
-                    <th style="padding:2px;" colspan="3"></th>
-                    <th style="padding:2px;">TOTAL</th>
-                    <th style="padding:2px; text-align:right;">{{number_format($nota->total)}}</th>
-                </tr>
-            </table>
+                <table class="table table-striped" style="font-size:12px;width:100%;margin-bottom:-3px;margin-top:-15px">
+                    <tr>
+                        <th width=150px; style="padding:2px;" rowspan="2">{{auth()->user()->username}}</th>
+                        <th style="padding:2px;" rowspan="2">{{$nota->update_at}}</th>
+                        <th width=200px; style="padding:2px;" colspan="3">Page {{$a}} of {{$jumlah_halaman}}</th>
+                        <th style="padding:2px;">DISKON TAMBAHAN</th>
+                        <th style="padding:2px; text-align:right;">{{number_format($nota->diskon_rupiah)}}</th>
+                    </tr>
+                    <tr>
+                        <th style="padding:2px;" colspan="3"></th>
+                        <th style="padding:2px;">TOTAL</th>
+                        <th style="padding:2px; text-align:right;">{{number_format($nota->total)}}</th>
+                    </tr>
+                </table>
+            @else 
+                <table class="table table-striped" style="font-size:12px;width:100%;margin-bottom:-3px;margin-top:-20px;border:0;">
+                    <tr style="border:0">
+                        <th width=150px; style="padding:2px;">{{auth()->user()->username}}</th>
+                        <th style="padding:2px;">{{$nota->update_at}}</th>
+                        <th width=200px; style="padding:2px;" colspan="3">Page {{$a}} of {{$jumlah_halaman}}</th>
+                    </tr>
+                </table>
             @endif
             
     
