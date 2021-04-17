@@ -737,20 +737,26 @@ class PoController extends Controller
             ->where('perusahaan_id',auth()->user()->perusahaan_id)
             ->get();
 
-        $po=Po::where('customer_id',$id)
-            ->where('perusahaan_id',auth()->user()->perusahaan_id)
-            ->where('status_konfirmasi','<>','Please Confirm');
-
         if($request->has('status')){
             $status=$request->input('status');
 
-            if($status=="true"){
-                $po=$po->WhereNull('no_ref_po')
+            if($status=="Y"){
+                $po=Po::where('customer_id',$id)
+                    ->where('perusahaan_id',auth()->user()->perusahaan_id)
+                    ->where('status_konfirmasi','<>','Please Confirm')
+                    ->WhereNull('no_ref_po')
                     ->whereNotIn('no_po',$picking);
-            }else if($status=="false"){
-                $po=$po->whereNotNull('no_ref_po');
+            }else if($status=="N"){
+                $po=Po::where('customer_id',$id)
+                    ->where('perusahaan_id',auth()->user()->perusahaan_id)
+                    ->where('status_konfirmasi','<>','Please Confirm')
+                    ->whereNotNull('no_ref_po');
             }else{
-                $po=$po->WhereNull('no_ref_po')
+                $po=Po::where('customer_id',$id)
+                    ->where('perusahaan_id',auth()->user()->perusahaan_id)
+                    ->where('status_konfirmasi','<>','Please Confirm')
+                    ->WhereNull('no_ref_po')
+                    ->WhereNull('no_ref_po')
                     ->whereNotIn('no_po',$picking);
             }
         }

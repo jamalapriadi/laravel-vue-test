@@ -130,7 +130,7 @@
                     </tr>
                 </table>
             @else 
-                <table class="table table-striped" style="font-size:12px;width:100%;margin-bottom:-3px;margin-top:-20px;border:0;">
+                <table class="table table-striped" style="font-size:12px;width:100%;margin-bottom:-3px;margin-top:-15px;border:0;">
                     <tr style="border:0">
                         <th width=150px; style="padding:2px;">{{auth()->user()->username}}</th>
                         <th style="padding:2px;">{{$nota->update_at}}</th>

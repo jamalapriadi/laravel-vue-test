@@ -30,7 +30,7 @@
                             <div class="form-group row">
                                 <label for="" class="control-label col-lg-3">Po Baru?</label>
                                 <div class="col-lg-9">
-                                    <toggle-button :value="true" :sync="true" :labels="{checked: 'No', unchecked: 'Yes'}" v-model="state.po_pending" @change="ubahPoPending()"/>
+                                    <toggle-button :value="true" :sync="true" :labels="{checked: 'No', unchecked: 'Yes'}" v-model="state.po_pending" @change="ubahPoPending($event)"/>
                                 </div>
                             </div>
                             
@@ -326,7 +326,8 @@ export default {
                 customer:'',
                 lokasi:'',
                 detail:[]
-            }
+            },
+            statusnya:'Y'
             
             
         }
@@ -358,14 +359,7 @@ export default {
     },
     methods: {
         getNoPo(){
-            var statusnya='Y';
-            if(this.state.po_pending==true){
-                statusnya='Y';
-            }else{
-                statusnya='N';
-            }
-
-            axios.get('/data/list-po-not-in-picking?status='+statusnya+"&customer="+this.state.customer)
+            axios.get('/data/list-po-not-in-picking?status='+this.statusnya+"&customer="+this.state.customer)
                 .then(response => {
                     this.pos= response.data
                 })
@@ -434,14 +428,7 @@ export default {
             this.$refs.tokocustomer.inputValue = toko
             this.state.customer=nama;
 
-            var statusnya='Y';
-            if(this.state.po_pending==true){
-                statusnya='Y';
-            }else{
-                statusnya='N';
-            }
-
-            this.getNoPo(statusnya);
+            this.getNoPo(this.statusnya);
         },
 
         getTokoCustomer(item){
@@ -469,13 +456,13 @@ export default {
             this.getNoPo(statusnya);
         },
 
-        ubahPoPending(){
+        ubahPoPending(event){
             var ppending=this.state.po_pending;
-            var statusnya='Y';
-            if(this.state.po_pending==true){
-                statusnya='Y';
+            
+            if(event.value==true){
+                this.statusnya='Y';
             }else{
-                statusnya='N';
+                this.statusnya='N';
             }
 
             this.listcaricustomer=[];
@@ -500,7 +487,7 @@ export default {
             this.customers=[];
             this.state.kurang=[];
 
-            this.getNoPo(statusnya);
+            this.getNoPo(this.statusnya);
             this.getCustomer()
         },
 
@@ -594,16 +581,10 @@ export default {
         },
 
         getCustomer(){
-            var statusnya='Y';
-            if(this.state.po_pending==true){
-                statusnya='Y';
-            }else{
-                statusnya='N';
-            }
 
             axios.get('/data/customer-not-in-picking',{
                 params:{
-                    status:statusnya
+                    status:this.statusnya
                 }
             })
                 .then(response => {
@@ -803,7 +784,7 @@ export default {
         },
 
         ubahCustomer(){
-            axios.get('/data/po-by-customer/'+this.state.customer+'?status='+this.state.po_pending)
+            axios.get('/data/po-by-customer/'+this.state.customer+'?status='+this.statusnya)
                 .then(response => {
                     this.pos = response.data
                 })
@@ -856,14 +837,7 @@ export default {
                         this.getCustomer();
                         this.getLokasi();
 
-                        var statusnya='Y';
-                        if(this.state.po_pending==true){
-                            statusnya='Y';
-                        }else{
-                            statusnya='N';
-                        }
-
-                        this.getNoPo(statusnya);
+                        this.getNoPo(this.statusnya);
 
                         this.message = 'Data has been saved.';
                         this.loading = false;

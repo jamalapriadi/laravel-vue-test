@@ -360,6 +360,7 @@ class PickingController extends Controller
                         $cus->tgl=date('Y-m-d');
                         $cus->lokasi_id=request('lokasi');
                         $cus->perusahaan_id=auth()->user()->perusahaan_id;
+                        $cus->status_konfirmasi='Please Confirm';
                         $cus->insert_user=auth()->user()->username;
                         $cus->update_user=auth()->user()->username;
                         $simpancus=$cus->save();
